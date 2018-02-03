@@ -76,7 +76,7 @@ Options
 `-dir` find testcases and expected output in this directory, also write
 actual output there
 
-`-xml` create Junit compatible `xml`files instead of output to console
+`-xml` create Junit/Ant compatible `xml`files instead of output to console
 (collect in Jenkins etc.)
 
 `-noansi` don't use ansi codes to erase passing tests from console
