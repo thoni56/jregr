@@ -13,7 +13,6 @@
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="C:/Users/Thomas/workspace/JRegr/bin"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr" includes="mockito-all-1.8.2.jar"/>
-            <zipfileset dir="C:\Program Files\Eclipse\eclipse\plugins\org.junit_3.8.2.v3_8_2_v20100427-1100" includes="junit.jar"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr\commons-cli-1.2" includes="commons-cli-1.2.jar"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr" includes="abbot.jar"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr" includes="costello.jar"/>
