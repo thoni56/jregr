@@ -15,10 +15,10 @@ In a configuration file per directory, `.jregr`, you specify a pattern
 for what is considered a test case, and the command(s) that should be
 performed on each of the test cases.
 
-The output (meaning everything that is sent to the standard output) is
-considered the actual output of the test case. This is compared to the
-content of a file with the same basename ($1) and extension
-`.expected`.
+The output (meaning everything that is sent to the standard and/or
+error outputs) is considered the actual output of the test case. This
+is compared to the content of a file with the same basename ($1) and
+extension `.expected`.
 
 If they are identical the test case passed, if not it failed.
 
