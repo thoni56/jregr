@@ -1,0 +1,133 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Launch) - Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Platform<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.Platform",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Costello<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.editor.Costello",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ScriptEditor<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.editor.ScriptEditor",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ForkedStepRunner<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.script.ForkedStepRunner",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-KeyStrokeMap<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.tester.KeyStrokeMap",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-MapGenerator<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.tester.MapGenerator",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-RobotVerifier<Jregr>",
+            "request": "launch",
+            "mainClass": "abbot.tester.RobotVerifier",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ScriptFixture<Jregr>",
+            "request": "launch",
+            "mainClass": "junit.extensions.abbot.ScriptFixture",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ScriptTestSuite<Jregr>",
+            "request": "launch",
+            "mainClass": "junit.extensions.abbot.ScriptTestSuite",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-SizeOf<Jregr>",
+            "request": "launch",
+            "mainClass": "junit.extensions.abbot.SizeOf",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Version<Jregr>",
+            "request": "launch",
+            "mainClass": "junit.runner.Version",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TestRunner<Jregr>",
+            "request": "launch",
+            "mainClass": "junit.textui.TestRunner",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-JUnitCore<Jregr>",
+            "request": "launch",
+            "mainClass": "org.junit.runner.JUnitCore",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-ASMifierClassVisitor<Jregr>",
+            "request": "launch",
+            "mainClass": "org.mockito.asm.util.ASMifierClassVisitor",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-CheckClassAdapter<Jregr>",
+            "request": "launch",
+            "mainClass": "org.mockito.asm.util.CheckClassAdapter",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-TraceClassVisitor<Jregr>",
+            "request": "launch",
+            "mainClass": "org.mockito.asm.util.TraceClassVisitor",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Debug (Launch)-Diff<Jregr>",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.diff.Diff",
+            "projectName": "Jregr"
+        }
+    ]
+}
