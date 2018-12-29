@@ -96,6 +96,7 @@ public class XMLReporter extends AbstractRegrReporter {
 			String line = "";
 			while ((line = expectedReader.readLine()) != null)
 					outputStream.println(line);
+			expectedReader.close();
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
 		}
