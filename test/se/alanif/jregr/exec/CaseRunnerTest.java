@@ -3,6 +3,8 @@ package se.alanif.jregr.exec;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import junit.framework.TestCase;
+import org.junit.Test;
+
 
 public class CaseRunnerTest extends TestCase {
 
@@ -13,6 +15,7 @@ public class CaseRunnerTest extends TestCase {
 
 	CaseRunner caseRunner = new CaseRunner();
 
+	@Test
 	public void testShouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {
 		when(mockedErrorGobbler.output()).thenReturn("");
 		when(mockedOutputGobbler.output()).thenReturn("");
@@ -20,6 +23,7 @@ public class CaseRunnerTest extends TestCase {
 		assertEquals("", caseRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher));
 	}
 	
+	@Test
 	public void testShouldReturnResultFromErrorAndOutput() throws Exception {
 		when(mockedErrorGobbler.output()).thenReturn("error");
 		when(mockedOutputGobbler.output()).thenReturn("output");

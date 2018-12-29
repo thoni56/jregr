@@ -5,9 +5,11 @@ import java.io.OutputStream;
 import se.alanif.jregr.exec.StreamGobbler;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 public class StreamGobblerTest extends TestCase {
 	
+	@Test
 	public void testCanGobble1000Lines() throws Exception {
 		Process p = Runtime.getRuntime().exec("test/stdout"); // This program has to be a native Windows program, cygwin doesn't work!!!
 		StreamGobbler gobbler = new StreamGobbler(p.getInputStream());
@@ -21,6 +23,7 @@ public class StreamGobblerTest extends TestCase {
 		assertEquals(1000, count);
 	}
 	
+	@Test
 	public void testCanGobbleAllOf99BottlesAndSendInput() throws Exception {
 		Process p = Runtime.getRuntime().exec("test/99bottles");
 

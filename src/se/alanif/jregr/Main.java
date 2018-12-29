@@ -12,7 +12,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-import org.apache.commons.cli.BasicParser;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
@@ -123,7 +123,7 @@ public class Main {
 		OptionsManager optionManager = new OptionsManager();
 		HelpFormatter helpFormatter = new HelpFormatter();
 		try {
-			CommandLine commandLine = new BasicParser().parse(optionManager, args);
+			CommandLine commandLine = new DefaultParser().parse(optionManager, args);
 	
 			if (commandLine.hasOption("help")) {
 				helpFormatter.printHelp("jregr", optionManager);

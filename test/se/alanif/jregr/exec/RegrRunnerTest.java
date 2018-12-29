@@ -5,6 +5,8 @@ import static org.mockito.Mockito.*;
 
 import java.io.PrintWriter;
 
+import org.junit.Test;
+
 import junit.framework.TestCase;
 import se.alanif.jregr.CommandsDecoder;
 import se.alanif.jregr.RegrDirectory;
@@ -36,23 +38,26 @@ public class RegrRunnerTest extends TestCase {
 		when(mockedCase.getOutputFile()).thenReturn(mockedOutputFile);
 	}
 
+	@Test
 	public void testRunnerOnNoCasesShouldNotReportAnyTests() throws Exception {
-		runner.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null);
+		int result = runner.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null);
 		
 		verify(mockedReporter, never()).starting(mockedCase, 0);
 	}
 
+	@Test
 	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
-		runner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null);
+		int result = runner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null);
 
 		verify(mockedReporter).starting(eq(mockedCase), anyInt());
 		verify(mockedReporter).report((State) anyObject());
 	}
-	
+
+	@Test
 	public void testRunCasesInADirectoryWithASingleCaseShouldRunOneCaseAndReport() throws Exception {
 		when(mockedRegrDirectory.getCases()).thenReturn(ONE_CASE);
 
-		runner.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null );
+		int result = runner.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null );
 		
 		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder)anyObject(), (PrintWriter)anyObject(), (CaseRunner)anyObject(), (ProcessBuilder)anyObject());
 		verify(mockedReporter).starting(eq(mockedCase), anyInt());

@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "Jregr",
+                "projectName": "Jregr",
+                "workingDirectory": "/home/thoni/Utveckling/jregr",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "Jregr",
+                "projectName": "Jregr",
+                "workingDirectory": "/home/thoni/Utveckling/jregr",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}

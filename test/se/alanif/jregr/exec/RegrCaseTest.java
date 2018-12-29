@@ -10,6 +10,7 @@ import se.alanif.jregr.exec.RegrCase.State;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.io.File;
 import junit.framework.TestCase;
+import org.junit.Test;
 import static org.mockito.Mockito.*;
 
 public class RegrCaseTest extends TestCase {
@@ -64,6 +65,7 @@ public class RegrCaseTest extends TestCase {
 		when(mockedRegrDirectory.toDirectory()).thenReturn(mockedDirectory);
 	}
 
+	@Test
 	public void testShouldExecTheCommandAndArgumentsFromTheDecoder() throws Exception {
 		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_CASENAME);
 		
@@ -72,6 +74,7 @@ public class RegrCaseTest extends TestCase {
 		verify(mockedProcessBuilder).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime, CASENAME);
 	}
 	
+	@Test
 	public void testShouldRunByExecutingEveryCommand() throws Exception {
 		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME))
 			.thenReturn(COMMAND1_AND_ARGUMENTS)
@@ -85,6 +88,7 @@ public class RegrCaseTest extends TestCase {
 		verify(mockedProcessBuilder, times(2)).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime, CASENAME);
 	}
 
+	@Test
 	public void testShouldReturnPassIfExpectedButNoOutputFileExists() throws Exception {
 		when(mockedRegrDirectory.hasExpectedFile(theCase.getName())).thenReturn(true);
 		when(mockedRegrDirectory.hasOutputFile(theCase.getName())).thenReturn(false);
@@ -92,6 +96,7 @@ public class RegrCaseTest extends TestCase {
 		assertEquals(State.PASS, theCase.status());
 	}
 
+	@Test
 	public void testShouldReturnPendingIfNoExpectedButOutputFileExists() throws Exception {
 		when(mockedRegrDirectory.hasExpectedFile(theCase.getName())).thenReturn(false);
 		when(mockedRegrDirectory.hasOutputFile(theCase.getName())).thenReturn(true);
@@ -99,6 +104,7 @@ public class RegrCaseTest extends TestCase {
 		assertEquals(State.PENDING, theCase.status());
 	}
 
+	@Test
 	public void testShouldReturnFailIfExpectedAndOutputFileExists() throws Exception {
 		when(mockedRegrDirectory.hasSuspendedFile(theCase.getName())).thenReturn(false);
 		when(mockedRegrDirectory.hasExpectedFile(theCase.getName())).thenReturn(true);
@@ -107,6 +113,7 @@ public class RegrCaseTest extends TestCase {
 		assertEquals(State.FAIL, theCase.status());
 	}
 	
+	@Test
 	public void testShouldReturnSuspendedFailIfSuspendedAndOutputFileExists() throws Exception {
 		when(mockedRegrDirectory.hasExpectedFile(theCase.getName())).thenReturn(true);
 		when(mockedRegrDirectory.hasSuspendedFile(theCase.getName())).thenReturn(true);
@@ -115,6 +122,7 @@ public class RegrCaseTest extends TestCase {
 		assertEquals(State.SUSPENDED_FAIL, theCase.status());
 	}
 
+	@Test
 	public void testShouldReturnSuspendedPassIfSuspendedAndOutputFileDoesntExists() throws Exception {
 		when(mockedRegrDirectory.hasSuspendedFile(theCase.getName())).thenReturn(true);
 		when(mockedRegrDirectory.hasExpectedFile(theCase.getName())).thenReturn(true);
@@ -123,6 +131,7 @@ public class RegrCaseTest extends TestCase {
 		assertEquals(State.SUSPENDED_PASS, theCase.status());
 	}
 
+	@Test
 	public void testShouldWriteToOutputFileAndCloseIt() throws Exception {
 		PrintWriter mockedWriter = mock(PrintWriter.class);
 		when(mockedCaseRunner.run((Process)anyObject(), (StreamGobbler)anyObject(), (StreamGobbler)anyObject(), (StreamPusher)anyObject())).thenReturn("");
@@ -133,11 +142,13 @@ public class RegrCaseTest extends TestCase {
 		verify(mockedWriter).close();
 	}
 	
+	@Test
 	public void testCanSeeIfACaseExists() throws Exception {
 		when(mockedRegrDirectory.hasCaseFile(CASENAME)).thenReturn(true);
 		assertTrue(theCase.exists());
 	}
 	
+	@Test
 	public void testCanGetOutputFile() throws Exception {
 		File mockedOutputFile = mock(File.class);
 		when(mockedRegrDirectory.getOutputFile(CASENAME)).thenReturn(mockedOutputFile);

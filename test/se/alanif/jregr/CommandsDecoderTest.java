@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.junit.Test;
+
 import se.alanif.jregr.io.Directory;
 
 import junit.framework.TestCase;
@@ -61,18 +63,22 @@ public class CommandsDecoderTest extends TestCase {
 		defaultDecoder = new CommandsDecoder(null);
 	}
 	
+	@Test
 	public void testCanGetExtensionFromCurrentJregrLine() throws Exception {
 		assertEquals(EXTENSION1, decoder.getExtension());
 	}
 
+	@Test
 	public void testShouldBuildCommandAndArgumentsFromFirstLine() throws Exception {
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 	
+	@Test
 	public void testShouldBuildWithoutBinDirPathIfExecutableDoesNotExist() throws Exception {
 		assertTrue(Arrays.equals(COMMAND_AND_ARGUMENTS_WITHOUT_PATH, decoder.buildCommandAndArguments(binDirectoryWithoutExecutables, CASENAME)));
 	}
 	
+	@Test
 	public void testShouldGetStdinFileFromCurrentJregrLine() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION1+" : "+COMMAND1+" "+ARG11+" "+ARG12 + " < " + STDIN);
 		decoder = new CommandsDecoder(mockedFileReader);
@@ -80,6 +86,7 @@ public class CommandsDecoderTest extends TestCase {
 		assertEquals(STDIN, decoder.getStdin(CASENAME));
 	}
 
+	@Test
 	public void testReturnsFalseWhenAdvancingBeyondEndOfCommands() throws Exception {
 		when(mockedFileReader.readLine())
 			.thenReturn(EXTENSION2+" : "+COMMAND2+" "+ARG21+" "+OPT21+" "+OPTION_VALUE_21)
@@ -89,6 +96,7 @@ public class CommandsDecoderTest extends TestCase {
 		assertFalse(decoder.advance());
 	}
 
+	@Test
 	public void testShouldNotAdvanceAfterEndOfJregrFile() throws Exception {
 		when(mockedFileReader.readLine())
 			.thenReturn("extension : command")
@@ -98,6 +106,7 @@ public class CommandsDecoderTest extends TestCase {
 		assertFalse(decoder.advance());
 	}
 
+	@Test
 	public void testShouldBuildCommandAndArgumentsFromSecondLine() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION2+" : "+COMMAND2+" "+ARG21+" "+OPT21+" "+OPTION_VALUE_21);
 		
@@ -105,6 +114,7 @@ public class CommandsDecoderTest extends TestCase {
 		assertTrue(Arrays.equals(SECOND_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 	
+	@Test
 	public void testCanResetDecoderToReadFromBeginning() throws Exception {
 		decoder.advance();
 		decoder.reset();
@@ -114,33 +124,40 @@ public class CommandsDecoderTest extends TestCase {
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 
+	@Test
 	public void testShouldReturnDefaultExtensionFirstSetWhenNoJregrFileReader() throws Exception {
 		assertEquals(DEFAULT_EXTENSION1, defaultDecoder.getExtension());
 	}
 	
+	@Test
 	public void testShouldBuildDefaultCommandAndArgumentsWhenNoJregrFile() throws Exception {
 		assertTrue(Arrays.equals(DEFAULT_FIRST_COMMAND_AND_ARGUMENTS, defaultDecoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 	
+	@Test
 	public void testShouldReturnNullAsStdinForFirstSetWhenNoJregrfile() throws Exception {
 		assertEquals(null, defaultDecoder.getStdin(CASENAME));
 	}
 
+	@Test
 	public void testShouldBeAbleToDeliverTwoSetsOfDefaultValuesWhenNoJregrReader() throws Exception {
 		assertTrue(defaultDecoder.advance());
 		assertFalse(defaultDecoder.advance());
 	}
 
+	@Test
 	public void testShouldBuildSecondDefaultCommandAndArgumentsWhenNoJregrReader() throws Exception {
 		defaultDecoder.advance();
 		assertTrue(Arrays.equals(DEFAULT_SECOND_COMMAND_AND_ARGUMENTS, defaultDecoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 	
+	@Test
 	public void testShouldGetDefaultInputForSecondLineWhenNoJregrReader() throws Exception {
 		defaultDecoder.advance();
 		assertEquals(CASENAME+DEFAULT_EXTENSION2, defaultDecoder.getStdin(CASENAME));
 	}
 	
+	@Test
 	public void testCanResetDefaultDecoderToReadFromBeginning() throws Exception {
 		defaultDecoder.advance();
 		defaultDecoder.reset();

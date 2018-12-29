@@ -8,12 +8,14 @@ import java.io.Writer;
 import se.alanif.jregr.io.File;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 public class FileTest extends TestCase {
 
 	private static final String ARBITRARY_TEXT1 = "Some arbitrary text";
 	private static final String ARBITRARY_TEXT2 = "on two lines";
 
+	@Test
 	public void testCanReadContentStrippingCarriageReturnCharacters() throws Exception {
 		String contentTestFilename = this.getClass().getName() + ".content";
 

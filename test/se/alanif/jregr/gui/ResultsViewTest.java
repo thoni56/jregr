@@ -5,15 +5,18 @@ import java.awt.Frame;
 import javax.swing.JTable;
 
 import junit.extensions.abbot.ComponentTestFixture;
+import org.junit.Test;
 
 public class ResultsViewTest extends ComponentTestFixture {
 
+	@Test
 	public void testHasResultsWindow() throws Exception {
 		ResultsView resultsWindow = givenAResultsView();
 		GuiTestUtilities gui = showGui(resultsWindow);
 		gui.findJPanel("Results");
 	}
 	
+	@Test
 	public void testHasTestCasesTable() throws Exception {
 		ResultsView resultsWindow = givenAResultsView();
 		GuiTestUtilities gui = showGui(resultsWindow);

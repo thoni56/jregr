@@ -11,6 +11,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
@@ -86,30 +87,35 @@ public class RegrDirectoryTest extends TestCase {
 		}
 	}
 
+	@Test
 	public void testDirectoryReturnsNoCasesForEmptyDirectoryWithoutCommandsFile() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(NO_FILENAMES));
 		
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithoutCommandsFile.getCases()));
 	}
 
+	@Test
 	public void testDirectoryReturnsNoCasesForEmptyDirectoryWithCommandsFile() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(NO_FILENAMES));
 		
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithCommandsFile.getCases()));
 	}
 
+	@Test
 	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingDefaultExtension() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_DEFAULT_EXTENSION));
 	
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithoutCommandsFile.getCases()));
 	}
 
+	@Test
 	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingExtension() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_EXTENSION));
 		
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithCommandsFile.getCases()));
 	}
 
+	@Test
 	public void testDirectoryReturnsOneCaseForDirectoryWithSingleFileMatchingDefaultExtension() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(ONE_FILENAME_WITH_DEFAULT_EXTENSION));
 
@@ -118,6 +124,7 @@ public class RegrDirectoryTest extends TestCase {
 		assertEquals(CASENAME1, cases[0].getName());
 	}
 
+	@Test
 	public void testDirectoryReturnsOneCaseForDirectoryWithSingleFileMatchingExtension() throws Exception {
 		when(mockedDirectoryWithCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(ONE_FILENAME_WITH_EXTENSION));
 
@@ -126,6 +133,7 @@ public class RegrDirectoryTest extends TestCase {
 		assertEquals(CASENAME1, cases[0].getName());
 	}
 
+	@Test
 	public void testDirectoryReturnsOneCaseForDirectoryWithOneFileMatchingAndOneFileNotMatchingDefaultExtension() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(TWO_FILENAMES_ONE_MATCHING_DEFAULT_EXTENSION));
 	
@@ -138,10 +146,12 @@ public class RegrDirectoryTest extends TestCase {
 		assertEquals(jregrFile, regrDirectoryWithCommandsFile.getCommandsFile());
 	}
 	
+	@Test
 	public void testRegrDirectoryShouldReturnOutputFile() throws Exception {
 		assertEquals(mockedFile, regrDirectoryWithoutCommandsFile.getOutputFile(CASENAME1));
 	}
 	
+	@Test
 	public void testCanSeeIfCaseFileExists() throws Exception {
 		assertTrue(regrDirectoryWithoutCommandsFile.hasCaseFile(CASENAME1));
 	}

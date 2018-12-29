@@ -3,6 +3,7 @@ package se.alanif.jregr.gui;
 import javax.swing.JPanel;
 
 import junit.extensions.abbot.ComponentTestFixture;
+import org.junit.Test;
 
 public class RegrViewTest extends ComponentTestFixture {
 
@@ -26,14 +27,17 @@ public class RegrViewTest extends ComponentTestFixture {
 		gui = showGui(regrView);
 	}
 
+	@Test
 	public void testHasRegrWindow() throws Exception {
 		gui.findJPanel("JRegr");
 	}
 
+	@Test
 	public void testHasRunButton() throws Exception {
 		gui.findButton("Run");
 	}
 
+	@Test
 	public void testAddsTheInjectedResultsPanel() throws Exception {
 		assertEquals(injectedResultsPanel, gui.findJPanel("Results"));
 	}

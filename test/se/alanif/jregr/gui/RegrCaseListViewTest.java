@@ -12,10 +12,13 @@ import se.alanif.jregr.exec.RegrCase;
 
 import junit.extensions.abbot.ComponentTestFixture;
 
+import org.junit.Test;
+
 public class RegrCaseListViewTest extends ComponentTestFixture {
 
 	private static final String REGR_CASE_NAME = "One RegrCase Name";
 
+	@Test
 	public void testCanDisplayAnEmptyModel() throws Exception {
 		DefaultListModel emptyModel = givenAnEmptyModel();
 		RegrCaseListView view = givenARegrCaseListViewWith(emptyModel);
@@ -23,6 +26,7 @@ public class RegrCaseListViewTest extends ComponentTestFixture {
 		gui.findJList("TestCases");
 	}
 	
+	@Test
 	public void testCanDisplayASingleRegrCase() throws Exception {
 		DefaultListModel modelWithOneRegrCase = new DefaultListModel();
 		RegrCase mockedCase = mock(RegrCase.class);
