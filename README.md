@@ -35,7 +35,7 @@ It should be read like:
 -   each test case is a file ending in `.sh`
 -   for each such file in this directory: run `sh` on it
 
-The pattern is
+The general pattern is
 
     <extension> ':' <command> [ '<' <input> ]
 
@@ -63,10 +63,31 @@ Running
 -------
 
 Navigate to a directory containing a `.jregr` configuration file and run
-`jregr`. With no options or arguments, `jregr` will run all test cases
-and report the progress on the standard output. Passing tests will
-disappear from view, while failing, suspended and ignored test cases
-will remain. Finally `jregr` will give a summary.
+
+    java -jar jregr.jar
+
+With no options or arguments, `jregr` will run all test cases and report the
+progress on the standard output. If you have an ANSI capable terminal *most
+these days), passing tests will disappear from view, while failing, suspended
+and ignored test cases will remain. Finally `jregr` will give a summary of the tests.
+
+To run a single test just add its full name as an argument.
+
+Of course you might want to wrap the java command inside a script, something like this
+
+    #! /bin/bash
+    d=`dirname "$0"`
+    uname=`uname -a`
+    if [[ "$uname" == *[Cc]ygwin* ]]; then
+      d=`cygpath -d "$d"`\\;
+    else
+      d=$d/;
+    fi
+    java -jar "$d"jregr.jar $@
+    exit
+
+This script also handles the case where you are running `jregr` from a cywin
+environment using your Windows java.
 
 Options
 -------
@@ -81,3 +102,12 @@ actual output there
 
 `-noansi` don't use ansi codes to erase passing tests from console
 output, so will show every test case as it runs
+
+Character Encodings
+-------------------
+
+Sometimes it might be important to preserve character encodings so that the
+expected output can be matched correctly. There is no option for this, instead
+use the Java VM option '-Dfile.encoding=<encoding>', like
+
+    java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar $@
