@@ -1,13 +1,28 @@
 package se.alanif.jregr.exec;
 
 import java.io.OutputStream;
+import java.io.File;
+import java.io.IOException;
 
 import se.alanif.jregr.exec.StreamGobbler;
 
 import junit.framework.TestCase;
+
+import org.junit.Before;
 import org.junit.Test;
 
 public class StreamGobblerTest extends TestCase {
+
+	@Before
+	public void setUp() throws Exception {
+		compile("stdout");
+		compile("99bottles");
+	}
+
+	private void compile(String program) throws IOException, InterruptedException {
+		Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("test"));
+		p.waitFor();
+	}
 	
 	@Test
 	public void testCanGobble1000Lines() throws Exception {

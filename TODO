@@ -1,2 +1,3 @@
 ✔ Remove source to set file encoding @done(18-12-30 12:30)
 ✔ Document java option -Dfile.encoding= @done(18-12-30 12:30)
+✔ Fix StreamGobbler tests to compile the dummy external programs @done(18-12-30 12:52)
