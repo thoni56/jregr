@@ -14,7 +14,7 @@ public class GuiReporter extends JPanel implements RegrReporter {
 
 	private static final long serialVersionUID = 1L;
 
-	private DefaultListModel model = new DefaultListModel();
+	private DefaultListModel<RegrCase> model = new DefaultListModel<RegrCase>();
 	private RegrCaseListView regrCaseListView;
 
 	public GuiReporter() {
