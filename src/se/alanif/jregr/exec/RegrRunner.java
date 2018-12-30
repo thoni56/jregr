@@ -13,7 +13,9 @@ import se.alanif.jregr.reporters.RegrReporter;
 
 public class RegrRunner {
 
-    public void runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName, CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+    public boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
+                        CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+        boolean success = true;
         reporter.start(suiteName, cases.length, commandLine);
         for (RegrCase theCase : cases) {
         	String csn = StandardCharsets.ISO_8859_1.toString();
@@ -29,12 +31,16 @@ public class RegrRunner {
             theCase.run(bindir, decoder, printWriter, new CaseRunner(), new ProcessBuilder());
             long end = System.currentTimeMillis();
             theCase.clean();
+            if (theCase.failed()) {
+                success = false;
+            }
 
             // TODO Until we use an XML framework we can't call starting() before the test because of the timing info
-            reporter.starting(theCase, end-start);
+            reporter.starting(theCase, end - start);
             reporter.report(theCase.status());
         }
         reporter.end();
+        return success;
     }
 
 }

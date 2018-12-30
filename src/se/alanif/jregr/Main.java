@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -119,27 +118,30 @@ public class Main {
 		return binDirectory;
 	}
 
-	private void core(String[] args) {
+	private boolean core(String[] args) {
 		OptionsManager optionManager = new OptionsManager();
 		HelpFormatter helpFormatter = new HelpFormatter();
+		boolean result = true;
 		try {
 			CommandLine commandLine = new DefaultParser().parse(optionManager, args);
 	
 			if (commandLine.hasOption("help")) {
 				helpFormatter.printHelp("jregr", optionManager);
 			} else
-				handleArgs(commandLine);			
+				result = handleArgs(commandLine);			
 	
 		} catch (ParseException e) {
 			System.out.println("Argument error - " + e.getMessage());
 			helpFormatter.printHelp("jregr", optionManager);
+			result = false;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return result;
 	}
 
-	private void handleArgs(CommandLine commandLine) throws FileNotFoundException, IOException {
+	// Return true if success
+	private boolean handleArgs(CommandLine commandLine) throws FileNotFoundException, IOException {
 		// Refactor: should not run the cases, but return a runner or null
 		Directory regressionDirectory = findRegressionDirectory(commandLine);
 		if (regressionDirectory != null) {
@@ -164,14 +166,15 @@ public class Main {
 						regrDirectory);
 				final String suiteName = commandLine.hasOption("dir") ? commandLine
 						.getOptionValue("dir") : regrDirectory.getName();
-				runner.runCases(cases, reporter, binDirectory, suiteName,
+				return runner.runCases(cases, reporter, binDirectory, suiteName,
 						decoder, commandLine);
 			} else {
 				wrongDirectory(commandLine.hasOption("gui"),
 						regrDirectory.toDirectory(), "has no Alan files to run");
-				System.exit(-1);
+				return false;
 			}
-		}
+		} else
+			return false;
 	}
 
 	private RegrCase[] addExplicitOrImplicitCases(CommandLine commandLine,
@@ -198,7 +201,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		new Main().core(args);
+		System.exit(new Main().core(args)?0:1);
 	}
 
 }

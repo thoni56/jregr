@@ -39,15 +39,14 @@ public class RegrRunnerTest extends TestCase {
 	}
 
 	@Test
-	public void testRunnerOnNoCasesShouldNotReportAnyTests() throws Exception {
-		int result = runner.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null);
-		
+	public void testRunnerOnNoCasesShouldNotReportAnyTestsWhichIsAPass() throws Exception {
+		assertTrue(runner.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null));
 		verify(mockedReporter, never()).starting(mockedCase, 0);
 	}
 
 	@Test
 	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
-		int result = runner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null);
+		assertTrue(runner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
 
 		verify(mockedReporter).starting(eq(mockedCase), anyInt());
 		verify(mockedReporter).report((State) anyObject());
@@ -57,7 +56,7 @@ public class RegrRunnerTest extends TestCase {
 	public void testRunCasesInADirectoryWithASingleCaseShouldRunOneCaseAndReport() throws Exception {
 		when(mockedRegrDirectory.getCases()).thenReturn(ONE_CASE);
 
-		int result = runner.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null );
+		runner.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null);
 		
 		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder)anyObject(), (PrintWriter)anyObject(), (CaseRunner)anyObject(), (ProcessBuilder)anyObject());
 		verify(mockedReporter).starting(eq(mockedCase), anyInt());
