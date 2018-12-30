@@ -1,2 +1,2 @@
-☐ Remove source to set file encoding
-☐ Document java option -Dfile.encoding=
+✔ Remove source to set file encoding @done(18-12-30 12:30)
+✔ Document java option -Dfile.encoding= @done(18-12-30 12:30)
