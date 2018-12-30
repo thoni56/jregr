@@ -117,7 +117,7 @@ public class RegrCase {
 			return isSuspended?State.SUSPENDED:State.VIRGIN;
 		if (!regrDirectory.hasExpectedFile(caseName) && regrDirectory.hasOutputFile(caseName))
 			return isSuspended?State.SUSPENDED:State.PENDING;
-		if (passed())
+		if (regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
 			return isSuspended?State.SUSPENDED_PASS:State.PASS;
 		return isSuspended?State.SUSPENDED_FAIL:State.FAIL;
 	}
