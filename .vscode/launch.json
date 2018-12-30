@@ -12,6 +12,36 @@
         },
         {
             "type": "java",
+            "name": "Jregr - saviour (pass)",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/alan/regression",
+            "args": [
+                "saviour.alan"
+            ],
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Jregr - entityHelp (suspended)",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/alan/regression",
+            "args": [
+                "entityHelp.alan"
+            ],
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Jregr - Alan regression",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/alan/regression",
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch)-Platform<Jregr>",
             "request": "launch",
             "mainClass": "abbot.Platform",
