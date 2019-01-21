@@ -152,7 +152,8 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	}
 
 	private void color(String color) {
-		System.out.print(CSI+color+"m");
+		if (!commandLine.hasOption("nocolor") && !commandLine.hasOption("nocolour"))
+			System.out.print(CSI+color+"m");
 	}
 
 	private void record(int count, String type, String typeColor) {
