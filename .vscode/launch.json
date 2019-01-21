@@ -15,7 +15,7 @@
             "name": "Jregr - saviour (pass)",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
-            "cwd": "/home/thoni/Utveckling/alan/regression",
+            "cwd": "$(workspaceFolder)/../Alan/alan/regression",
             "args": [
                 "saviour.alan"
             ],
