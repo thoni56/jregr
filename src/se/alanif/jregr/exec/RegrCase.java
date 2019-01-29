@@ -28,6 +28,7 @@ public class RegrCase {
 	}
 
 	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CaseRunner caseRunner, ProcessBuilder processBuilder) {
+		int linenumber = 1;
 		outputWriter.printf("########## %s ##########\n", caseName);
 		try {
 			do {
@@ -42,9 +43,12 @@ public class RegrCase {
 				}
 				String output = caseRunner.run(process, new StreamGobbler(process.getErrorStream()), new StreamGobbler(process.getInputStream()), inputPusher);
 				outputWriter.print(output);
+				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
-			// did not find the .input file, but that is no problem, only a virgin test case
+			// did not find the .input file, but that might not be a problem, could be a virgin test case
+			// but it could also be a mistake in the .jregr file, so print it...
+			outputWriter.print("Could not find input file for command line " + linenumber + " in .jregr file");
 		} catch (IOException e) {
 			fatal  = true;
 			outputWriter.print(e.getMessage());
@@ -132,7 +136,6 @@ public class RegrCase {
 	}
 
 	public boolean failed() {
-		State status = status();
 		return fatal || (!passed() && !suspended());
 	}
 
