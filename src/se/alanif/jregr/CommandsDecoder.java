@@ -46,6 +46,10 @@ public class CommandsDecoder {
         }
     }
 
+    public boolean usingDefault() {
+        return !jregrFileExists;
+    }
+
     private String[] splitIntoWords(String line) throws IOException {
         String[] split = line.split(" ");
         split = decodeStdin(split);
