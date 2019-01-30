@@ -34,6 +34,17 @@
         },
         {
             "type": "java",
+            "name": "Jregr - testname without extension",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/alan/regression",
+            "args": [
+                "entityHelp"
+            ],
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
             "name": "Jregr - Alan regression",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",

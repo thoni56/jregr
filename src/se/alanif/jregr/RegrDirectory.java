@@ -109,8 +109,10 @@ public class RegrDirectory {
 	private boolean isCaseName(String name) {
 		if (case_extension.length() == 0)
 			return false;
+		else if (name.endsWith(case_extension))
+			return true;
 		else
-			return name.endsWith(case_extension);
+			return directory.hasFile(name+case_extension);
 	}
 
 }
