@@ -127,17 +127,8 @@ public class RegrCase {
 		return isSuspended?State.SUSPENDED_FAIL:State.FAIL;
 	}
 
-	private boolean passed() {
-		return regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName);
-	}
-	
-	private boolean suspended() {
-		State state = status();
-		return state == State.SUSPENDED || state == State.SUSPENDED_FAIL || state == State.SUSPENDED_PASS;
-	}
-
 	public boolean failed() {
-		return fatal || (!passed() && !suspended());
+		return fatal || status() == State.FAIL;
 	}
 
 	public boolean exists() {
