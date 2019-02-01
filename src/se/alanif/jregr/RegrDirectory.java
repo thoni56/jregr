@@ -37,7 +37,10 @@ public class RegrDirectory {
 	}
 
 	private String stripExtension(String fileName) {
-		return fileName.substring(0, fileName.length()-case_extension.length());
+		if (fileName.endsWith(case_extension))
+			return fileName.substring(0, fileName.length()-case_extension.length());
+		else
+			return fileName;
 	}
 
 	public String getName() {
@@ -64,6 +67,7 @@ public class RegrDirectory {
 	}
 
 	public RegrCase[] getCases(String[] files) {
+		// Could be without extension if input from command line
 		ArrayList<RegrCase> cases = new ArrayList<RegrCase>();
 		if (files != null && files.length > 0) {
 			for (String filename : files) {

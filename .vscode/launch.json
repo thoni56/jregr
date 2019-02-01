@@ -34,6 +34,17 @@
         },
         {
             "type": "java",
+            "name": "Jregr - restricted_expression_nullified (truncated)",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/alan/regression",
+            "args": [
+                "restricted_expression_nullified"
+            ],
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
             "name": "Jregr - testname without extension",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
