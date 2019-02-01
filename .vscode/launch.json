@@ -45,6 +45,16 @@
         },
         {
             "type": "java",
+            "name": "Jregr - regression/tracing",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/alan/regression/tracing",
+            "args": [
+            ],
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
             "name": "Jregr - Alan regression",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
