@@ -8,12 +8,12 @@
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
                 <attribute name="Rsrc-Main-Class" value="se.alanif.jregr.Main"/>
                 <attribute name="Class-Path" value="."/>
-                <attribute name="Rsrc-Class-Path" value="./ mockito-all-1.8.2.jar junit.jar commons-cli-1.2.jar abbot.jar costello.jar"/>
+                <attribute name="Rsrc-Class-Path" value="./ mockito-all-1.8.2.jar junit.jar commons-cli-1.4.jar abbot.jar costello.jar"/>
             </manifest>
             <zipfileset src="jar-in-jar-loader.zip"/>
             <fileset dir="C:/Users/Thomas/workspace/JRegr/bin"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr" includes="mockito-all-1.8.2.jar"/>
-            <zipfileset dir="C:\Users\Thomas\workspace\JRegr\commons-cli-1.2" includes="commons-cli-1.2.jar"/>
+            <zipfileset dir="C:\Users\Thomas\workspace\JRegr\commons-cli-1.2" includes="commons-cli-1.4.jar"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr" includes="abbot.jar"/>
             <zipfileset dir="C:\Users\Thomas\workspace\JRegr" includes="costello.jar"/>
         </jar>

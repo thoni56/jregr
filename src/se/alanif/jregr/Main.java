@@ -98,9 +98,6 @@ public class Main {
 		} else {
 			directory = currentDirectory();
 		}
-		RegrDirectory regrDirectory = new RegrDirectory(directory, Runtime.getRuntime());
-		if (!regrDirectory.hasCases())
-			directory = selectRegrDirectory(currentDirectory());
 		return directory;
 	}
 
@@ -142,7 +139,7 @@ public class Main {
 
 	// Return true if success
 	private boolean handleArgs(CommandLine commandLine) throws FileNotFoundException, IOException {
-		// Refactor: should not run the cases, but return a runner or null
+		// TODO: Refactor - should not run the cases, but return a runner or null
 		Directory regressionDirectory = findRegressionDirectory(commandLine);
 		if (regressionDirectory != null) {
 			RegrDirectory regrDirectory = new RegrDirectory(
@@ -170,7 +167,7 @@ public class Main {
 						decoder, commandLine);
 			} else {
 				wrongDirectory(commandLine.hasOption("gui"),
-						regrDirectory.toDirectory(), "has no Alan files to run");
+						regrDirectory.toDirectory(), "has no test cases to run");
 				return false;
 			}
 		} else

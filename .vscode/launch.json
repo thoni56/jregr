@@ -34,6 +34,16 @@
         },
         {
             "type": "java",
+            "name": "Jregr - empty directory",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "/home/thoni/Utveckling/",
+            "args": [
+            ],
+            "projectName": "Jregr"
+        },
+        {
+            "type": "java",
             "name": "Jregr - restricted_expression_nullified (truncated)",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
