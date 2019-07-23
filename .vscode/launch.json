@@ -38,8 +38,7 @@
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
             "cwd": "/home/thoni/Utveckling/",
-            "args": [
-            ],
+            "args": [],
             "projectName": "Jregr"
         },
         {
@@ -70,8 +69,7 @@
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
             "cwd": "/home/thoni/Utveckling/alan/regression/tracing",
-            "args": [
-            ],
+            "args": [],
             "projectName": "Jregr"
         },
         {
@@ -81,6 +79,29 @@
             "mainClass": "se.alanif.jregr.Main",
             "cwd": "/home/thoni/Utveckling/alan/regression",
             "projectName": "Jregr"
+        },
+        {
+            "type": "java",
+            "name": "Jregr - Alan compiler testing",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/../Alan/alan/compiler/testing",
+            "projectName": "Jregr",
+            "args": [
+                "-bin",
+                "..",
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Jregr -version",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/../Alan/alan/compiler/testing",
+            "projectName": "Jregr",
+            "args": [
+                "-version"
+            ]
         },
         {
             "type": "java",
