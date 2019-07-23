@@ -26,12 +26,13 @@ import se.alanif.jregr.reporters.RegrReporter;
 import se.alanif.jregr.reporters.XMLReporter;
 
 public class Main {
+    private static final String JREGR_VERSION = "0.0.0";
 	
 	private void error(boolean usegui, final String message) {
 		if (usegui)
 			JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
 		else
-			System.out.println("Error: "+message);
+            System.out.println("Error: " + message);
 	}
 
 	private void wrongDirectory(boolean usegui, Directory directory, String reason) {
@@ -54,7 +55,8 @@ public class Main {
 		boolean correctSelection = false;
 		while (!correctSelection) {
 			correctSelection = true;
-			directory = chooseDirectory(directory.getAbsolutePath(), "Select directory of test cases", "Run Regressions");
+            directory = chooseDirectory(directory.getAbsolutePath(), "Select directory of test cases",
+                    "Run Regressions");
 			if (directory != null) {
 				RegrDirectory regrDirectory = new RegrDirectory(directory, Runtime.getRuntime());
 				if (!regrDirectory.hasCases()) {
@@ -72,10 +74,10 @@ public class Main {
 		boolean correctSelection = false;
 		while (!correctSelection) {
 			correctSelection = true;
-			directory = chooseDirectory(directory.getPath(), "Select directory for executable programs (Alan & Arun)", "Select");
+            directory = chooseDirectory(directory.getPath(), "Select directory for executable programs", "Select");
 			if (directory != null) {
 				if (!haveExecutables(directory, decoder)) {
-					wrongDirectory(true, directory, "does not have executable Alan and Arun programs");
+                    wrongDirectory(true, directory, "does not have executable programs");
 					correctSelection = false;
 				}
 			}
@@ -105,7 +107,7 @@ public class Main {
 		Directory binDirectory = null;
 		if (commandLine.hasOption("bin")) {
 			binDirectory = new Directory(commandLine.getOptionValue("bin"));
-		} else if (commandLine.hasOption("gui")){
+        } else if (commandLine.hasOption("gui")) {
 			binDirectory = selectBinDirectory(currentDirectory(), decoder);
 		}
 		if (binDirectory != null && !haveExecutables(binDirectory, decoder)) {
@@ -142,11 +144,9 @@ public class Main {
 		// TODO: Refactor - should not run the cases, but return a runner or null
 		Directory regressionDirectory = findRegressionDirectory(commandLine);
 		if (regressionDirectory != null) {
-			RegrDirectory regrDirectory = new RegrDirectory(
-					regressionDirectory, Runtime.getRuntime());
+            RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
 			final File commandsFile = regrDirectory.getCommandsFile();
-			CommandsDecoder decoder = new CommandsDecoder(
-					readerFor(commandsFile));
+            CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
 			Directory binDirectory = findBinDirectory(commandLine, decoder);
 			if (regrDirectory.hasCases()) {
 				RegrRunner runner = new RegrRunner();
@@ -155,27 +155,22 @@ public class Main {
 					reporter = new XMLReporter(regrDirectory.toDirectory());
 				else if (commandLine.hasOption("gui")) {
 					reporter = new GuiReporter();
-					SwingUtilities.invokeLater(new RegrView(
-							(JComponent) reporter));
+                    SwingUtilities.invokeLater(new RegrView((JComponent) reporter));
 				} else
 					reporter = new ConsoleReporter();
-				RegrCase[] cases = addExplicitOrImplicitCases(commandLine,
-						regrDirectory);
-				final String suiteName = commandLine.hasOption("dir") ? commandLine
-						.getOptionValue("dir") : regrDirectory.getName();
-				return runner.runCases(cases, reporter, binDirectory, suiteName,
-						decoder, commandLine);
+                RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
+                final String suiteName = commandLine.hasOption("dir") ? commandLine.getOptionValue("dir")
+                        : regrDirectory.getName();
+                return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
 			} else {
-				wrongDirectory(commandLine.hasOption("gui"),
-						regrDirectory.toDirectory(), "has no test cases to run");
+                wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
 				return false;
 			}
 		} else
 			return false;
 	}
 
-	private RegrCase[] addExplicitOrImplicitCases(CommandLine commandLine,
-			RegrDirectory regrDirectory) {
+    private RegrCase[] addExplicitOrImplicitCases(CommandLine commandLine, RegrDirectory regrDirectory) {
 		final String[] arguments = commandLine.getArgs();
 		RegrCase[] cases;
 		if (arguments.length > 0) {
@@ -198,7 +193,7 @@ public class Main {
 	}
 
 	public static void main(String[] args) {
-		System.exit(new Main().core(args)?0:1);
+        System.exit(new Main().core(args) ? 0 : 1);
 	}
 
 }

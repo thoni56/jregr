@@ -15,18 +15,11 @@ public class OptionsManager extends Options {
 		addOption("noansi", false, "don't use ANSI control on the console to minimize output");
 		addOption("nocolor", false, "don't use ANSI control on the console to color output");
 		addOption("nocolour", false, "don't use ANSI control on the console to colour output");
-		addOption(Option.builder("bin")
-								.longOpt("bin")
-							   	.desc("find binaries (alan, arun or according to the .jregr file) in directory BINDIR" )
-							   	.hasArg()
-							   	.argName("BINDIR")
+		addOption(Option.builder("bin").longOpt("bin")
+				.desc("find binaries (according to the .jregr file) in directory BINDIR").hasArg().argName("BINDIR")
 							   	.build());
-		addOption(Option.builder("dir")
-								.longOpt("dir")
-				   			   	.desc("directory of test cases to run")
-				   			   	.hasArg()
-				   			   	.argName("REGRDIR")
-				   			   	.build());
+		addOption(Option.builder("dir").longOpt("dir").desc("directory of test cases to run").hasArg()
+				.argName("REGRDIR").build());
 	}
 	
 }
