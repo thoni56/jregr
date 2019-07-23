@@ -46,6 +46,15 @@ each line having an <extension>, a <command> and an optional <input>.
 
 The actual output will be the total output of running all lines.
 
+Note1: that you should avoid using paths in the command. Better to use
+the `-bin` option to find executables that are not in the path.
+
+Note2: currently there is no way to use the `-bin` option more than
+once, so you have multiple executables you need to have them in the
+same directory.
+
+Note3: this might change, see TODO
+
 
 Configuration File Variables
 ----------------------------
@@ -73,7 +82,8 @@ and ignored test cases will remain. Finally `jregr` will give a summary of the t
 
 To run a single test just add its full name as an argument.
 
-Of course you might want to wrap the java command inside a script, something like this
+For convenience the execution is wrapped inside a script, `jregr`,
+which is something like this
 
     #! /bin/bash
     d=`dirname "$0"`
@@ -100,8 +110,9 @@ actual output there
 `-xml` create Junit/Ant compatible `xml`files instead of output to console
 (collect in Jenkins etc.)
 
-`-noansi` don't use ansi codes to erase passing tests from console
-output, so will show every test case as it runs
+`-noansi` don't overwrite passing test names from the console output (which
+is done using ANSI control codes), so will show the name of every test case
+as it runs
 
 Character Encodings
 -------------------

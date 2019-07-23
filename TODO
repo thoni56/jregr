@@ -1,3 +1,7 @@
+☐ Should possibly set CWD to the directory of the tests so that a relative path
+    in the .jregr can be followed wherever Jregr was run from
+☐ Recurse through directories, probably only follow directories that have .jregr 
+    files, but then make no error for directories not having tests since that might be an intermediate directory
 ✔ Remove source to set file encoding @done(18-12-30 12:30)
 ✔ Document java option -Dfile.encoding= @done(18-12-30 12:30)
 ✔ Fix StreamGobbler tests to compile the dummy external programs @done(18-12-30 12:52)
