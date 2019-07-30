@@ -10,8 +10,8 @@
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="/Users/thomas/Documents/workspace/JRegr/bin"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Users/thomas/Documents/workspace/JRegr/mockito-all-1.8.2.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="/Users/thomas/Documents/workspace/JRegr/commons-cli-1.2/commons-cli-1.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./mockito-all-1.8.2.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="./commons-cli-1.4/commons-cli-1.4.jar"/>
         </jar>
     </target>
 </project>
