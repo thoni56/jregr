@@ -21,19 +21,22 @@ public class XMLReporter extends AbstractRegrReporter {
 
 	private String suiteName;
 	private RegrCase theCase;
-	private PrintStream out = System.out;
+	private PrintStream xmlOutput = System.out;
 	private long millis;
 
 	public XMLReporter(Directory regrDirectory) throws FileNotFoundException {
 		File xmlFile = regrDirectory.getFile("TEST-jregr.xml");
 		OutputStream xmlStream = new FileOutputStream(xmlFile);
-		out = new PrintStream(xmlStream);
+		xmlOutput = new PrintStream(xmlStream);
+	}
+
+	public XMLReporter() {
 	}
 
 	public void start(String suiteName, int numberOfTests, CommandLine commandLine) {
 		this.suiteName = suiteName;
-		out.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
-		out.println("<testsuite name=\""+suiteName+"\">");
+		xmlOutput.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
+		xmlOutput.println("<testsuite name=\"" + suiteName + "\">");
 	}
 
 	public void starting(RegrCase caseName, long millis) {
@@ -44,48 +47,48 @@ public class XMLReporter extends AbstractRegrReporter {
 	public void fatal() {
 		fatal++;
 		header(theCase.getName(), millis);
-		out.println("    <error type=\"Fatal\" message=\"Case '"+theCase+"' failed to complete\">");
-		out.println("    </error>");
+		xmlOutput.println("    <error type=\"Fatal\" message=\"Case '" + theCase + "' failed to complete\">");
+		xmlOutput.println("    </error>");
 		tail();
 	}
 
 	public void virgin() {
 		virgin++;
 		header(theCase.getName(), millis);
-		out.println("    <error type=\"Virgin\" message=\"No input defined for case '"+theCase+"'\">");
-		out.println("      The file '"+theCase+".input' does not exist");
-		out.println("    </error>");
+		xmlOutput.println("    <error type=\"Virgin\" message=\"No input defined for case '" + theCase + "'\">");
+		xmlOutput.println("      The file '" + theCase + ".input' does not exist");
+		xmlOutput.println("    </error>");
 		tail();
 	}
 
 	public void pending() {
 		pending++;
 		header(theCase.getName(), millis);
-		out.println("    <error type=\"Pending\" message=\"No expected output defined for case '"+theCase+"'\">");
-		out.println("      The file '"+theCase+".expected' does not exist");
-		out.println("    </error>");
+		xmlOutput.println(
+				"    <error type=\"Pending\" message=\"No expected output defined for case '" + theCase + "'\">");
+		xmlOutput.println("      The file '" + theCase + ".expected' does not exist");
+		xmlOutput.println("    </error>");
 		tail();
 	}
 
 	public void fail() {
 		failing++;
 		header(theCase.getName(), millis);
-		out.println("    <failure message=\"Output does not match expected\">");
-		insertDiff(theCase, out);
-        out.println("    </failure>");
+		xmlOutput.println("    <failure message=\"Output does not match expected\">");
+		insertDiff(theCase, xmlOutput);
+		xmlOutput.println("    </failure>");
 		tail();
 	}
 
 	private void insertDiff(RegrCase theCase, PrintStream outputStream) {
-		out.println("        <![CDATA[Compared to the expected output, the actual has");
-		new Diff(out).doDiff(theCase.getExpectedFile(), theCase.getOutputFile());
+		xmlOutput.println("        <![CDATA[Compared to the expected output, the actual has");
 		outputStream.println("]]>");
 	}
 
 	public void pass() {
 		passing++;
 		header(theCase.getName(), millis);
-		insertExpectedOutput(theCase, out);
+		insertExpectedOutput(theCase, xmlOutput);
 		tail();
 	}
 
@@ -106,7 +109,7 @@ public class XMLReporter extends AbstractRegrReporter {
 	public void suspended() {
 		suspended++;
 		header(theCase.getName(), 0);
-		out.println("    <skipped />");
+		xmlOutput.println("    <skipped />");
 		tail();
 	}
 
@@ -119,15 +122,17 @@ public class XMLReporter extends AbstractRegrReporter {
 	}
 
 	public void end() {
-		out.println("</testsuite>");
+		xmlOutput.println("</testsuite>");
 	}
 
 	private void header(String caseName, long millis) {
-		out.println("  <testcase classname=\""+suiteName+"\" name=\""+caseName+"\" time=\""+(float)millis/1000+"\">");
+		xmlOutput.println("  <testcase classname=\"" + suiteName + "\" name=\"" + caseName + "\" time=\""
+				+ (float) millis / 1000 + "\">");
 	}
 
 	private void tail() {
-		out.println("  </testcase>");
+		xmlOutput.println("  </testcase>");
+	}
 	}
 
 }
