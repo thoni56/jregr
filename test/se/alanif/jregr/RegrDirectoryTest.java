@@ -1,6 +1,6 @@
 package se.alanif.jregr;
 
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -25,16 +25,18 @@ public class RegrDirectoryTest extends TestCase {
 	private static final String EXTENSION = ".extension";
 
 	private static final String CASENAME1 = "test1";
-	
-	private static final String CASEFILENAME_WITH_DEFAULT_EXTENSION_1 = CASENAME1+DEFAULT_EXTENSION;
-	private static final String CASEFILENAME_WITH_EXTENSION_1 = CASENAME1+EXTENSION;
+
+	private static final String CASEFILENAME_WITH_DEFAULT_EXTENSION_1 = CASENAME1 + DEFAULT_EXTENSION;
+	private static final String CASEFILENAME_WITH_EXTENSION_1 = CASENAME1 + EXTENSION;
 	private static final String FILENAME1 = "test1";
 	private static final String FILENAME2 = "file2";
 
 	private static final String[] NO_FILENAMES = new String[] {};
-	private static final String[] ONE_FILENAME_WITH_DEFAULT_EXTENSION = new String[] { CASEFILENAME_WITH_DEFAULT_EXTENSION_1 };
+	private static final String[] ONE_FILENAME_WITH_DEFAULT_EXTENSION = new String[] {
+			CASEFILENAME_WITH_DEFAULT_EXTENSION_1 };
 	private static final String[] ONE_FILENAME_WITH_EXTENSION = new String[] { CASEFILENAME_WITH_EXTENSION_1 };
-	private static final String[] TWO_FILENAMES_ONE_MATCHING_DEFAULT_EXTENSION = new String[] { CASEFILENAME_WITH_DEFAULT_EXTENSION_1, FILENAME2 };
+	private static final String[] TWO_FILENAMES_ONE_MATCHING_DEFAULT_EXTENSION = new String[] {
+			CASEFILENAME_WITH_DEFAULT_EXTENSION_1, FILENAME2 };
 	private static final String[] TWO_FILENAMES_NONE_MATCHING_DEFAULT_EXTENSION = new String[] { FILENAME1, FILENAME2 };
 	private static final String[] TWO_FILENAMES_NONE_MATCHING_EXTENSION = new String[] { FILENAME1, FILENAME2 };
 
@@ -46,29 +48,28 @@ public class RegrDirectoryTest extends TestCase {
 
 	private RegrDirectory regrDirectoryWithoutCommandsFile;
 	private RegrDirectory regrDirectoryWithCommandsFile;
-	
-	private File jregrFile = new File(RegrDirectory.COMMANDS_FILE_NAME);	
+
+	private File jregrFile = new File(RegrDirectory.COMMANDS_FILE_NAME);
 
 	private static final RegrCase[] NO_CASES = new RegrCase[] {};
 
-
 	protected void setUp() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.getFile(CASENAME1+".output")).thenReturn(mockedFile);
-		when(mockedDirectoryWithoutCommandsFile.hasFile(CASENAME1+DEFAULT_EXTENSION)).thenReturn(true);
+		when(mockedDirectoryWithoutCommandsFile.getFile(CASENAME1 + ".output")).thenReturn(mockedFile);
+		when(mockedDirectoryWithoutCommandsFile.hasFile(CASENAME1 + DEFAULT_EXTENSION)).thenReturn(true);
 		when(mockedDirectoryWithoutCommandsFile.getFile(RegrDirectory.COMMANDS_FILE_NAME)).thenReturn(null);
 
 		when(mockedDirectoryWithCommandsFile.getFile(RegrDirectory.COMMANDS_FILE_NAME)).thenReturn(jregrFile);
 
 		mockedFile.deleteOnExit();
-		
+
 		BufferedReader mockedBufferReader = mock(BufferedReader.class);
-		when(mockedDirectoryWithCommandsFile.getBufferedReaderForFile((File)anyObject())).thenReturn(mockedBufferReader);
-		when(mockedBufferReader.readLine()).thenReturn(EXTENSION+" : command");
+		when(mockedDirectoryWithCommandsFile.getBufferedReaderForFile((File) any())).thenReturn(mockedBufferReader);
+		when(mockedBufferReader.readLine()).thenReturn(EXTENSION + " : command");
 
 		regrDirectoryWithoutCommandsFile = new RegrDirectory(mockedDirectoryWithoutCommandsFile, mockedRuntime);
 		regrDirectoryWithCommandsFile = new RegrDirectory(mockedDirectoryWithCommandsFile, mockedRuntime);
 	}
-	
+
 	private class TestMatcher implements Answer<String[]> {
 		private String[] filenames;
 
@@ -89,35 +90,38 @@ public class RegrDirectoryTest extends TestCase {
 
 	@Test
 	public void testDirectoryReturnsNoCasesForEmptyDirectoryWithoutCommandsFile() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(NO_FILENAMES));
-		
+		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any())).thenAnswer(new TestMatcher(NO_FILENAMES));
+
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithoutCommandsFile.getCases()));
 	}
 
 	@Test
 	public void testDirectoryReturnsNoCasesForEmptyDirectoryWithCommandsFile() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(NO_FILENAMES));
-		
+		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any())).thenAnswer(new TestMatcher(NO_FILENAMES));
+
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithCommandsFile.getCases()));
 	}
 
 	@Test
 	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingDefaultExtension() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_DEFAULT_EXTENSION));
-	
+		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any()))
+				.thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_DEFAULT_EXTENSION));
+
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithoutCommandsFile.getCases()));
 	}
 
 	@Test
 	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingExtension() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_EXTENSION));
-		
+		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any()))
+				.thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_EXTENSION));
+
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithCommandsFile.getCases()));
 	}
 
 	@Test
 	public void testDirectoryReturnsOneCaseForDirectoryWithSingleFileMatchingDefaultExtension() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(ONE_FILENAME_WITH_DEFAULT_EXTENSION));
+		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any()))
+				.thenAnswer(new TestMatcher(ONE_FILENAME_WITH_DEFAULT_EXTENSION));
 
 		final RegrCase[] cases = regrDirectoryWithoutCommandsFile.getCases();
 		assertEquals(1, cases.length);
@@ -126,7 +130,8 @@ public class RegrDirectoryTest extends TestCase {
 
 	@Test
 	public void testDirectoryReturnsOneCaseForDirectoryWithSingleFileMatchingExtension() throws Exception {
-		when(mockedDirectoryWithCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(ONE_FILENAME_WITH_EXTENSION));
+		when(mockedDirectoryWithCommandsFile.list((FilenameFilter) any()))
+				.thenAnswer(new TestMatcher(ONE_FILENAME_WITH_EXTENSION));
 
 		final RegrCase[] cases = regrDirectoryWithCommandsFile.getCases();
 		assertEquals(1, cases.length);
@@ -134,9 +139,11 @@ public class RegrDirectoryTest extends TestCase {
 	}
 
 	@Test
-	public void testDirectoryReturnsOneCaseForDirectoryWithOneFileMatchingAndOneFileNotMatchingDefaultExtension() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) anyObject())).thenAnswer(new TestMatcher(TWO_FILENAMES_ONE_MATCHING_DEFAULT_EXTENSION));
-	
+	public void testDirectoryReturnsOneCaseForDirectoryWithOneFileMatchingAndOneFileNotMatchingDefaultExtension()
+			throws Exception {
+		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any()))
+				.thenAnswer(new TestMatcher(TWO_FILENAMES_ONE_MATCHING_DEFAULT_EXTENSION));
+
 		final RegrCase[] cases = regrDirectoryWithoutCommandsFile.getCases();
 		assertEquals(1, cases.length);
 		assertEquals(CASENAME1, cases[0].getName());
@@ -145,12 +152,12 @@ public class RegrDirectoryTest extends TestCase {
 	public void testRegrDirectoryReturnsJRegrFile() throws Exception {
 		assertEquals(jregrFile, regrDirectoryWithCommandsFile.getCommandsFile());
 	}
-	
+
 	@Test
 	public void testRegrDirectoryShouldReturnOutputFile() throws Exception {
 		assertEquals(mockedFile, regrDirectoryWithoutCommandsFile.getOutputFile(CASENAME1));
 	}
-	
+
 	@Test
 	public void testCanSeeIfCaseFileExists() throws Exception {
 		assertTrue(regrDirectoryWithoutCommandsFile.hasCaseFile(CASENAME1));

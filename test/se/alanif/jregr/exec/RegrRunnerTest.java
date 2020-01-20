@@ -1,6 +1,6 @@
 package se.alanif.jregr.exec;
 
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.PrintWriter;
@@ -22,7 +22,7 @@ public class RegrRunnerTest extends TestCase {
 
 	private static final RegrCase mockedCase = mock(RegrCase.class);
 	private static final RegrCase[] NO_CASES = new RegrCase[] {};
-	private static final RegrCase[] ONE_CASE = new RegrCase[] {mockedCase};
+	private static final RegrCase[] ONE_CASE = new RegrCase[] { mockedCase };
 
 	private RegrDirectory mockedRegrDirectory = mock(RegrDirectory.class);
 	private RegrReporter mockedReporter = mock(RegrReporter.class);
@@ -49,7 +49,7 @@ public class RegrRunnerTest extends TestCase {
 		assertTrue(runner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
 
 		verify(mockedReporter).starting(eq(mockedCase), anyInt());
-		verify(mockedReporter).report((State) anyObject());
+		verify(mockedReporter).report((State) any());
 	}
 
 	@Test
@@ -57,10 +57,11 @@ public class RegrRunnerTest extends TestCase {
 		when(mockedRegrDirectory.getCases()).thenReturn(ONE_CASE);
 
 		runner.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null);
-		
-		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder)anyObject(), (PrintWriter)anyObject(), (CaseRunner)anyObject(), (ProcessBuilder)anyObject());
+
+		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CaseRunner) any(),
+				(ProcessBuilder) any());
 		verify(mockedReporter).starting(eq(mockedCase), anyInt());
-		verify(mockedReporter).report((State) anyObject());
+		verify(mockedReporter).report((State) any());
 	}
-	
+
 }
