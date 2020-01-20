@@ -98,7 +98,7 @@ public class XMLReporter extends AbstractRegrReporter {
 			BufferedReader expectedReader = new BufferedReader(new FileReader(theCase.getExpectedFile()));
 			String line = "";
 			while ((line = expectedReader.readLine()) != null)
-					outputStream.println(line);
+				outputStream.println(line);
 			expectedReader.close();
 		} catch (FileNotFoundException e) {
 		} catch (IOException e) {
@@ -133,6 +133,9 @@ public class XMLReporter extends AbstractRegrReporter {
 	private void tail() {
 		xmlOutput.println("  </testcase>");
 	}
+
+	public String removeControlCharactersFrom(String inputString) {
+		return inputString;
 	}
 
 }
