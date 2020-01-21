@@ -94,6 +94,18 @@
         },
         {
             "type": "java",
+            "name": "Jregr - Alan compiler -xml verbose",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/../Alan/alan/compiler/testing/arguments",
+            "projectName": "Jregr",
+            "args": [
+                "-xml",
+                "verbose"
+            ]
+        },
+        {
+            "type": "java",
             "name": "Jregr -version",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
