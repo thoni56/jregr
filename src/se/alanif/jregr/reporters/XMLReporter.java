@@ -31,6 +31,7 @@ public class XMLReporter extends AbstractRegrReporter {
 		xmlOutput = new PrintStream(xmlStream);
 	}
 
+	// No arguments constructor for tests
 	public XMLReporter() {
 	}
 
@@ -89,7 +90,7 @@ public class XMLReporter extends AbstractRegrReporter {
 		File outputFile = theCase.getOutputFile();
 		String output = outputFile.getContent();
 		if (output.matches(CONTROL_CHARACTER_REGEX)) {
-			// Need to create a new file because of Diff API
+			// Need to create a new file because Diff API is (File, File)
 			java.io.File tempFile = null;
 			try {
 				output = output.replaceAll(xml10pattern, "");
@@ -153,7 +154,7 @@ public class XMLReporter extends AbstractRegrReporter {
 	}
 
 	public String removeControlCharactersFrom(String inputString) {
-		return inputString.replaceAll("\b", "");
+		return inputString.replaceAll(CONTROL_CHARACTER_REGEX, "");
 	}
 
 }
