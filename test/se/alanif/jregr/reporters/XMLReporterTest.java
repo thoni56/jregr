@@ -14,4 +14,14 @@ public class XMLReporterTest extends TestCase {
 		assertEquals(inputString, outputString);
 	}
 
+	@Test
+	public void testCanRemoveAnyControlCharacterFromStringWithBackspace() throws Exception {
+		XMLReporter reporter = new XMLReporter();
+		String inputString = "absdloeiruLJD\bSJKDLHK";
+		String expectedString = "absdloeiruLJDSJKDLHK";
+		String outputString = reporter.removeControlCharactersFrom(inputString);
+
+		assertEquals(expectedString, outputString);
+	}
+
 }

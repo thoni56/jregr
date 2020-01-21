@@ -19,6 +19,7 @@ import se.alanif.jregr.io.File;
 
 public class XMLReporter extends AbstractRegrReporter {
 
+	private static final String CONTROL_CHARACTER_REGEX = "[\\p{Cntrl}&&[^\r\n\t]]";
 	private String suiteName;
 	private RegrCase theCase;
 	private PrintStream xmlOutput = System.out;
@@ -80,8 +81,25 @@ public class XMLReporter extends AbstractRegrReporter {
 		tail();
 	}
 
+	private static String xml10pattern = "[^" + "\u0009\r\n" + "\u0020-\uD7FF" + "\uE000-\uFFFD"
+			+ "\ud800\udc00-\udbff\udfff" + "]";
+
 	private void insertDiff(RegrCase theCase, PrintStream outputStream) {
 		xmlOutput.println("        <![CDATA[Compared to the expected output, the actual has");
+		File outputFile = theCase.getOutputFile();
+		String output = outputFile.getContent();
+		if (output.matches(CONTROL_CHARACTER_REGEX)) {
+			// Need to create a new file because of Diff API
+			java.io.File tempFile = null;
+			try {
+				output = output.replaceAll(xml10pattern, "");
+				tempFile = File.createTempFile("jregr", "output");
+			} catch (IOException e) {
+				xmlOutput.println("FATAL - Could not create temporary file");
+			}
+			new Diff(xmlOutput).doDiff(theCase.getExpectedFile(), tempFile);
+		} else
+			new Diff(xmlOutput).doDiff(theCase.getExpectedFile(), theCase.getOutputFile());
 		outputStream.println("]]>");
 	}
 
@@ -135,7 +153,7 @@ public class XMLReporter extends AbstractRegrReporter {
 	}
 
 	public String removeControlCharactersFrom(String inputString) {
-		return inputString;
+		return inputString.replaceAll("\b", "");
 	}
 
 }
