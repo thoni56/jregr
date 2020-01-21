@@ -23,12 +23,13 @@ public class StreamGobblerTest extends TestCase {
 		Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("test"));
 		p.waitFor();
 	}
-	
+
 	@Test
 	public void testCanGobble1000Lines() throws Exception {
-		Process p = Runtime.getRuntime().exec("test/stdout"); // This program has to be a native Windows program, cygwin doesn't work!!!
+		Process p = Runtime.getRuntime().exec("test/stdout"); // This program has to be a native Windows program, cygwin
+																// doesn't work!!!
 		StreamGobbler gobbler = new StreamGobbler(p.getInputStream());
-		
+
 		gobbler.start();
 		p.waitFor();
 		gobbler.join();
@@ -37,7 +38,7 @@ public class StreamGobblerTest extends TestCase {
 		int count = input.split("\n").length;
 		assertEquals(1000, count);
 	}
-	
+
 	@Test
 	public void testCanGobbleAllOf99BottlesAndSendInput() throws Exception {
 		Process p = Runtime.getRuntime().exec("test/99bottles");
@@ -51,7 +52,7 @@ public class StreamGobblerTest extends TestCase {
 		gobbler.start();
 		p.waitFor();
 		gobbler.join();
-		
+
 		String input = gobbler.output();
 		int count = input.split("\n").length;
 		assertEquals(499, count);

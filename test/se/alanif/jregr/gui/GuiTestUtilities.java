@@ -33,11 +33,13 @@ public class GuiTestUtilities {
 		this.finder = finder;
 		this.container = container;
 	}
-	
-	public JOptionPane findDialog(final String partialMessage) throws ComponentNotFoundException, MultipleComponentsFoundException {
+
+	public JOptionPane findDialog(final String partialMessage)
+			throws ComponentNotFoundException, MultipleComponentsFoundException {
 		return (JOptionPane) finder.find(container, new Matcher() {
 			public boolean matches(Component c) {
-				return c instanceof JOptionPane && ((JOptionPane)c).getMessage().toString().indexOf(partialMessage)>=0;
+				return c instanceof JOptionPane
+						&& ((JOptionPane) c).getMessage().toString().indexOf(partialMessage) >= 0;
 			}
 		});
 	}
@@ -51,33 +53,33 @@ public class GuiTestUtilities {
 	}
 
 	public JComboBox findComboBox(final String name) throws Exception {
-		return (JComboBox)finder.find(container, new Matcher() {
+		return (JComboBox) finder.find(container, new Matcher() {
 			public boolean matches(Component c) {
-				return c instanceof JComboBox && ((JComboBox)c).getName().equals(name);
+				return c instanceof JComboBox && ((JComboBox) c).getName().equals(name);
 			}
 		});
 	}
 
 	public JTextArea findTextArea(final String fieldName) throws Exception {
-		return (JTextArea)finder.find(container, new Matcher() {
+		return (JTextArea) finder.find(container, new Matcher() {
 			public boolean matches(Component c) {
-				return c instanceof JTextArea && ((JTextArea)c).getName().equals(fieldName);
+				return c instanceof JTextArea && ((JTextArea) c).getName().equals(fieldName);
 			}
 		});
 	}
 
 	public JTextField findTextField(final String fieldName) throws Exception {
-		return (JTextField)finder.find(container, new Matcher() {
+		return (JTextField) finder.find(container, new Matcher() {
 			public boolean matches(Component c) {
-				return c instanceof JTextField && ((JTextField)c).getName().equals(fieldName);
+				return c instanceof JTextField && ((JTextField) c).getName().equals(fieldName);
 			}
 		});
 	}
 
 	public JLabel findLabel(final String label) throws Exception {
-		return (JLabel)finder.find(container, new Matcher() {
+		return (JLabel) finder.find(container, new Matcher() {
 			public boolean matches(Component c) {
-				return c instanceof JLabel && ((JLabel)c).getText().equals(label);
+				return c instanceof JLabel && ((JLabel) c).getText().equals(label);
 			}
 		});
 	}
@@ -89,28 +91,28 @@ public class GuiTestUtilities {
 			}
 		});
 	}
-	
+
 	public JTable findJTable(final String name) throws ComponentNotFoundException, MultipleComponentsFoundException {
-		return (JTable)finder.find(container, new Matcher() {
-		    public boolean matches(Component c) {
-		        return c instanceof JTable && ((JTable)c).getName() == name;
-		    }
+		return (JTable) finder.find(container, new Matcher() {
+			public boolean matches(Component c) {
+				return c instanceof JTable && ((JTable) c).getName() == name;
+			}
 		});
 	}
 
 	public JPanel findJPanel(final String name) throws ComponentNotFoundException, MultipleComponentsFoundException {
-		return (JPanel)finder.find(container, new Matcher() {
+		return (JPanel) finder.find(container, new Matcher() {
 			public boolean matches(Component c) {
-				return c instanceof JPanel && ((JPanel)c).getName() == name;
+				return c instanceof JPanel && ((JPanel) c).getName() == name;
 			}
 		});
 	}
 
 	public JList findJList(final String name) throws ComponentNotFoundException, MultipleComponentsFoundException {
-		return (JList)finder.find(container, new Matcher() {
-		    public boolean matches(Component c) {
-		        return c instanceof JList && ((JList)c).getName() == name;
-		    }
+		return (JList) finder.find(container, new Matcher() {
+			public boolean matches(Component c) {
+				return c instanceof JList && ((JList) c).getName() == name;
+			}
 		});
 	}
 
@@ -158,4 +160,3 @@ public class GuiTestUtilities {
 	}
 
 }
-
