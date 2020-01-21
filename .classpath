@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="bin" path="src"/>
-	<classpathentry kind="src" output="test-bin" path="test">
-		<attributes>
-			<attribute name="test" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="src" path="src" output="bin" />
+	<classpathentry kind="src" path="test" output="bin" />
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.4/commons-cli-1.4.jar" sourcepath="lib/commons-cli-1.4/commons-cli-1.4-sources.jar"/>
 	<classpathentry kind="lib" path="lib/mockito-core-3.2.4.jar"/>
@@ -14,5 +10,4 @@
 	<classpathentry kind="lib" path="lib/costello.jar"/>
 	<classpathentry kind="lib" path="lib/abbot.jar"/>
 	<classpathentry kind="lib" path="lib/junit-4.10.jar"/>
-	<classpathentry kind="output" path="bin"/>
 </classpath>
