@@ -1,3 +1,4 @@
+☐ Remove any non-XML-compliant characters when generating XML-file
 ☐ Should possibly set CWD to the directory of the tests so that a relative path
     in the .jregr can be followed wherever Jregr was run from
 ☐ Recurse through directories, probably only follow directories that have .jregr 
