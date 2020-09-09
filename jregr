@@ -6,7 +6,8 @@
 #
 # Also this version explicitly set encoding to iso-8859-1, YMVV
 #
-d=`dirname "$0"`
+d=`realpath "$0"`
+d=`dirname "$d"`
 uname=`uname -a`
 if [[ "$uname" == *[Cc]ygwin* ]]; then
   d=`cygpath -d "$d"`\\;
