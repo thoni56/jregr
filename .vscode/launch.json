@@ -106,6 +106,17 @@
         },
         {
             "type": "java",
+            "name": "Jregr - IMP DOL",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/../ToolMaker/src/imp/testing/DOL",
+            "projectName": "Jregr",
+            "args": [
+                "-xml"
+            ]
+        },
+        {
+            "type": "java",
             "name": "Jregr -version",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",

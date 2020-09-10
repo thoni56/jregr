@@ -1,5 +1,4 @@
-JRegr - a Regression tester in Java
-===================================
+# JRegr - a Regression tester in Java
 
 Very often you want to automatically run a program with certain inputs
 and compare that to some known output.
@@ -8,8 +7,7 @@ There are some tools to do this already, like DejaGnu, Expect etc., but
 for some reason or other these did not fit my purpose, or possibly
 taste.
 
-Synopsis
---------
+## Synopsis
 
 In a configuration file per directory, `.jregr`, you specify a pattern
 for what is considered a test case, and the command(s) that should be
@@ -22,13 +20,11 @@ extension `.expected`.
 
 If they are identical the test case passed, if not it failed.
 
-Format of configuration file
-----------------------------
+## Format of configuration file
 
-Possibly, the following is the simplest configuration file
-imaginable:
+The following is the simplest configuration file imaginable:
 
-    .sh: sh $1.sh
+    .sh : sh $1.sh
 
 It should be read like:
 
@@ -39,10 +35,13 @@ The general pattern is
 
     <extension> ':' <command> [ '<' <input> ]
 
-If the `<` is present, Jregr will try to find a file as specified
-after it and use that as the standard input to the `<command>`.  It is
-possible to have multiple lines, which will be run in sequence, with
-each line having an <extension>, a <command> and an optional <input>.
+The elements are space separated, so e.g. you need a space between
+`<extension>` and the `:`.
+
+If the `<` is present, Jregr will try to find a filename after it and
+use that as the standard input to the `<command>`.  It is possible to
+have multiple lines, which will be run in sequence, with each line
+having an `<extension>`, a `<command>` and an optional `<input>`.
 
 The actual output will be the total output of running all lines.
 
@@ -55,9 +54,16 @@ same directory.
 
 Note3: this might change, see TODO
 
+## Limitations of commands
 
-Configuration File Variables
-----------------------------
+The command is executed with Javas `Runtime.exec()` so it must be
+directly executable (e.g. shell scripts might be on some platforms but
+not on others) and it does not handle wildcards or pipes. This might
+still work but is not by design but an effect of how Java on that OS
+performes the `exec()` call. E.g. with a Windows Java it won't work,
+but might on Linux et.al.
+
+## Configuration File Variables
 
 There are some 'variables' available for use in the configuration
 file:
@@ -68,19 +74,28 @@ the extension on the first line in the configuration file
 `$2` - the complete file name for the file matching the extension on
 the current line
 
-Running
--------
+So actually the shortest possible `.jregr` file is:
+
+    .sh : sh $2
+    
+Since `$2` is the complete testname matched with the extension `.sh`
+it will be the same as the testname with the extension concatenated at
+the end.
+
+## Running
 
 Navigate to a directory containing a `.jregr` configuration file and run
 
     java -jar jregr.jar
 
-With no options or arguments, `jregr` will run all test cases and report the
-progress on the standard output. If you have an ANSI capable terminal *most
-these days), passing tests will disappear from view, while failing, suspended
-and ignored test cases will remain. Finally `jregr` will give a summary of the tests.
+With no options or arguments, `jregr` will run all test cases and
+report the progress on the standard output. If you have an ANSI
+capable terminal (most are these days), passing tests will disappear
+from view, while failing, suspended and ignored test cases will remain
+visible. Finally `jregr` will give a summary of the number of tests
+run.
 
-To run a single test just add its full name as an argument.
+You can run a single test by just adding its full name as an argument.
 
 For convenience the execution is wrapped inside a script, `jregr`,
 which is something like this
