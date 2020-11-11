@@ -1,6 +1,6 @@
 package se.alanif.jregr.exec;
 
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.PrintWriter;
@@ -48,8 +48,7 @@ public class RegrRunnerTest extends TestCase {
 	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
 		assertTrue(runner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
 
-		verify(mockedReporter).starting(eq(mockedCase), anyInt());
-		verify(mockedReporter).report((State) any());
+		verify(mockedReporter).starting(eq(mockedCase), longThat(millis -> millis == 0));
 	}
 
 	@Test
@@ -60,7 +59,7 @@ public class RegrRunnerTest extends TestCase {
 
 		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CaseRunner) any(),
 				(ProcessBuilder) any());
-		verify(mockedReporter).starting(eq(mockedCase), anyInt());
+		verify(mockedReporter).starting(eq(mockedCase), longThat(millis -> millis == 0));
 		verify(mockedReporter).report((State) any());
 	}
 
