@@ -104,16 +104,8 @@ public class RegrDirectoryTest extends TestCase {
 	}
 
 	@Test
-	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingDefaultExtension() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any()))
-				.thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_DEFAULT_EXTENSION));
-
-		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithoutCommandsFile.getCases()));
-	}
-
-	@Test
-	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingExtension() throws Exception {
-		when(mockedDirectoryWithoutCommandsFile.list((FilenameFilter) any()))
+	public void testDirectoryReturnsNoCasesForDirectoryWithNoFileMatchingExplicitExtension() throws Exception {
+		when(mockedDirectoryWithCommandsFile.list((FilenameFilter) any()))
 				.thenAnswer(new TestMatcher(TWO_FILENAMES_NONE_MATCHING_EXTENSION));
 
 		assertTrue(Arrays.equals(NO_CASES, regrDirectoryWithCommandsFile.getCases()));
