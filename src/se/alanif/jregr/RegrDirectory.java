@@ -19,7 +19,7 @@ public class RegrDirectory {
 	private String case_extension;
 
 	private Directory directory;
-	
+
 	private FilenameFilter caseNameFilter = new FilenameFilter() {
 		public boolean accept(java.io.File dir, String name) {
 			return isCaseName(name);
@@ -38,7 +38,7 @@ public class RegrDirectory {
 
 	private String stripExtension(String fileName) {
 		if (fileName.endsWith(case_extension))
-			return fileName.substring(0, fileName.length()-case_extension.length());
+			return fileName.substring(0, fileName.length() - case_extension.length());
 		else
 			return fileName;
 	}
@@ -87,27 +87,27 @@ public class RegrDirectory {
 	}
 
 	public boolean hasOutputFile(String caseName) {
-		return directory.hasFile(caseName+OUTPUT_EXTENSION);
+		return directory.hasFile(caseName + OUTPUT_EXTENSION);
 	}
 
 	public boolean hasExpectedFile(String caseName) {
-		return directory.hasFile(caseName+EXPECTED_EXTENSION);
+		return directory.hasFile(caseName + EXPECTED_EXTENSION);
 	}
 
 	public boolean hasSuspendedFile(String caseName) {
-		return directory.hasFile(caseName+SUSPENDED_EXTENSION);
+		return directory.hasFile(caseName + SUSPENDED_EXTENSION);
 	}
 
 	public File getOutputFile(String caseName) {
-		return directory.getFile(caseName+OUTPUT_EXTENSION);
+		return directory.getFile(caseName + OUTPUT_EXTENSION);
 	}
 
 	public File getExpectedFile(String caseName) {
-		return directory.getFile(caseName+EXPECTED_EXTENSION);
+		return directory.getFile(caseName + EXPECTED_EXTENSION);
 	}
 
 	public boolean hasCaseFile(String caseName) {
-		return directory.hasFile(caseName+case_extension);
+		return directory.hasFile(caseName + case_extension);
 	}
 
 	private boolean isCaseName(String name) {
@@ -116,7 +116,7 @@ public class RegrDirectory {
 		else if (name.endsWith(case_extension))
 			return true;
 		else
-			return directory.hasFile(name+case_extension);
+			return directory.hasFile(name + case_extension);
 	}
 
 }

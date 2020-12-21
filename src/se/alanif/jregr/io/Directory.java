@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 
 import se.alanif.jregr.CommandsDecoder;
-import se.alanif.jregr.io.File;
 
 public class Directory extends File {
 
@@ -16,7 +15,7 @@ public class Directory extends File {
 	private static final long serialVersionUID = 1L;
 
 	public boolean executableExist(String name) {
-		return hasFile(name) || hasFile(name+".exe");
+		return hasFile(name) || hasFile(name + ".exe");
 	}
 
 	public boolean hasFile(String fileName) {
@@ -24,13 +23,13 @@ public class Directory extends File {
 	}
 
 	public File getFile(String fileName) {
-		return new File(getAbsolutePath()+separator+fileName);
+		return new File(getAbsolutePath() + separator + fileName);
 	}
 
 	public boolean executablesExist(CommandsDecoder decoder) {
 		decoder.reset();
 		do {
-			if (hasFile(decoder.getCommand()) || hasFile(decoder.getCommand()+".exe"))
+			if (hasFile(decoder.getCommand()) || hasFile(decoder.getCommand() + ".exe"))
 				return true;
 		} while (decoder.advance());
 		return false;
