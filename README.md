@@ -45,23 +45,20 @@ having an `<extension>`, a `<command>` and an optional `<input>`.
 
 The actual output will be the total output of running all lines.
 
-Note1: that you should avoid using paths in the command. Better to use
-the `-bin` option to find executables that are not in the path.
+Note1: you should avoid using paths in the command. Better to use the `-bin` option to find executables that are not in the path.
 
-Note2: currently there is no way to use the `-bin` option more than
-once, so you have multiple executables you need to have them in the
-same directory.
+Note2: currently there is no way to use the `-bin` option more than once, so if you need multiple executables they must exist in the same directory (for now).
 
-Note3: this might change, see TODO
 
 ## Limitations of commands
 
 The command is executed with Javas `Runtime.exec()` so it must be
-directly executable (e.g. shell scripts might be on some platforms but
-not on others) and it does not handle wildcards or pipes. This might
+directly executable (e.g. shell scripts might be executable on some platforms but
+are not on others) and it does not handle wildcards or pipes. This might
 still work but is not by design but an effect of how Java on that OS
-performes the `exec()` call. E.g. with a Windows Java it won't work,
-but might on Linux et.al.
+happens to perform the `exec()` call. E.g. with a Windows Java it won't
+work, but might on Linux et.al.
+
 
 ## Configuration File Variables
 
@@ -74,13 +71,16 @@ the extension on the first line in the configuration file
 `$2` - the complete file name for the file matching the extension on
 the current line
 
-So actually the shortest possible `.jregr` file is:
+So actually the shortest possible `.jregr` file is something like:
 
     .sh : sh $2
     
 Since `$2` is the complete testname matched with the extension `.sh`
 it will be the same as the testname with the extension concatenated at
 the end.
+
+(Except that 'sh' does not exist on all platforms...)
+
 
 ## Running
 
@@ -122,8 +122,8 @@ Options
 `-dir` find testcases and expected output in this directory, also write
 actual output there
 
-`-xml` create Junit/Ant compatible `xml`files instead of output to console
-(collect in Jenkins etc.)
+`-xml` create Junit/Ant compatible `xml` files instead of output to console
+(to collect in Jenkins etc.)
 
 `-noansi` don't overwrite passing test names from the console output (which
 is done using ANSI control codes), so will show the name of every test case
