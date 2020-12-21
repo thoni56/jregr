@@ -9,14 +9,12 @@ import se.alanif.jregr.io.File;
 
 public class RegrDirectory {
 
-	private static final long serialVersionUID = 1L;
-
 	public static final String COMMANDS_FILE_NAME = ".jregr";
 
 	private static final String OUTPUT_EXTENSION = ".output";
 	private static final String SUSPENDED_EXTENSION = ".suspended";
 	private static final String EXPECTED_EXTENSION = ".expected";
-	private String case_extension;
+	private String caseExtension;
 
 	private Directory directory;
 
@@ -33,12 +31,12 @@ public class RegrDirectory {
 		this.runtime = runtime;
 		CommandsDecoder commandsDecoder = new CommandsDecoder(directory.getBufferedReaderForFile(getCommandsFile()));
 		commandsDecoder.reset();
-		case_extension = commandsDecoder.getExtension();
+		caseExtension = commandsDecoder.getExtension();
 	}
 
 	private String stripExtension(String fileName) {
-		if (fileName.endsWith(case_extension))
-			return fileName.substring(0, fileName.length() - case_extension.length());
+		if (fileName.endsWith(caseExtension))
+			return fileName.substring(0, fileName.length() - caseExtension.length());
 		else
 			return fileName;
 	}
@@ -107,16 +105,16 @@ public class RegrDirectory {
 	}
 
 	public boolean hasCaseFile(String caseName) {
-		return directory.hasFile(caseName + case_extension);
+		return directory.hasFile(caseName + caseExtension);
 	}
 
 	private boolean isCaseName(String name) {
-		if (case_extension.length() == 0)
+		if (caseExtension.length() == 0)
 			return false;
-		else if (name.endsWith(case_extension))
+		else if (name.endsWith(caseExtension))
 			return true;
 		else
-			return directory.hasFile(name + case_extension);
+			return directory.hasFile(name + caseExtension);
 	}
 
 }
