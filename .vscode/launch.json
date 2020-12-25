@@ -6,12 +6,6 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Launch) - Current File",
-            "request": "launch",
-            "mainClass": "${file}"
-        },
-        {
-            "type": "java",
             "name": "Jregr - saviour (pass)",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
@@ -124,6 +118,18 @@
             "projectName": "Jregr",
             "args": [
                 "-version"
+            ]
+        },
+        {
+            "type": "java",
+            "name": "Jregr -dir should cd to dir",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}",
+            "projectName": "Jregr",
+            "args": [
+                "-dir",
+                "test/examples"
             ]
         },
         {
