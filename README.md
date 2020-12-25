@@ -137,11 +137,3 @@ expected output can be matched correctly. There is no option for this, instead
 use the Java VM option '-Dfile.encoding=<encoding>', like
 
     java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar $@
-
-    
-# TODO
-
-- Allow empty .jregr files
-- Recurse through directories (-r option or default)
-- An empty .jregr file should signify the re-use/inherited rules from above directory
-- Ensure -bin directory is always given relative to the current directory - will force adding directory parts while recursing
