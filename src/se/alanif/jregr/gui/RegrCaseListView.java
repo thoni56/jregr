@@ -10,7 +10,7 @@ import javax.swing.ListCellRenderer;
 
 import se.alanif.jregr.exec.RegrCase;
 
-public class RegrCaseListView extends JList {
+public class RegrCaseListView extends JList<RegrCase> {
 
 	public class RegrCaseCellRenderer extends JLabel implements ListCellRenderer {
 
@@ -44,6 +44,8 @@ public class RegrCaseListView extends JList {
 				setBackground(Color.YELLOW);
 				setForeground(Color.GREEN);
 				break;
+			default:
+				break;
 			}
 			setText(theCase.getName());
 			return this;
@@ -53,7 +55,7 @@ public class RegrCaseListView extends JList {
 
 	private static final long serialVersionUID = 1L;
 
-	public RegrCaseListView(DefaultListModel model) {
+	public RegrCaseListView(DefaultListModel<RegrCase> model) {
 		setModel(model);
 		setName("TestCases");
 		setCellRenderer(new RegrCaseCellRenderer());

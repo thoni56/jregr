@@ -3,7 +3,6 @@ package se.alanif.jregr.io;
 import java.io.BufferedReader;
 
 import se.alanif.jregr.CommandsDecoder;
-import se.alanif.jregr.io.Directory;
 import junit.framework.TestCase;
 import org.junit.Test;
 import static org.mockito.Mockito.*;

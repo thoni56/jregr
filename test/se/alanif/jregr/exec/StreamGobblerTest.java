@@ -4,8 +4,6 @@ import java.io.OutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import se.alanif.jregr.exec.StreamGobbler;
-
 import junit.framework.TestCase;
 
 import org.junit.Before;

@@ -20,7 +20,7 @@ public class RegrCaseListViewTest extends ComponentTestFixture {
 
 	@Test
 	public void testCanDisplayAnEmptyModel() throws Exception {
-		DefaultListModel emptyModel = givenAnEmptyModel();
+		DefaultListModel<RegrCase> emptyModel = givenAnEmptyModel();
 		RegrCaseListView view = givenARegrCaseListViewWith(emptyModel);
 		GuiTestUtilities gui = showGui(view);
 		gui.findJList("TestCases");
@@ -28,7 +28,7 @@ public class RegrCaseListViewTest extends ComponentTestFixture {
 	
 	@Test
 	public void testCanDisplayASingleRegrCase() throws Exception {
-		DefaultListModel modelWithOneRegrCase = new DefaultListModel();
+		DefaultListModel<RegrCase> modelWithOneRegrCase = new DefaultListModel<RegrCase>();
 		RegrCase mockedCase = mock(RegrCase.class);
 		when(mockedCase.toString()).thenReturn(REGR_CASE_NAME);
 		modelWithOneRegrCase.addElement(mockedCase);
@@ -44,13 +44,13 @@ public class RegrCaseListViewTest extends ComponentTestFixture {
 		return gui;
 	}
 
-	private RegrCaseListView givenARegrCaseListViewWith(DefaultListModel model) {
+	private RegrCaseListView givenARegrCaseListViewWith(DefaultListModel<RegrCase> model) {
 		RegrCaseListView view = new RegrCaseListView(model);
 		return view;
 	}
 
-	private DefaultListModel givenAnEmptyModel() {
-		DefaultListModel model = new DefaultListModel();
+	private DefaultListModel<RegrCase> givenAnEmptyModel() {
+		DefaultListModel<RegrCase> model = new DefaultListModel<RegrCase>();
 		return model;
 	}
 }
