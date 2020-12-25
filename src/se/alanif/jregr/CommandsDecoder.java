@@ -39,7 +39,7 @@ public class CommandsDecoder {
             jregrFileReader = fileReader;
             try {
                 fileReader.mark(10000);
-                reset();
+                readAndSplitLineIntoWords();
             } catch (IOException e) {
                 jregrFileExists = false;
             }
@@ -137,8 +137,10 @@ public class CommandsDecoder {
         if (jregrFileExists) {
             try {
                 final String line = jregrFileReader.readLine();
-                if (line == null || line == "") return false;
-                words = splitIntoWords(line);
+                if (line == null || line == "")
+                	return false;
+                else
+                	words = splitIntoWords(line);
                 return true;
             } catch (IOException e) {
                 return false;
@@ -153,14 +155,18 @@ public class CommandsDecoder {
         else
             try {
                 jregrFileReader.reset();
-                String line = this.jregrFileReader.readLine();
-                if (line != null)
-                	words = splitIntoWords(line);
-                else
-                	words = new String[] {"", "", ""};
+                readAndSplitLineIntoWords();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
     }
+
+	private void readAndSplitLineIntoWords() throws IOException {
+		String line = this.jregrFileReader.readLine();
+		if (line != null)
+			words = splitIntoWords(line);
+		else
+			words = new String[] {"", "", ""};
+	}
 }
