@@ -141,6 +141,13 @@ public class Main {
         return result;
     }
 
+    /*
+     * TODO bin-directory should always be relative to the current regr directory. This means
+     * that the -bin option has to be manipulated to match if there is a -dir option too. Also we should ensure that we cd to
+     * the directory of the tests before running them, so that the, probably relative, path to the
+     * bin directory will be correct.
+     */
+    
     // Return true if success
     private boolean handleArgs(CommandLine commandLine) throws FileNotFoundException, IOException {
         // TODO: Refactor - should not run the cases, but return a runner or null
