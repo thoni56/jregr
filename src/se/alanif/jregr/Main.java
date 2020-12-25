@@ -6,24 +6,18 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
 
-import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 
 import se.alanif.jregr.exec.RegrCase;
 import se.alanif.jregr.exec.RegrRunner;
-import se.alanif.jregr.gui.GuiReporter;
-import se.alanif.jregr.gui.RegrView;
 import se.alanif.jregr.io.Directory;
-import se.alanif.jregr.reporters.ConsoleReporter;
 import se.alanif.jregr.reporters.RegrReporter;
-import se.alanif.jregr.reporters.XMLReporter;
 
 public class Main {
     private static final String JREGR_VERSION = "0.0.0";
@@ -75,11 +69,9 @@ public class Main {
         while (!correctSelection) {
             correctSelection = true;
             directory = chooseDirectory(directory.getPath(), "Select directory for executable programs", "Select");
-            if (directory != null) {
-                if (!haveExecutables(directory, decoder)) {
-                    wrongDirectory(true, directory, "does not have executable programs");
-                    correctSelection = false;
-                }
+            if (directory != null && !haveExecutables(directory, decoder)) {
+                wrongDirectory(true, directory, "does not have executable programs");
+                correctSelection = false;
             }
         }
         return directory;
@@ -128,9 +120,9 @@ public class Main {
                 helpFormatter.printHelp("jregr", optionManager);
             } else if (commandLine.hasOption("version")) {
                 System.out.println("Jregr version " + JREGR_VERSION);
-            } else
+            } else {
                 result = runCases(commandLine);
-
+            }
         } catch (ParseException e) {
             System.out.println("Argument error - " + e.getMessage());
             helpFormatter.printHelp("jregr", optionManager);
@@ -142,38 +134,35 @@ public class Main {
     }
 
     /*
-     * TODO bin-directory should always be relative to the current regr directory. This means
-     * that the -bin option has to be manipulated to match if there is a -dir option too. Also we should ensure that we cd to
-     * the directory of the tests before running them, so that the, probably relative, path to the
-     * bin directory will be correct.
+     * TODO bin-directory should always be relative to the current regr directory.
+     * This means that the -bin option has to be manipulated to match if there is a
+     * -dir option too. Also we should ensure that we cd to the directory of the
+     * tests before running them, so that the, probably relative, path to the bin
+     * directory will be correct.
      */
-    
+
     // Return true if success
-    private boolean runCases(CommandLine commandLine) throws FileNotFoundException, IOException {
+    private boolean runCases(CommandLine commandLine) throws FileNotFoundException {
         Directory regressionDirectory = findRegressionDirectory(commandLine);
-        if (regressionDirectory != null) {
-            final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
-            final File commandsFile = regrDirectory.getCommandsFile();
-            final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
-            final Directory binDirectory = findBinDirectory(commandLine, decoder);
-            if (regrDirectory.hasCases()) {
-                final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
-                final String suiteName = createSuiteName(commandLine, regrDirectory);
-                final RegrReporter reporter = RegrReporter.createReporter(commandLine, regrDirectory);
-                final RegrRunner runner = new RegrRunner();
-                return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
-            } else {
-                wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
-                return false;
-            }
-        } else
+        final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
+        final File commandsFile = regrDirectory.getCommandsFile();
+        final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
+        final Directory binDirectory = findBinDirectory(commandLine, decoder);
+        if (regrDirectory.hasCases()) {
+            final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
+            final String suiteName = createSuiteName(commandLine, regrDirectory);
+            final RegrReporter reporter = RegrReporter.createReporter(commandLine, regrDirectory);
+            final RegrRunner runner = new RegrRunner();
+            return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+        } else {
+            wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
             return false;
+        }
     }
 
-	private String createSuiteName(CommandLine commandLine, RegrDirectory regrDirectory) {
-		return commandLine.hasOption("dir") ? commandLine.getOptionValue("dir")
-		        : regrDirectory.getName();
-	}
+    private String createSuiteName(CommandLine commandLine, RegrDirectory regrDirectory) {
+        return commandLine.hasOption("dir") ? commandLine.getOptionValue("dir") : regrDirectory.getName();
+    }
 
     private RegrCase[] addExplicitOrImplicitCases(CommandLine commandLine, RegrDirectory regrDirectory) {
         final String[] arguments = commandLine.getArgs();
