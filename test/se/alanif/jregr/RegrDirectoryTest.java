@@ -141,8 +141,14 @@ public class RegrDirectoryTest extends TestCase {
 		assertEquals(CASENAME1, cases[0].getName());
 	}
 
+	@Test
 	public void testRegrDirectoryReturnsJRegrFile() throws Exception {
 		assertEquals(jregrFile, regrDirectoryWithCommandsFile.getCommandsFile());
+	}
+
+	@Test
+	public void testRegrDirectoryReturnsNullIfNoJRegrFile() throws Exception {
+		assertEquals(null, regrDirectoryWithoutCommandsFile.getCommandsFile());
 	}
 
 	@Test
