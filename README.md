@@ -50,16 +50,6 @@ Note1: you should avoid using paths in the command. Better to use the `-bin` opt
 Note2: currently there is no way to use the `-bin` option more than once, so if you need multiple executables they must exist in the same directory (for now).
 
 
-## Limitations of commands
-
-The command is executed with Javas `Runtime.exec()` so it must be
-directly executable (e.g. shell scripts might be executable on some platforms but
-are not on others) and it does not handle wildcards or pipes. This might
-still work but is not by design but an effect of how Java on that OS
-happens to perform the `exec()` call. E.g. with a Windows Java it won't
-work, but might on Linux et.al.
-
-
 ## Configuration File Variables
 
 There are some 'variables' available for use in the configuration
@@ -80,6 +70,16 @@ it will be the same as the testname with the extension concatenated at
 the end.
 
 (Except that 'sh' does not exist on all platforms...)
+
+
+## Limitations of commands
+
+The command is executed with Javas `Runtime.exec()` so it must be
+directly executable (e.g. shell scripts might be executable on some platforms but
+are not on others) and it does not handle wildcards or pipes. This might
+still work but is not by design but an effect of how Java on that OS
+happens to perform the `exec()` call. E.g. with a Windows Java it won't
+work, but might on Linux et.al.
 
 
 ## Running
@@ -114,8 +114,8 @@ which is something like this
 This script also handles the case where you are running `jregr` from a cywin
 environment using your Windows java.
 
-Options
--------
+
+## Options
 
 `-bin` find any executable files in this directory
 
@@ -129,11 +129,19 @@ actual output there
 is done using ANSI control codes), so will show the name of every test case
 as it runs
 
-Character Encodings
--------------------
+
+## Character Encodings
 
 Sometimes it might be important to preserve character encodings so that the
 expected output can be matched correctly. There is no option for this, instead
 use the Java VM option '-Dfile.encoding=<encoding>', like
 
     java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar $@
+
+    
+# TODO
+
+- Allow empty .jregr files
+- Recurse through directories (-r option or default)
+- An empty .jregr file should signify the re-use/inherited rules from above directory
+- Ensure -bin directory is always given relative to the current directory - will force adding directory parts while recursing
