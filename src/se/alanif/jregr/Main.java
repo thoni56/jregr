@@ -153,23 +153,15 @@ public class Main {
         // TODO: Refactor - should not run the cases, but return a runner or null
         Directory regressionDirectory = findRegressionDirectory(commandLine);
         if (regressionDirectory != null) {
-            RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
+            final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
             final File commandsFile = regrDirectory.getCommandsFile();
-            CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
-            Directory binDirectory = findBinDirectory(commandLine, decoder);
+            final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
+            final Directory binDirectory = findBinDirectory(commandLine, decoder);
             if (regrDirectory.hasCases()) {
-                RegrRunner runner = new RegrRunner();
-                RegrReporter reporter;
-                if (commandLine.hasOption("xml"))
-                    reporter = new XMLReporter(regrDirectory.toDirectory());
-                else if (commandLine.hasOption("gui")) {
-                    reporter = new GuiReporter();
-                    SwingUtilities.invokeLater(new RegrView((JComponent) reporter));
-                } else
-                    reporter = new ConsoleReporter();
-                RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
-                final String suiteName = commandLine.hasOption("dir") ? commandLine.getOptionValue("dir")
-                        : regrDirectory.getName();
+                final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
+                final String suiteName = createSuiteName(commandLine, regrDirectory);
+                final RegrReporter reporter = RegrReporter.createReporter(commandLine, regrDirectory);
+                final RegrRunner runner = new RegrRunner();
                 return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
             } else {
                 wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
@@ -178,6 +170,11 @@ public class Main {
         } else
             return false;
     }
+
+	private String createSuiteName(CommandLine commandLine, RegrDirectory regrDirectory) {
+		return commandLine.hasOption("dir") ? commandLine.getOptionValue("dir")
+		        : regrDirectory.getName();
+	}
 
     private RegrCase[] addExplicitOrImplicitCases(CommandLine commandLine, RegrDirectory regrDirectory) {
         final String[] arguments = commandLine.getArgs();
