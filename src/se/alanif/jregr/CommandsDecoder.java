@@ -18,12 +18,14 @@ public class CommandsDecoder {
     // Feed it a BufferedReader in the constructor
 
     // It also handles the case where there is no .jregr file
-    // and then serves the standard commands ".alan : alan $1" + ".a3c : arun $1 < $1.input"
+    // and then serves the standard commands ".alan : alan $1" + ".a3c : arun $1 <
+    // $1.input"
 
-    private static final String[] DEFAULT_EXTENSION =   new String[]   {".alan",            ".input"};
-    private static final String[] DEFAULT_COMMAND =     new String[]   {"alan",             "arun"};
-    private static final String[][] DEFAULT_ARGUMENTS = new String[][] {new String[]{"$1"}, new String[]{"-n", "-r", "$1"}};
-    private static final String[] STDIN =               new String[]   {null,               "$1.input"};
+    private static final String[] DEFAULT_EXTENSION = new String[] { ".alan", ".input" };
+    private static final String[] DEFAULT_COMMAND = new String[] { "alan", "arun" };
+    private static final String[][] DEFAULT_ARGUMENTS = new String[][] { new String[] { "$1" },
+            new String[] { "-n", "-r", "$1" } };
+    private static final String[] DEFAULT_STDIN = new String[] { null, "$1.input" };
 
     private String[] words;
     private BufferedReader jregrFileReader;
@@ -57,24 +59,24 @@ public class CommandsDecoder {
     }
 
     private String expandSymbols(String caseName, String argument) {
-        argument = argument.replaceAll("\\$1", caseName);
-        argument = argument.replaceAll("\\$2", caseName+getExtension());
+        argument = argument.replace("\\$1", caseName);
+        argument = argument.replace("\\$2", caseName + getExtension());
         return argument;
     }
 
     private String[] decodeStdin(String[] split) {
-        if (split[split.length-2].equals("<")) {
-            stdin = split[split.length-1];
-            split = Arrays.copyOf(split, split.length-2);
+        if (split[split.length - 2].equals("<")) {
+            stdin = split[split.length - 1];
+            split = Arrays.copyOf(split, split.length - 2);
         } else
             stdin = null;
         return split;
     }
 
     private String[] removeColonInSecondPosition(String[] split) {
-        String[] w = Arrays.copyOf(split, split.length-1);
-        for (int i=1; i<w.length; i++)
-            w[i] = split[i+1];
+        String[] w = Arrays.copyOf(split, split.length - 1);
+        for (int i = 1; i < w.length; i++)
+            w[i] = split[i + 1];
         return w;
     }
 
@@ -87,9 +89,9 @@ public class CommandsDecoder {
 
     private String[] getArguments() {
         if (jregrFileExists) {
-            String [] arguments = new String[words.length - 2];
+            String[] arguments = new String[words.length - 2];
             for (int i = 2; i < words.length; i++)
-                arguments[i-2] = words[i];
+                arguments[i - 2] = words[i];
             return arguments;
         } else
             return DEFAULT_ARGUMENTS[defaultSet];
@@ -106,7 +108,7 @@ public class CommandsDecoder {
     public String getStdin(String caseName) {
         String r;
         if (!jregrFileExists)
-            r = STDIN[defaultSet];
+            r = DEFAULT_STDIN[defaultSet];
         else
             r = stdin;
         if (r != null)
@@ -116,7 +118,7 @@ public class CommandsDecoder {
     }
 
     public String[] buildCommandAndArguments(Directory binDirectory, String caseName) {
-        final String binPath = binDirectory != null? binDirectory.getAbsolutePath() + Directory.separator : "";
+        final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + Directory.separator : "";
         String command;
         if (binDirectory == null || !binDirectory.executableExist(getCommand()))
             command = expandSymbols(caseName, getCommand());
@@ -138,9 +140,9 @@ public class CommandsDecoder {
             try {
                 final String line = jregrFileReader.readLine();
                 if (line == null || line == "")
-                	return false;
+                    return false;
                 else
-                	words = splitIntoWords(line);
+                    words = splitIntoWords(line);
                 return true;
             } catch (IOException e) {
                 return false;
@@ -162,11 +164,11 @@ public class CommandsDecoder {
             }
     }
 
-	private void readAndSplitLineIntoWords() throws IOException {
-		String line = this.jregrFileReader.readLine();
-		if (line != null)
-			words = splitIntoWords(line);
-		else
-			words = new String[] {"", "", ""};
-	}
+    private void readAndSplitLineIntoWords() throws IOException {
+        String line = this.jregrFileReader.readLine();
+        if (line != null)
+            words = splitIntoWords(line);
+        else
+            words = new String[] { "", "", "" };
+    }
 }
