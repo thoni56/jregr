@@ -143,6 +143,24 @@
         },
         {
             "type": "java",
+            "name": "Jregr example - no .jregr",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/test/examples/nojregr",
+            "projectName": "Jregr",
+            "args": []
+        },
+        {
+            "type": "java",
+            "name": "Jregr example - empty .jregr",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/test/examples/emptyjregr",
+            "projectName": "Jregr",
+            "args": []
+        },
+        {
+            "type": "java",
             "name": "Debug (Launch)-Platform<Jregr>",
             "request": "launch",
             "mainClass": "abbot.Platform",
