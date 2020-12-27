@@ -53,6 +53,7 @@ public class RegrDirectoryTest extends TestCase {
 
 	private static final RegrCase[] NO_CASES = new RegrCase[] {};
 
+	@Override
 	protected void setUp() throws Exception {
 		when(mockedDirectoryWithoutCommandsFile.getFile(CASENAME1 + ".output")).thenReturn(mockedFile);
 		when(mockedDirectoryWithoutCommandsFile.hasFile(CASENAME1 + DEFAULT_EXTENSION)).thenReturn(true);

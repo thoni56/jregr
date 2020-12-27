@@ -14,7 +14,9 @@ import se.alanif.jregr.io.File;
 public class RegrCase {
 
 	// Status values for cases
-	public enum State {VIRGIN, PENDING, FAIL, FATAL, PASS, SUSPENDED, SUSPENDED_FAIL, SUSPENDED_PASS}
+	public enum State {
+		VIRGIN, PENDING, FAIL, FATAL, PASS, SUSPENDED, SUSPENDED_FAIL, SUSPENDED_PASS
+	}
 
 	private Runtime runtime;
 	private String caseName;
@@ -27,31 +29,36 @@ public class RegrCase {
 		this.regrDirectory = directory;
 	}
 
-	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CaseRunner caseRunner, ProcessBuilder processBuilder) {
+	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CaseRunner caseRunner,
+			ProcessBuilder processBuilder) {
 		int linenumber = 1;
-		outputWriter.printf("########## %s ##########\n", caseName);
+		outputWriter.printf("########## %s ##########%n", caseName);
 		try {
 			do {
-				Process process = processBuilder.exec(binDirectory, decoder, regrDirectory.toDirectory(), runtime, caseName);
+				Process process = processBuilder.exec(binDirectory, decoder, regrDirectory.toDirectory(), runtime,
+						caseName);
 				final String stdin = decoder.getStdin(caseName);
 				final StreamPusher inputPusher;
 				if (stdin == null)
 					inputPusher = null;
 				else {
-					final FileReader inputReader = new FileReader(regrDirectory.getPath()+File.separator+stdin);
+					final FileReader inputReader = new FileReader(regrDirectory.getPath() + File.separator + stdin);
 					inputPusher = new StreamPusher(process.getOutputStream(), inputReader);
 				}
-				String output = caseRunner.run(process, new StreamGobbler(process.getErrorStream()), new StreamGobbler(process.getInputStream()), inputPusher);
+				String output = caseRunner.run(process, new StreamGobbler(process.getErrorStream()),
+						new StreamGobbler(process.getInputStream()), inputPusher);
 				outputWriter.print(output);
 				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
-			// did not find the .input file, but that might not be a problem, could be a virgin test case
-			// but it could also be a mistake in the .jregr file, so print it unless we are using built in...
+			// did not find the .input file, but that might not be a problem, could be a
+			// virgin test case
+			// but it could also be a mistake in the .jregr file, so print it unless we are
+			// using built in...
 			if (!decoder.usingDefault())
 				outputWriter.print("Could not find input file for command line " + linenumber + " in .jregr file\n");
 		} catch (IOException e) {
-			fatal  = true;
+			fatal = true;
 			outputWriter.print(e.getMessage());
 		} finally {
 			outputWriter.close();
@@ -93,8 +100,10 @@ public class RegrCase {
 			return false;
 		} finally {
 			try {
-				if (outputReader != null) outputReader.close();
-				if (expectedReader != null) expectedReader.close();
+				if (outputReader != null)
+					outputReader.close();
+				if (expectedReader != null)
+					expectedReader.close();
 			} catch (IOException e) {
 			}
 		}
@@ -108,23 +117,24 @@ public class RegrCase {
 	public String getName() {
 		return caseName;
 	}
-	
+
 	public String toString() {
 		return getName();
 	}
 
 	public State status() {
-		if (fatal) return State.FATAL;
+		if (fatal)
+			return State.FATAL;
 		boolean isSuspended = false;
 		if (regrDirectory.hasSuspendedFile(caseName))
 			isSuspended = true;
 		if (!regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
-			return isSuspended?State.SUSPENDED:State.VIRGIN;
+			return isSuspended ? State.SUSPENDED : State.VIRGIN;
 		if (!regrDirectory.hasExpectedFile(caseName) && regrDirectory.hasOutputFile(caseName))
-			return isSuspended?State.SUSPENDED:State.PENDING;
+			return isSuspended ? State.SUSPENDED : State.PENDING;
 		if (regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
-			return isSuspended?State.SUSPENDED_PASS:State.PASS;
-		return isSuspended?State.SUSPENDED_FAIL:State.FAIL;
+			return isSuspended ? State.SUSPENDED_PASS : State.PASS;
+		return isSuspended ? State.SUSPENDED_FAIL : State.FAIL;
 	}
 
 	public boolean failed() {
