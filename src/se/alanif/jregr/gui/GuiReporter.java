@@ -10,17 +10,20 @@ import se.alanif.jregr.exec.RegrCase;
 import se.alanif.jregr.exec.RegrCase.State;
 import se.alanif.jregr.reporters.RegrReporter;
 
-public class GuiReporter extends JPanel implements RegrReporter {
-
-	private static final long serialVersionUID = 1L;
+public class GuiReporter implements RegrReporter {
 
 	private DefaultListModel<RegrCase> model = new DefaultListModel<RegrCase>();
 	private RegrCaseListView regrCaseListView;
+	private JPanel panel = new JPanel();
 
 	public GuiReporter() {
 		regrCaseListView = new RegrCaseListView(model);
-		this.add(new JScrollPane(regrCaseListView));
-		setSize(600, 600);
+		panel.add(new JScrollPane(regrCaseListView));
+		panel.setSize(600, 600);
+	}
+	
+	public JPanel getView() {
+		return panel;
 	}
 	
 	public void start(String suite, int numberOfTests, CommandLine commandLine) {
