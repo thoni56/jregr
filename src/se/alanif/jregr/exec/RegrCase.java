@@ -72,42 +72,36 @@ public class RegrCase {
 	}
 
 	private boolean outputSameAsExpected() {
-		BufferedReader expectedReader = null;
-		BufferedReader outputReader = null;
-		try {
-			File expectedFile = getExpectedFile();
-			if (expectedFile.exists()) {
-				File outputFile = getOutputFile();
-				try {
-					expectedReader = new BufferedReader(new FileReader(expectedFile));
-					outputReader = new BufferedReader(new FileReader(outputFile));
-				} catch (FileNotFoundException e1) {
-					return false;
-				}
-
-				String outputLine = "";
-				String expectedLine = "";
-				while (outputLine != null && expectedLine != null) {
-					if (!outputLine.equals(expectedLine))
-						return false;
-					try {
-						outputLine = outputReader.readLine();
-						expectedLine = expectedReader.readLine();
-					} catch (IOException e) {
-					}
-				}
-				return outputLine == null && expectedLine == null;
-			}
-			return false;
-		} finally {
-			try {
-				if (outputReader != null)
-					outputReader.close();
-				if (expectedReader != null)
-					expectedReader.close();
+		File expectedFile = getExpectedFile();
+		if (expectedFile.exists()) {
+			File outputFile = getOutputFile();
+			try (BufferedReader expectedReader = new BufferedReader(new FileReader(expectedFile));
+					BufferedReader outputReader = new BufferedReader(new FileReader(outputFile));) {
+				return fileContentsAreEqual(expectedReader, outputReader);
+			} catch (FileNotFoundException e) {
+				return false;
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
+		return false;
+
+	}
+
+	private boolean fileContentsAreEqual(BufferedReader expectedReader, BufferedReader outputReader) {
+		String outputLine = "";
+		String expectedLine = "";
+		while (outputLine != null && expectedLine != null) {
+			if (!outputLine.equals(expectedLine))
+				return false;
+			try {
+				outputLine = outputReader.readLine();
+				expectedLine = expectedReader.readLine();
+			} catch (IOException e) {
+				return false;
+			}
+		}
+		return outputLine == null && expectedLine == null;
 	}
 
 	public void clean() {
