@@ -1,0 +1,2 @@
+.case : echo $1
+.case : cat $2
