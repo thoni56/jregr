@@ -145,19 +145,22 @@ public class Main {
     private boolean runCases(CommandLine commandLine) throws FileNotFoundException {
         Directory regressionDirectory = findRegressionDirectory(commandLine);
         final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
-        final File commandsFile = regrDirectory.getCommandsFile();
-        final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
-        final Directory binDirectory = findBinDirectory(commandLine, decoder);
-        if (regrDirectory.hasCases()) {
-            final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
-            final String suiteName = createSuiteName(commandLine, regrDirectory);
-            final RegrReporter reporter = RegrReporter.createReporter(commandLine, regrDirectory);
-            final RegrRunner runner = new RegrRunner();
-            return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
-        } else {
-            wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
-            return false;
-        }
+        if (regrDirectory.getCommandsFile() != null) {
+            final File commandsFile = regrDirectory.getCommandsFile();
+            final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
+            final Directory binDirectory = findBinDirectory(commandLine, decoder);
+            if (regrDirectory.hasCases()) {
+                final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
+                final String suiteName = createSuiteName(commandLine, regrDirectory);
+                final RegrReporter reporter = RegrReporter.createReporter(commandLine, regrDirectory);
+                final RegrRunner runner = new RegrRunner();
+                return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+            } else
+                wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
+        } else
+            wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
+                    "- top level directory must have .jregr file");
+        return false;
     }
 
     private String createSuiteName(CommandLine commandLine, RegrDirectory regrDirectory) {

@@ -42,7 +42,8 @@ public class RegrCase {
 				if (stdin == null)
 					inputPusher = null;
 				else {
-					final FileReader inputReader = new FileReader(regrDirectory.getPath() + File.separator + stdin);
+					final FileReader inputReader = new FileReader(
+							regrDirectory.getPath() + java.io.File.separator + stdin);
 					inputPusher = new StreamPusher(process.getOutputStream(), inputReader);
 				}
 				String output = caseRunner.run(process, new StreamGobbler(process.getErrorStream()),

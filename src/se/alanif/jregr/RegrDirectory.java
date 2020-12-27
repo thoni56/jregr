@@ -29,9 +29,12 @@ public class RegrDirectory {
 	public RegrDirectory(Directory directory, Runtime runtime) {
 		this.directory = directory;
 		this.runtime = runtime;
-		CommandsDecoder commandsDecoder = new CommandsDecoder(directory.getBufferedReaderForFile(getCommandsFile()));
-		commandsDecoder.reset();
-		caseExtension = commandsDecoder.getExtension();
+		File commandsFile = getCommandsFile();
+		if (commandsFile != null) {
+			CommandsDecoder commandsDecoder = new CommandsDecoder(directory.getBufferedReaderForFile(commandsFile));
+			commandsDecoder.reset();
+			caseExtension = commandsDecoder.getExtension();
+		}
 	}
 
 	private String stripExtension(String fileName) {
@@ -81,7 +84,10 @@ public class RegrDirectory {
 	}
 
 	public File getCommandsFile() {
-		return directory.getFile(COMMANDS_FILE_NAME);
+		if (directory.hasFile(COMMANDS_FILE_NAME))
+			return directory.getFile(COMMANDS_FILE_NAME);
+		else
+			return null;
 	}
 
 	public boolean hasOutputFile(String caseName) {
