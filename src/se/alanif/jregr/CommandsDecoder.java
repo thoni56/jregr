@@ -52,16 +52,16 @@ public class CommandsDecoder {
         return !jregrFileExists;
     }
 
-    private String[] splitIntoWords(String line) throws IOException {
+    private String[] splitIntoWords(String line) {
         String[] split = line.split(" ");
         split = decodeStdin(split);
         return removeColonInSecondPosition(split);
     }
 
-    private String expandSymbols(String caseName, String argument) {
-        argument = argument.replace("\\$1", caseName);
-        argument = argument.replace("\\$2", caseName + getExtension());
-        return argument;
+    private String expandSymbols(String caseName, String template) {
+        template = template.replace("$1", caseName);
+        template = template.replace("$2", caseName + getExtension());
+        return template;
     }
 
     private String[] decodeStdin(String[] split) {
@@ -118,7 +118,7 @@ public class CommandsDecoder {
     }
 
     public String[] buildCommandAndArguments(Directory binDirectory, String caseName) {
-        final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + Directory.separator : "";
+        final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + java.io.File.separator : "";
         String command;
         if (binDirectory == null || !binDirectory.executableExist(getCommand()))
             command = expandSymbols(caseName, getCommand());
@@ -139,7 +139,7 @@ public class CommandsDecoder {
         if (jregrFileExists) {
             try {
                 final String line = jregrFileReader.readLine();
-                if (line == null || line == "")
+                if (line == null || line.equals(""))
                     return false;
                 else
                     words = splitIntoWords(line);
