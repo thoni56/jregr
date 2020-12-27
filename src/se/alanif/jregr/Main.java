@@ -129,7 +129,7 @@ public class Main {
             } else if (commandLine.hasOption("version")) {
                 System.out.println("Jregr version " + JREGR_VERSION);
             } else
-                result = handleArgs(commandLine);
+                result = runCases(commandLine);
 
         } catch (ParseException e) {
             System.out.println("Argument error - " + e.getMessage());
@@ -149,8 +149,7 @@ public class Main {
      */
     
     // Return true if success
-    private boolean handleArgs(CommandLine commandLine) throws FileNotFoundException, IOException {
-        // TODO: Refactor - should not run the cases, but return a runner or null
+    private boolean runCases(CommandLine commandLine) throws FileNotFoundException, IOException {
         Directory regressionDirectory = findRegressionDirectory(commandLine);
         if (regressionDirectory != null) {
             final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
