@@ -11,7 +11,7 @@ import se.alanif.jregr.reporters.RegrReporter;
 
 public class RegrRunner {
 
-    public boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
+    public static boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
                         CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
         boolean success = true;
         reporter.start(suiteName, cases.length, commandLine);

@@ -152,9 +152,8 @@ public class Main {
             if (regrDirectory.hasCases()) {
                 final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
                 final String suiteName = createSuiteName(commandLine, regrDirectory);
-                final RegrReporter reporter = RegrReporter.createReporter(commandLine, regrDirectory);
-                final RegrRunner runner = new RegrRunner();
-                return runner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+                final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
+                return RegrRunner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
             } else
                 wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
         } else
