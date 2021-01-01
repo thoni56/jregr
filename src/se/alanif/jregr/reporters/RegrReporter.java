@@ -7,18 +7,18 @@ import javax.swing.SwingUtilities;
 
 import org.apache.commons.cli.CommandLine;
 
-import se.alanif.jregr.RegrDirectory;
 import se.alanif.jregr.exec.RegrCase;
 import se.alanif.jregr.exec.RegrCase.State;
 import se.alanif.jregr.gui.GuiReporter;
 import se.alanif.jregr.gui.RegrView;
+import se.alanif.jregr.io.Directory;
 
 public interface RegrReporter {
 	
-	public static RegrReporter createReporter(CommandLine commandLine, RegrDirectory regrDirectory) {
+	public static RegrReporter createReporter(CommandLine commandLine, Directory directory) {
         if (commandLine.hasOption("xml"))
 			try {
-				return new XMLReporter(regrDirectory.toDirectory());
+				return new XMLReporter(directory);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
