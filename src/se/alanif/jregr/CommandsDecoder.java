@@ -4,172 +4,142 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 
+import se.alanif.jregr.CommandsDecoder.CommandSyntaxException;
 import se.alanif.jregr.io.Directory;
 
 public class CommandsDecoder {
 
-    // The RegrDecoder decodes a file (presumably a .jregr file) into
-    // <extension> ':' <command> {<arg>} [ '<' <stdin> ]
-    // It will expand $1 to the case name and $2 to the full filename
-    // matched by the line (case name + extension)
+	// The RegrDecoder decodes a file (presumably a .jregr file) into
+	// <extension> ':' <command> {<arg>} [ '<' <stdin> ]
+	// It will expand $1 to the case name and $2 to the full filename
+	// matched by the line (case name + extension)
 
-    // It will work on one line at a time starting with the first
-    // Use advance() to advance to next line
-    // Feed it a BufferedReader in the constructor
+	// It will work on one line at a time starting with the first
+	// Use advance() to advance to next line
+	// Feed it a BufferedReader in the constructor
 
-    // It also handles the case where there is no .jregr file
-    // and then serves the standard commands ".alan : alan $1" + ".a3c : arun $1 <
-    // $1.input"
+	// It also handles the case where there is no .jregr file
+	// and then serves the standard commands ".alan : alan $1" + ".a3c : arun $1 <
+	// $1.input"
+	
+	@SuppressWarnings("serial")
+	public class CommandSyntaxException extends IOException {
+		public CommandSyntaxException(String errorMessage) {
+	        super(errorMessage);
+	    }
+	}
 
-	// TODO Remove possibility for default rules
-    private static final String[] DEFAULT_EXTENSION = new String[] { ".alan", ".input" };
-    private static final String[] DEFAULT_COMMAND = new String[] { "alan", "arun" };
-    private static final String[][] DEFAULT_ARGUMENTS = new String[][] { new String[] { "$1" },
-            new String[] { "-n", "-r", "$1" } };
-    private static final String[] DEFAULT_STDIN = new String[] { null, "$1.input" };
+	private String[] parts;
+	private BufferedReader jregrFileReader;
+	private String stdinFilename;
 
-    private String[] words;
-    private BufferedReader jregrFileReader;
-    private boolean jregrFileExists;
-    private int defaultSet = 0;
-    private String stdin;
+	public CommandsDecoder(BufferedReader fileReader) throws IOException {
+		jregrFileReader = fileReader;
+		fileReader.mark(10000);
+		readAndSplitLineIntoParts();
+	}
 
-    public CommandsDecoder(BufferedReader fileReader) {
-        if (fileReader == null)
-            jregrFileExists = false;
-        else {
-            jregrFileExists = true;
-            jregrFileReader = fileReader;
-            try {
-                fileReader.mark(10000);
-                readAndSplitLineIntoWords();
-            } catch (IOException e) {
-                jregrFileExists = false;
-            }
-        }
-    }
+	private void readAndSplitLineIntoParts() throws IOException {
+		String line = this.jregrFileReader.readLine();
+		if (line != null)
+			parts = splitIntoParts(line);
+		else
+			parts = new String[] { "", "", "" };
+	}
 
-    public boolean usingDefault() {
-        return !jregrFileExists;
-    }
+	private String[] splitIntoParts(String line) throws CommandSyntaxException {
+		String[] split = line.split(" ");
+		if (split.length < 3 || !split[1].equals(":")) {
+			throw new CommandSyntaxException("Syntax error in .jregr file");
+		}
+		split = decodeStdin(split);
+		return removeColonInSecondPosition(split);
+	}
 
-    private String[] splitIntoWords(String line) {
-        String[] split = line.split(" ");
-        split = decodeStdin(split);
-        return removeColonInSecondPosition(split);
-    }
+	private String[] decodeStdin(String[] split) {
+		if (split[split.length - 2].equals("<")) {
+			stdinFilename = split[split.length - 1];
+			split = Arrays.copyOf(split, split.length - 2);
+		} else
+			stdinFilename = null;
+		return split;
+	}
 
-    private String expandSymbols(String caseName, String template) {
-        template = template.replace("$1", caseName);
-        template = template.replace("$2", caseName + getExtension());
-        return template;
-    }
+	private String[] removeColonInSecondPosition(String[] split) {
+		String[] w = Arrays.copyOf(split, split.length - 1);
+		for (int i = 1; i < w.length; i++)
+			w[i] = split[i + 1];
+		return w;
+	}
 
-    private String[] decodeStdin(String[] split) {
-        if (split[split.length - 2].equals("<")) {
-            stdin = split[split.length - 1];
-            split = Arrays.copyOf(split, split.length - 2);
-        } else
-            stdin = null;
-        return split;
-    }
+	private String expandSymbols(String caseName, String template) {
+		template = template.replace("$1", caseName);
+		template = template.replace("$2", caseName + getExtension());
+		return template;
+	}
 
-    private String[] removeColonInSecondPosition(String[] split) {
-        String[] w = Arrays.copyOf(split, split.length - 1);
-        for (int i = 1; i < w.length; i++)
-            w[i] = split[i + 1];
-        return w;
-    }
+	public String getCommand() {
+		return parts[1];
+	}
 
-    public String getCommand() {
-        if (jregrFileExists)
-            return words[1];
-        else
-            return DEFAULT_COMMAND[defaultSet];
-    }
+	private String[] getArguments() {
+		String[] arguments = new String[parts.length - 2];
+		for (int i = 2; i < parts.length; i++)
+			arguments[i - 2] = parts[i];
+		return arguments;
+	}
 
-    private String[] getArguments() {
-        if (jregrFileExists) {
-            String[] arguments = new String[words.length - 2];
-            for (int i = 2; i < words.length; i++)
-                arguments[i - 2] = words[i];
-            return arguments;
-        } else
-            return DEFAULT_ARGUMENTS[defaultSet];
-    }
+	public String getExtension() {
+		return parts[0];
+	}
 
-    public String getExtension() {
-        if (jregrFileExists)
-            return words[0];
-        else {
-            return DEFAULT_EXTENSION[defaultSet];
-        }
-    }
+	public String getStdin(String caseName) {
+		String r;
+		r = stdinFilename;
+		if (r != null)
+			return expandSymbols(caseName, r);
+		else
+			return r;
+	}
 
-    public String getStdin(String caseName) {
-        String r;
-        if (!jregrFileExists)
-            r = DEFAULT_STDIN[defaultSet];
-        else
-            r = stdin;
-        if (r != null)
-            return expandSymbols(caseName, r);
-        else
-            return r;
-    }
+	public String[] buildCommandAndArguments(Directory binDirectory, String caseName) {
+		final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + java.io.File.separator : "";
+		String command;
+		if (binDirectory == null || !binDirectory.executableExist(getCommand()))
+			command = expandSymbols(caseName, getCommand());
+		else
+			command = binPath + expandSymbols(caseName, getCommand());
+		String[] arguments = getArguments();
+		String[] commandAndArguments = new String[arguments.length + 1];
+		commandAndArguments[0] = command;
+		for (int i = 0; i < arguments.length; i++) {
+			String argument = arguments[i];
+			argument = expandSymbols(caseName, argument);
+			commandAndArguments[i + 1] = argument;
+		}
+		return commandAndArguments;
+	}
 
-    public String[] buildCommandAndArguments(Directory binDirectory, String caseName) {
-        final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + java.io.File.separator : "";
-        String command;
-        if (binDirectory == null || !binDirectory.executableExist(getCommand()))
-            command = expandSymbols(caseName, getCommand());
-        else
-            command = binPath + expandSymbols(caseName, getCommand());
-        String[] arguments = getArguments();
-        String[] commandAndArguments = new String[arguments.length + 1];
-        commandAndArguments[0] = command;
-        for (int i = 0; i < arguments.length; i++) {
-            String argument = arguments[i];
-            argument = expandSymbols(caseName, argument);
-            commandAndArguments[i + 1] = argument;
-        }
-        return commandAndArguments;
-    }
+	public boolean advance() {
+		try {
+			final String line = jregrFileReader.readLine();
+			if (line == null || line.equals(""))
+				return false;
+			else
+				parts = splitIntoParts(line);
+			return true;
+		} catch (IOException e) {
+			return false;
+		}
+	}
 
-    public boolean advance() {
-        if (jregrFileExists) {
-            try {
-                final String line = jregrFileReader.readLine();
-                if (line == null || line.equals(""))
-                    return false;
-                else
-                    words = splitIntoWords(line);
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        } else
-            return defaultSet++ < 1;
-    }
-
-    public void reset() {
-        if (!jregrFileExists)
-            defaultSet = 0;
-        else
-            try {
-                jregrFileReader.reset();
-                readAndSplitLineIntoWords();
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-    }
-
-    private void readAndSplitLineIntoWords() throws IOException {
-        String line = this.jregrFileReader.readLine();
-        if (line != null)
-            words = splitIntoWords(line);
-        else
-            words = new String[] { "", "", "" };
-    }
+	public void reset() {
+		try {
+			jregrFileReader.reset();
+			readAndSplitLineIntoParts();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

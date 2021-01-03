@@ -53,11 +53,8 @@ public class RegrCase {
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
 			// did not find the .input file, but that might not be a problem, could be a
-			// virgin test case
-			// but it could also be a mistake in the .jregr file, so print it unless we are
-			// using built in...
-			if (!decoder.usingDefault())
-				outputWriter.print("Could not find input file for command line " + linenumber + " in .jregr file\n");
+			// virgin test case but it could also be a mistake in the .jregr file
+			outputWriter.println("WARNING! Could not find input file for command line " + linenumber + " in .jregr file");
 		} catch (IOException e) {
 			fatal = true;
 			outputWriter.print(e.getMessage());

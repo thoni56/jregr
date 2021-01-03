@@ -1,6 +1,7 @@
 package se.alanif.jregr;
 
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import se.alanif.jregr.exec.RegrCase;
@@ -26,7 +27,7 @@ public class RegrDirectory {
 
 	private Runtime runtime;
 
-	public RegrDirectory(Directory directory, Runtime runtime) {
+	public RegrDirectory(Directory directory, Runtime runtime) throws IOException {
 		this.directory = directory;
 		this.runtime = runtime;
 		File commandsFile = getCommandsFile();
