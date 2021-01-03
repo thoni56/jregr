@@ -16,7 +16,6 @@ import org.apache.commons.cli.ParseException;
 
 import se.alanif.jregr.CommandsDecoder.CommandSyntaxException;
 import se.alanif.jregr.exec.RegrCase;
-import se.alanif.jregr.exec.RegrRunner;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.reporters.RegrReporter;
 
@@ -157,7 +156,7 @@ public class Main {
 					final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
 					final String suiteName = createSuiteName(commandLine, regrDirectory);
 					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
-					return RegrRunner.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+					return RegrDirectory.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
 				} else
 					wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
 			} else

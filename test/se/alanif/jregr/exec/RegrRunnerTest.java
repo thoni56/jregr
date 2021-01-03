@@ -39,13 +39,13 @@ public class RegrRunnerTest extends TestCase {
 
 	@Test
 	public void testRunnerOnNoCasesShouldNotReportAnyTests() throws Exception {
-		assertTrue(RegrRunner.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null));
+		assertTrue(RegrDirectory.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null));
 		verify(mockedReporter, never()).starting(mockedCase, 0);
 	}
 
 	@Test
 	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
-		assertTrue(RegrRunner.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
+		assertTrue(RegrDirectory.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
 
 		verify(mockedReporter).starting(eq(mockedCase), longThat(millis -> millis == 0));
 	}
@@ -54,7 +54,7 @@ public class RegrRunnerTest extends TestCase {
 	public void testRunCasesInADirectoryWithASingleCaseShouldRunOneCaseAndReport() throws Exception {
 		when(mockedRegrDirectory.getCases()).thenReturn(ONE_CASE);
 
-		RegrRunner.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null);
+		RegrDirectory.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null);
 
 		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CaseRunner) any(),
 				(ProcessBuilder) any());
