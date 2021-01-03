@@ -21,6 +21,7 @@ public class CommandsDecoder {
     // and then serves the standard commands ".alan : alan $1" + ".a3c : arun $1 <
     // $1.input"
 
+	// TODO Remove possibility for default rules
     private static final String[] DEFAULT_EXTENSION = new String[] { ".alan", ".input" };
     private static final String[] DEFAULT_COMMAND = new String[] { "alan", "arun" };
     private static final String[][] DEFAULT_ARGUMENTS = new String[][] { new String[] { "$1" },
