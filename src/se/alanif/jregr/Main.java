@@ -145,8 +145,8 @@ public class Main {
     private boolean runCases(CommandLine commandLine) throws FileNotFoundException {
         Directory regressionDirectory = findRegressionDirectory(commandLine);
         final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
-        if (regrDirectory.getCommandsFile() != null) {
-            final File commandsFile = regrDirectory.getCommandsFile();
+        final File commandsFile = regrDirectory.getCommandsFile();
+        if (commandsFile != null && commandsFile.length() > 0) {
             final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
             final Directory binDirectory = findBinDirectory(commandLine, decoder);
             if (regrDirectory.hasCases()) {
@@ -158,7 +158,7 @@ public class Main {
                 wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
         } else
             wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
-                    "- top level directory must have .jregr file");
+                    "- top level directory must have .jregr file that is non-empty");
         return false;
     }
 
