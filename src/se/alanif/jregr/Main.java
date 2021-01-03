@@ -165,7 +165,7 @@ public class Main {
 						"- top level directory must have .jregr file that is non-empty");
 		} catch (CommandSyntaxException e) {
 			wrongDirectory(commandLine.hasOption("gui"), regressionDirectory,
-					"- syntax error on .jregr file");
+					"- syntax error in .jregr file");
 		}
 		return false;
 	}
