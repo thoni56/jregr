@@ -9,12 +9,18 @@ import org.junit.Test;
 
 
 public class AcceptanceErrorScenarios {
-	
+
 	private static final int STDOUT = 0;
 	private static final int STDERR = 1;
 
-	public static String[] runCommandForOutput(String[] params) {
-		ProcessBuilder pb = new ProcessBuilder(params);
+	public static String[] runCommandForOutput(String[] arguments) {
+		String[] jregr = {
+				"java",
+				"-cp", "bin;lib/commons-cli-1.4/*",
+				"se.alanif.jregr.Main"
+		};
+		String[] allArguments = combine(jregr, arguments);
+		ProcessBuilder pb = new ProcessBuilder(allArguments);
 		Process p = null;
 		String[] result = new String[2];
 		try {
@@ -36,29 +42,28 @@ public class AcceptanceErrorScenarios {
 
 	@Test
 	public void shouldRequireJregrFileInImplicitTopDirectory() throws Exception {
-		String[] arguments = {
-				"java.exe",
-				"-cp", "bin;lib/commons-cli-1.4/*",
-				"se.alanif.jregr.Main"
-		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runCommandForOutput(new String[0]);
 		if (output[STDERR] != null)
 			throw new Exception("Error message: "+output[STDERR]);
-		assertEquals("Error: Directory 'Jregr' - top level directory must have .jregr file that is non-empty", output[STDOUT]);
+		assertEquals("Error: Directory 'Jregr' - top level directory must have a non-empty .jregr file", output[STDOUT]);
 	}
 
 	@Test
 	public void shouldRequireJregrFileInExplicitTopDirectory() throws Exception {
 		String[] arguments = {
-				"java.exe",
-				"-cp", "bin;lib/commons-cli-1.4/*",
-				"se.alanif.jregr.Main",
 				"-dir", "acceptance/nojregr"
 		};
 		String[] output = runCommandForOutput(arguments);
 		if (output[1] != null)
 			throw new Exception("Error message: "+output[1]);
-		assertEquals("Error: Directory 'nojregr' - top level directory must have .jregr file that is non-empty", output[0]);
+		assertEquals("Error: Directory 'nojregr' - top level directory must have a non-empty .jregr file", output[0]);
 	}
 
+    private static String[] combine(String[] a, String[] b){
+        int length = a.length + b.length;
+        String[] result = new String[length];
+        System.arraycopy(a, 0, result, 0, a.length);
+        System.arraycopy(b, 0, result, a.length, b.length);
+        return result;
+    }
 }
