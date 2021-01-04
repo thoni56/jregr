@@ -98,8 +98,18 @@ public class AcceptanceErrorScenarios {
 		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
 	}
 	
-
-
+	@Test
+	public void shouldSignalErrorForJregrFileWithNoSeparatedColon() throws Exception {
+		String directory = "malformed_jregr_with_no_separated_colon";
+		String[] arguments = {
+				"-dir", "acceptance/"+directory
+		};
+		String[] output = runCommandForOutput(arguments);
+		if (output[1] != null)
+			throw new Exception("Error message: "+output[1]);
+		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
+	}
+	
     private static String[] combine(String[] a, String[] b){
         int length = a.length + b.length;
         String[] result = new String[length];
