@@ -68,7 +68,7 @@ public class DirectoryTest extends TestCase {
 	
 	@Test
 	public void testCanSeeIfFileExists() throws Exception {
-		Directory directory = new Directory("test");
+		Directory directory = new Directory("");
 		java.io.File file = directory.getFile("file");
 		file.createNewFile();
 		
@@ -80,7 +80,7 @@ public class DirectoryTest extends TestCase {
 	
 	@Test
 	public void testCanReturnBufferedReaderForFile() throws Exception {
-		Directory directory = new Directory("test");
+		Directory directory = new Directory("");
 		java.io.File file = directory.getFile("file");
 		file.createNewFile();
 		BufferedReader reader = directory.getBufferedReaderForFile(directory.getFile("file"));
