@@ -50,27 +50,55 @@ public class AcceptanceErrorScenarios {
 
 	@Test
 	public void shouldRequireJregrFileInExplicitTopDirectory() throws Exception {
+		String directory = "nojregr";
 		String[] arguments = {
-				"-dir", "acceptance/nojregr"
+				"-dir", "acceptance/"+directory
 		};
 		String[] output = runCommandForOutput(arguments);
 		if (output[1] != null)
 			throw new Exception("Error message: "+output[1]);
-		assertEquals("Error: Directory 'nojregr' - top level directory must have a non-empty .jregr file", output[0]);
+		assertEquals("Error: Directory '"+directory+"' - top level directory must have a non-empty .jregr file", output[0]);
 	}
 	
 	
 	@Test
 	public void shouldSignalErrorForJregrFileWithEmptyLine() throws Exception {
+		String directory = "malformed_jregr_empty_line";
 		String[] arguments = {
-				"-dir", "acceptance/malformed_jregr_empty_line"
+				"-dir", "acceptance/"+directory
 		};
 		String[] output = runCommandForOutput(arguments);
 		if (output[1] != null)
 			throw new Exception("Error message: "+output[1]);
-		assertEquals("Error: Directory 'malformed_jregr_empty_line' - syntax error in .jregr file", output[0]);
+		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
 	}
 	
+
+	@Test
+	public void shouldSignalErrorForJregrFileWithOnlyExtension() throws Exception {
+		String directory = "malformed_jregr_only_extension";
+		String[] arguments = {
+				"-dir", "acceptance/"+directory
+		};
+		String[] output = runCommandForOutput(arguments);
+		if (output[1] != null)
+			throw new Exception("Error message: "+output[1]);
+		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
+	}
+	
+	@Test
+	public void shouldSignalErrorForJregrFileWithNoCommand() throws Exception {
+		String directory = "malformed_jregr_without_command";
+		String[] arguments = {
+				"-dir", "acceptance/"+directory
+		};
+		String[] output = runCommandForOutput(arguments);
+		if (output[1] != null)
+			throw new Exception("Error message: "+output[1]);
+		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
+	}
+	
+
 
     private static String[] combine(String[] a, String[] b){
         int length = a.length + b.length;
