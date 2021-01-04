@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 
-import se.alanif.jregr.CommandsDecoder.CommandSyntaxException;
 import se.alanif.jregr.io.Directory;
 
 public class CommandsDecoder {
