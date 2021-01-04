@@ -18,14 +18,17 @@ public class StreamGobblerTest extends TestCase {
 	}
 
 	private void compile(String program) throws IOException, InterruptedException {
-		Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("test"));
-		p.waitFor();
+		// If on Windows, you need pre-compile the programs to pure Windows binaries, not cygwin or similar
+		if (!System.getProperty("os.name").contains("Windows")) {
+			Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("unit"));
+			p.waitFor();
+		}
 	}
 
 	@Test
 	public void testCanGobble1000Lines() throws Exception {
-		Process p = Runtime.getRuntime().exec("test/stdout"); // This program has to be a native Windows program, cygwin
-																// doesn't work!!!
+		Process p = Runtime.getRuntime().exec("unit/stdout"); 	// If on Windows, this program has to be a native Windows program
+																// since it execs a Windows process, so cygwin programs don't work
 		StreamGobbler gobbler = new StreamGobbler(p.getInputStream());
 
 		gobbler.start();
@@ -39,7 +42,7 @@ public class StreamGobblerTest extends TestCase {
 
 	@Test
 	public void testCanGobbleAllOf99BottlesAndSendInput() throws Exception {
-		Process p = Runtime.getRuntime().exec("test/99bottles");
+		Process p = Runtime.getRuntime().exec("unit/99bottles");
 
 		OutputStream outputStream = p.getOutputStream();
 		outputStream.write('\n');
