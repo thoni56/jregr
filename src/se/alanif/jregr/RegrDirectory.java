@@ -131,6 +131,7 @@ public class RegrDirectory {
 			return directory.hasFile(name + caseExtension);
 	}
 
+	
 	public static boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
 	                    CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
 	    boolean success = true;

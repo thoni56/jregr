@@ -18,7 +18,8 @@ public class StreamGobblerTest extends TestCase {
 	}
 
 	private void compile(String program) throws IOException, InterruptedException {
-		// If on Windows, you need pre-compile the programs to pure Windows binaries, not cygwin or similar
+		// If on actual Windows, you need pre-compile the programs to pure Windows binaries. If you are using cygwin or msys2:
+		// $ x86_64-w64-mingw32-gcc -o 99bottles 99bottles.c
 		if (!System.getProperty("os.name").contains("Windows")) {
 			Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("unit"));
 			p.waitFor();
