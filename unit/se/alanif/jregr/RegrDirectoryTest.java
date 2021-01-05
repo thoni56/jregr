@@ -1,5 +1,6 @@
 package se.alanif.jregr;
 
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,6 +12,7 @@ import java.util.Arrays;
 
 import junit.framework.TestCase;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -19,7 +21,7 @@ import se.alanif.jregr.exec.RegrCase;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.io.File;
 
-public class RegrDirectoryTest extends TestCase {
+public class RegrDirectoryTest {
 
 	private static final String EXTENSION = ".extension";
 
@@ -47,7 +49,7 @@ public class RegrDirectoryTest extends TestCase {
 
 	private static final RegrCase[] NO_CASES = new RegrCase[] {};
 
-	@Override
+	@Before
 	protected void setUp() throws Exception {
 		mockedFile.deleteOnExit();
 
