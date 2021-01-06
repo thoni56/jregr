@@ -3,11 +3,12 @@ package se.alanif.jregr.io;
 import java.io.BufferedReader;
 
 import se.alanif.jregr.CommandsDecoder;
-import junit.framework.TestCase;
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class DirectoryTest extends TestCase {
+public class DirectoryTest {
 
 	private static final String EXISTING_COMMAND_NAME_WITHOUT_EXE = "ThisCommandExistsWithoutExeExtensionEGOnAMac";
 	private static final String EXISTING_COMMAND_NAME_WITH_EXE = "ThisCommandExistsButRequiresExeExtensionTypicallyForWindows";
