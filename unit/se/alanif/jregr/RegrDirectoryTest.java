@@ -50,7 +50,7 @@ public class RegrDirectoryTest {
 	private static final RegrCase[] NO_CASES = new RegrCase[] {};
 
 	@Before
-	protected void setUp() throws Exception {
+	public void setUp() throws Exception {
 		mockedFile.deleteOnExit();
 
 		when(mockedDirectoryWithCommandsFile.hasFile(RegrDirectory.COMMANDS_FILE_NAME)).thenReturn(true);
