@@ -144,5 +144,9 @@ public class RegrCase {
 	public File getExpectedFile() {
 		return regrDirectory.getExpectedFile(caseName);
 	}
+	
+	public PrintWriter getPrintWriter() throws FileNotFoundException {
+		return new PrintWriter(getOutputFile().getPath());
+	}
 
 }

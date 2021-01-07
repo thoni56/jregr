@@ -131,28 +131,42 @@ public class RegrDirectory {
 			return directory.hasFile(name + caseExtension);
 	}
 
-	
+
 	public static boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
-	                    CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
-	    boolean success = true;
-	    reporter.start(suiteName, cases.length, commandLine);
-	    for (RegrCase theCase : cases) {
-	        PrintWriter printWriter = new PrintWriter(theCase.getOutputFile().getPath());
-	        decoder.reset();
-	        long start = System.currentTimeMillis();
-	        theCase.run(bindir, decoder, printWriter, new CaseRunner(), new ProcessBuilder());
-	        long end = System.currentTimeMillis();
-	        theCase.clean();
-	        if (theCase.failed()) {
-	            success = false;
-	        }
-	
-	        // TODO Until we use an XML framework we can't call starting() before the test because of the timing info
-	        reporter.starting(theCase, end - start);
-	        reporter.report(theCase.status());
-	    }
-	    reporter.end();
-	    return success;
+			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+		boolean success = true;
+		reporter.start(suiteName, cases.length, commandLine);
+		for (RegrCase theCase : cases) {
+			PrintWriter printWriter = theCase.getPrintWriter();
+			decoder.reset();
+			long start = System.currentTimeMillis();
+			theCase.run(bindir, decoder, printWriter, new CaseRunner(), new ProcessBuilder());
+			long end = System.currentTimeMillis();
+			theCase.clean();
+			if (theCase.failed()) {
+				success = false;
+			}
+
+			// TODO Until we use an XML framework we can't call starting() before the test because of the timing info
+			reporter.starting(theCase, end - start);
+			reporter.report(theCase.status());
+		}
+		reporter.end();
+		return success;
+	}
+
+	public boolean recurse(RegrReporter reporter, Directory bindir, String suitName, CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+		Directory[] subDirectories = directory.getSubdirectories();
+		if (subDirectories == null || subDirectories.length == 0) {
+			return true;
+		} else {
+			if (subDirectories[0].hasFile(COMMANDS_FILE_NAME)) {
+				RegrCase[] cases = getCases();
+				return runCases(cases, reporter, bindir, suitName, decoder, commandLine);
+			} else {
+				return true;
+			}
+		}
 	}
 
 }
