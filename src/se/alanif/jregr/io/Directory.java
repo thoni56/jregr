@@ -46,4 +46,9 @@ public class Directory extends File {
 			return null;
 	}
 
+	public Directory[] getSubdirectories() {
+		// TODO Implement!
+		return null;
+	}
+
 }

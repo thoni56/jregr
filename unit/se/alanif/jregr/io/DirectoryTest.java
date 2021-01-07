@@ -10,7 +10,7 @@ import static org.mockito.Mockito.*;
 
 public class DirectoryTest {
 
-	private static final String EXISTING_COMMAND_NAME_WITHOUT_EXE = "ThisCommandExistsWithoutExeExtensionEGOnAMac";
+	private static final String EXISTING_COMMAND_NAME_WITHOUT_EXE = "ThisCommandExistsWithoutExeExtensionOnAMac";
 	private static final String EXISTING_COMMAND_NAME_WITH_EXE = "ThisCommandExistsButRequiresExeExtensionTypicallyForWindows";
 	private static final String NON_EXISTING_COMMAND_NAME = "ThisCommandDoesNotExistsAtAll";
 	
