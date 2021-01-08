@@ -1,8 +1,10 @@
 package se.alanif.jregr.io;
 
 import java.io.BufferedReader;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.util.Arrays;
 
 import se.alanif.jregr.CommandsDecoder;
 
@@ -46,9 +48,18 @@ public class Directory extends File {
 			return null;
 	}
 
+	private FileFilter subDirectoryFilter = new FileFilter() {
+		public boolean accept(java.io.File file) {
+			return file.isDirectory();
+		}
+	};
+
 	public Directory[] getSubdirectories() {
-		// TODO Implement!
-		return null;
+		java.io.File javaFiles[] = listFiles(subDirectoryFilter);
+		Directory subdirectories[] = new Directory[javaFiles.length];
+        for (int i = 0; i < javaFiles.length; i++)
+            subdirectories[i] = new Directory(javaFiles[i].getPath());
+		return subdirectories;
 	}
 
 }
