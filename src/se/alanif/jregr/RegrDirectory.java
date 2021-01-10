@@ -137,12 +137,13 @@ public class RegrDirectory {
 		reporter.end();
 		return success;
 	}
-	
+
 	public boolean runImplicitCases(RegrReporter reporter, Directory bindir, String suiteName,
-			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+			CommandsDecoder decoder, CommandLine commandLine) throws IOException {
 		RegrCase[] cases = getCases();
 		reporter.start(suiteName, cases.length, commandLine);
 		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
+		recurse(reporter, bindir, suiteName, decoder, commandLine);
 		reporter.end();
 		return success;
 	}
@@ -168,18 +169,22 @@ public class RegrDirectory {
 		return success;
 	}
 
-	public boolean recurse(RegrReporter reporter, Directory bindir, String suitName, CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+	public boolean recurse(RegrReporter reporter, Directory bindir, String suiteName, CommandsDecoder decoder, CommandLine commandLine) throws IOException {
+		boolean success = true;
 		Directory[] subDirectories = directory.getSubdirectories();
 		if (subDirectories == null || subDirectories.length == 0) {
-			return true;
+			return true;	// No subdirectories, that's ok
 		} else {
-			if (subDirectories[0].hasFile(COMMANDS_FILE_NAME)) {
-				RegrCase[] cases = getCases();
-				return runExplicitCases(cases, reporter, bindir, suitName, decoder, commandLine);
-			} else {
-				return true;
+			for (Directory subDirectory : subDirectories) {
+				if (subDirectory.hasFile(COMMANDS_FILE_NAME)) {
+					RegrDirectory regrDirectory = new RegrDirectory(subDirectory, runtime);
+					String subSuiteName = suiteName + "/" + subDirectory.getName();
+					if (!regrDirectory.runImplicitCases(reporter, bindir, subSuiteName, decoder, commandLine))
+						success = false;
+				}
 			}
 		}
+		return success;
 	}
 
 }
