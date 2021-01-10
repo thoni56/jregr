@@ -155,7 +155,7 @@ public class Main {
 				final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
 				final String suiteName = createSuiteName(commandLine, regrDirectory);
 				final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
-				return regrDirectory.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+				return regrDirectory.runExplicitCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
 			} else
 				wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
 						"- top level directory must have a non-empty .jregr file");

@@ -130,7 +130,7 @@ public class RegrDirectory {
 	}
 
 
-	public boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
+	public boolean runExplicitCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
 			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
 		reporter.start(suiteName, cases.length, commandLine);
 		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
@@ -138,7 +138,7 @@ public class RegrDirectory {
 		return success;
 	}
 	
-	public boolean runCases(RegrReporter reporter, Directory bindir, String suiteName,
+	public boolean runImplicitCases(RegrReporter reporter, Directory bindir, String suiteName,
 			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
 		RegrCase[] cases = getCases();
 		reporter.start(suiteName, cases.length, commandLine);
@@ -175,7 +175,7 @@ public class RegrDirectory {
 		} else {
 			if (subDirectories[0].hasFile(COMMANDS_FILE_NAME)) {
 				RegrCase[] cases = getCases();
-				return runCases(cases, reporter, bindir, suitName, decoder, commandLine);
+				return runExplicitCases(cases, reporter, bindir, suitName, decoder, commandLine);
 			} else {
 				return true;
 			}
