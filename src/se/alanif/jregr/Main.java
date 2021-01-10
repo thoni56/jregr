@@ -152,10 +152,13 @@ public class Main {
 			else if (commandsFile != null && commandsFile.length() > 0) {
 				final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
 				final Directory binDirectory = findBinDirectory(commandLine, decoder);
-				final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
 				final String suiteName = createSuiteName(commandLine, regrDirectory);
 				final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
-				return regrDirectory.runExplicitCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+				final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
+				if (cases.length == 0)
+					return regrDirectory.runAllCases(reporter, binDirectory, suiteName, decoder, commandLine);
+				else
+					return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
 			} else
 				wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
 						"- top level directory must have a non-empty .jregr file");
@@ -170,13 +173,13 @@ public class Main {
 		return commandLine.hasOption("dir") ? commandLine.getOptionValue("dir") : regrDirectory.getName();
 	}
 
-	private RegrCase[] addExplicitOrImplicitCases(CommandLine commandLine, RegrDirectory regrDirectory) {
+	private RegrCase[] findSelectedCases(CommandLine commandLine, RegrDirectory regrDirectory) {
 		final String[] arguments = commandLine.getArgs();
 		RegrCase[] cases;
 		if (arguments.length > 0) {
 			cases = regrDirectory.getCases(arguments);
 		} else {
-			cases = regrDirectory.getCases();
+			cases = new RegrCase[0];
 		}
 		return cases;
 	}
