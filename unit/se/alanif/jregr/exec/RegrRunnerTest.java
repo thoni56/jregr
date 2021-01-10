@@ -3,6 +3,7 @@ package se.alanif.jregr.exec;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 
 import org.junit.Test;
@@ -24,14 +25,32 @@ public class RegrRunnerTest extends TestCase {
 	private static final RegrCase[] NO_CASES = new RegrCase[] {};
 	private static final RegrCase[] ONE_CASE = new RegrCase[] { mockedCase };
 
-	private RegrDirectory mockedRegrDirectory = mock(RegrDirectory.class);
 	private RegrReporter mockedReporter = mock(RegrReporter.class);
 
 	private Directory binDirectory = mock(Directory.class);
 	private File mockedOutputFile = mock(File.class);
 	private CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
 
+
+	// Private sub-class of the SUT with a few overridden utility functions
+	// So that we can return what we need
+	private RegrCase[] casesToReturn;
+	private class MockedRegrDirectory extends RegrDirectory {
+
+		public MockedRegrDirectory(Directory directory, Runtime runtime) throws IOException {
+			super(directory, runtime);
+		}
+
+		@Override
+		public RegrCase[] getCases() {
+			return casesToReturn;
+		}
+	}
+	private MockedRegrDirectory regrDirectory;
+
 	protected void setUp() throws Exception {
+		regrDirectory = new MockedRegrDirectory(binDirectory, null);
+		
 		when(mockedOutputFile.getPath()).thenReturn("outputFile");
 		when(mockedCase.getName()).thenReturn(CASENAME);
 		when(mockedCase.getOutputFile()).thenReturn(mockedOutputFile);
@@ -39,22 +58,22 @@ public class RegrRunnerTest extends TestCase {
 
 	@Test
 	public void testRunnerOnNoCasesShouldNotReportAnyTests() throws Exception {
-		assertTrue(RegrDirectory.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null));
+		assertTrue(regrDirectory.runCases(NO_CASES, mockedReporter, null, SUITENAME, null, null));
 		verify(mockedReporter, never()).starting(mockedCase, 0);
 	}
 
 	@Test
 	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
-		assertTrue(RegrDirectory.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
+		assertTrue(regrDirectory.runCases(ONE_CASE, mockedReporter, null, SUITENAME, mockedDecoder, null));
 
 		verify(mockedReporter).starting(eq(mockedCase), longThat(millis -> millis == 0));
 	}
 
 	@Test
 	public void testRunCasesInADirectoryWithASingleCaseShouldRunOneCaseAndReport() throws Exception {
-		when(mockedRegrDirectory.getCases()).thenReturn(ONE_CASE);
+		casesToReturn = ONE_CASE;
 
-		RegrDirectory.runCases(ONE_CASE, mockedReporter, binDirectory, SUITENAME, mockedDecoder, null);
+		regrDirectory.runCases(mockedReporter, binDirectory, SUITENAME, mockedDecoder, null);
 
 		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CaseRunner) any(),
 				(ProcessBuilder) any());

@@ -152,13 +152,10 @@ public class Main {
 			else if (commandsFile != null && commandsFile.length() > 0) {
 				final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
 				final Directory binDirectory = findBinDirectory(commandLine, decoder);
-				if (regrDirectory.hasCases()) {
-					final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
-					final String suiteName = createSuiteName(commandLine, regrDirectory);
-					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
-					return RegrDirectory.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
-				} else
-					wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(), "has no test cases to run");
+				final RegrCase[] cases = addExplicitOrImplicitCases(commandLine, regrDirectory);
+				final String suiteName = createSuiteName(commandLine, regrDirectory);
+				final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
+				return regrDirectory.runCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
 			} else
 				wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
 						"- top level directory must have a non-empty .jregr file");
