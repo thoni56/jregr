@@ -66,6 +66,10 @@ public class RegrDirectory {
 
 	public RegrCase[] getCases() {
 		String[] fileNames = directory.list(caseNameFilter);
+		return convertFilesToCases(fileNames);
+	}
+
+	private RegrCase[] convertFilesToCases(String[] fileNames) {
 		ArrayList<RegrCase> cases = new ArrayList<RegrCase>();
 		if (fileNames != null && fileNames.length > 0) {
 			for (String string : fileNames) {
@@ -75,16 +79,10 @@ public class RegrDirectory {
 		return cases.toArray(new RegrCase[cases.size()]);
 	}
 
+	// If command line has cases as arguments we use this
 	public RegrCase[] getCases(String[] files) {
 		// Could be without extension if input from command line
-		ArrayList<RegrCase> cases = new ArrayList<RegrCase>();
-		if (files != null && files.length > 0) {
-			for (String filename : files) {
-				if (isCaseName(filename))
-					cases.add(new RegrCase(runtime, stripExtension(filename), this));
-			}
-		}
-		return cases.toArray(new RegrCase[cases.size()]);
+		return convertFilesToCases(files);
 	}
 
 	public Directory toDirectory() {
@@ -132,10 +130,26 @@ public class RegrDirectory {
 	}
 
 
-	public static boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
+	public boolean runCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
+			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+		reporter.start(suiteName, cases.length, commandLine);
+		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
+		reporter.end();
+		return success;
+	}
+	
+	public boolean runCases(RegrReporter reporter, Directory bindir, String suiteName,
+			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+		RegrCase[] cases = getCases();
+		reporter.start(suiteName, cases.length, commandLine);
+		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
+		reporter.end();
+		return success;
+	}
+
+	private boolean runTheCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
 			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
 		boolean success = true;
-		reporter.start(suiteName, cases.length, commandLine);
 		for (RegrCase theCase : cases) {
 			PrintWriter printWriter = theCase.getPrintWriter();
 			decoder.reset();
@@ -151,7 +165,6 @@ public class RegrDirectory {
 			reporter.starting(theCase, end - start);
 			reporter.report(theCase.status());
 		}
-		reporter.end();
 		return success;
 	}
 
