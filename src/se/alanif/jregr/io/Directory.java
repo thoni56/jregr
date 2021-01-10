@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.Arrays;
 
 import se.alanif.jregr.CommandsDecoder;
 
