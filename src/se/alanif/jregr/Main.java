@@ -133,40 +133,45 @@ public class Main {
 		return result;
 	}
 
-	/*
-	 * TODO bin-directory should always be relative to the current regr directory.
-	 * This means that the -bin option has to be manipulated to match if there is a
-	 * -dir option too. Also we should ensure that we cd to the directory of the
-	 * tests before running them, so that the, probably relative, path to the bin
-	 * directory will be correct.
-	 */
-
-	// Return true if success
 	private boolean runCases(CommandLine commandLine) throws IOException {
 		Directory regressionDirectory = findRegressionDirectory(commandLine);
-		try {
-			final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
-			final File commandsFile = regrDirectory.getCommandsFile();
-			if (!regressionDirectory.exists())
-				wrongDirectory(commandLine.hasOption("gui"), regressionDirectory, "does not exist");
-			else if (commandsFile != null && commandsFile.length() > 0) {
-				final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
-				final Directory binDirectory = findBinDirectory(commandLine, decoder);
-				final String suiteName = createSuiteName(commandLine, regrDirectory);
-				final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
-				final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
-				if (cases.length == 0)
-					return regrDirectory.runAllCases(reporter, binDirectory, suiteName, decoder, commandLine);
-				else
-					return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
-			} else
-				wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
-						"- top level directory must have a non-empty .jregr file");
-		} catch (CommandSyntaxException e) {
-			wrongDirectory(commandLine.hasOption("gui"), regressionDirectory,
-					"- syntax error in .jregr file");
-		}
+		if (!regressionDirectory.exists())
+			wrongDirectory(commandLine.hasOption("gui"), regressionDirectory, "does not exist");
+		else
+			try {
+				final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
+				final File commandsFile = regrDirectory.getCommandsFile();
+				if (commandsFile != null && commandsFile.length() > 0) {
+					final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
+					Directory binDirectory = findBinDirectory(commandLine, decoder);
+					if (binDirectory != null)
+						binDirectory = canonise(binDirectory);
+					final String suiteName = createSuiteName(commandLine, regrDirectory);
+					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
+					final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
+					if (cases.length == 0)
+						return regrDirectory.runAllCases(reporter, binDirectory, suiteName, decoder, commandLine);
+					else
+						return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+				} else
+					wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
+							"- top level directory must have a non-empty .jregr file");
+			} catch (CommandSyntaxException e) {
+				wrongDirectory(commandLine.hasOption("gui"), regressionDirectory,
+						"- syntax error in .jregr file");
+			}
 		return false;
+	}
+
+	private Directory canonise(Directory binDirectory) {
+		Directory canonical = null;
+		try {
+			canonical = new Directory(binDirectory.getCanonicalPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		return canonical;
 	}
 
 	private String createSuiteName(CommandLine commandLine, RegrDirectory regrDirectory) {
