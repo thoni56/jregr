@@ -3,6 +3,7 @@ package se.alanif.jregr.acceptance;
 import static org.junit.Assert.assertEquals;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 
 import org.junit.Test;
@@ -16,7 +17,7 @@ public class AcceptanceErrorScenarios {
 	public static String[] runCommandForOutput(String[] arguments) {
 		String[] jregr = {
 				"java",
-				"-cp", "bin;lib/commons-cli-1.4/*",
+				"-cp", "bin"+File.pathSeparator+"lib/commons-cli-1.4/*",
 				"se.alanif.jregr.Main"
 		};
 		String[] allArguments = combine(jregr, arguments);
