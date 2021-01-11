@@ -32,7 +32,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	public void start(String suite, int numberOfTests, CommandLine commandLine) {
 		total = numberOfTests;
 		this.commandLine = commandLine;
-		System.out.println("Running " + numberOfTests + " tests in '" + suite + "' :");
+		System.out.println("Running " + numberOfTests + " test(s) in '" + suite + "' :");
 	}
 
 	public void starting(RegrCase theCase, long millis) {
@@ -120,10 +120,11 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	}
 
 	public void end() {
+		possibleComma = "";
 		if (fatal > 0) color(FATAL);
 		else if (failing > 0) color(FAILED);
 		else color(PASSED);
-		System.out.printf("Total %d tests", total);
+		System.out.printf("%d test(s)", total);
 		color(DEFAULT);
 		System.out.print(" (");
 		if (fatal > 0) record(fatal, "fatal", FATAL);
