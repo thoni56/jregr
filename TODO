@@ -1,10 +1,10 @@
-☐ Recurse through directories, only follow directories that have .jregr files.
 ☐ An empty .jregr file means the content is inherited from directory above
 ☐ Should set CWD to the directory of the tests so that a relative path
   in the .jregr can be followed wherever Jregr was run from
 ☐ Should adjust any relative -bin option of -dir is also given to ensure it is relative to it
 ☐ Place any error output in the .output, if already done, why does not "<bin> not found" show up there?
 ☐ Remove any non-XML-compliant characters when generating XML-file
+✔ Recurse through directories, only follow directories that have .jregr files.
 ✔ A top level directory should always have a .jregr file
 ✔ Remove source to set file encoding @done(18-12-30 12:30)
 ✔ Document java option -Dfile.encoding= @done(18-12-30 12:30)

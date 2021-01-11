@@ -1,13 +1,13 @@
 package se.alanif.jregr.exec;
 
-import java.io.OutputStream;
 import java.io.File;
 import java.io.IOException;
-
-import junit.framework.TestCase;
+import java.io.OutputStream;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import junit.framework.TestCase;
 
 public class StreamGobblerTest extends TestCase {
 
@@ -18,10 +18,13 @@ public class StreamGobblerTest extends TestCase {
 	}
 
 	private void compile(String program) throws IOException, InterruptedException {
-		// If on actual Windows, you need pre-compile the programs to pure Windows binaries. If you are using cygwin or msys2:
-		// $ x86_64-w64-mingw32-gcc -o 99bottles 99bottles.c
+		// If on actual Windows, you need pre-compile the programs to pure Windows binaries, unless you have Cygwin...
 		if (!System.getProperty("os.name").contains("Windows")) {
 			Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("unit"));
+			p.waitFor();
+		} else {
+			Process p = Runtime.getRuntime().exec(new String[]{"C:\\cygwin64\\bin\\bash.exe", "-c", "x86_64-w64-mingw32-gcc -o " + program + " " + program + ".c"},
+					new String[]{"PATH=/usr/bin"}, new File("unit"));
 			p.waitFor();
 		}
 	}
@@ -29,7 +32,7 @@ public class StreamGobblerTest extends TestCase {
 	@Test
 	public void testCanGobble1000Lines() throws Exception {
 		Process p = Runtime.getRuntime().exec("unit/stdout"); 	// If on Windows, this program has to be a native Windows program
-																// since it execs a Windows process, so cygwin programs don't work
+		// since it execs a Windows process, so cygwin programs don't work
 		StreamGobbler gobbler = new StreamGobbler(p.getInputStream());
 
 		gobbler.start();
