@@ -3,11 +3,47 @@ package se.alanif.jregr.acceptance;
 import static org.junit.Assert.assertEquals;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.*;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class AcceptanceScenarios {
+	
+	@Before
+	public void setUp() throws Exception {
+		compile("theSUT");
+	}
 
+	private void compile(String program) throws IOException, InterruptedException {
+		// If on actual Windows, you need pre-compile the programs to pure Windows binaries, unless you have Cygwin...
+		if (!System.getProperty("os.name").contains("Windows")) {
+			Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("unit"));
+			p.waitFor();
+		} else {
+			Process p = Runtime.getRuntime().exec(new String[]{"C:\\cygwin64\\bin\\bash.exe", "-c", "x86_64-w64-mingw32-gcc -o " + program + " " + program + ".c"},
+					new String[]{"PATH=/usr/bin"}, new File("acceptance"));
+			p.waitFor();
+		}
+	}
+
+	@Test
+	public void shouldRunSingleTestInExplicitDirectory() throws Exception {
+		String directory = "one_case";
+		String[] arguments = {
+				"-dir", "acceptance/"+directory,
+				"-nocolor",
+				"-bin", "acceptance"
+		};
+		String[] output = runCommandForOutput(arguments);
+		assertEquals(output[STDERR], "");
+		String[] outputLines = output[STDOUT].split("\n");
+		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
+		assertEquals("one : Pending", outputLines[1]);
+	}
+	
 	@Test
 	public void shouldRecurseThroughEmptyDirectoryIntoSubdirectoryWithSingleTest() throws Exception {
 		String directory = "one_subdir_with_a_case";
