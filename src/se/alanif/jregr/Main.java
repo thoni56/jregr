@@ -40,7 +40,7 @@ public class Main {
 		Directory directory;
 		if (commandLine.hasOption("dir")) {
 			String path = commandLine.getOptionValue("dir");
-			if (path.charAt(path.length() - 1) == File.separatorChar)
+			if (path.charAt(path.length() - 1) == '\\' || path.charAt(path.length() - 1) == '/')
 				path = path.substring(0, path.length()-1);
 			directory = new Directory(path);
 		} else {
