@@ -88,7 +88,10 @@ public class Main {
 	private Directory findRegressionDirectory(CommandLine commandLine) {
 		Directory directory;
 		if (commandLine.hasOption("dir")) {
-			directory = new Directory(commandLine.getOptionValue("dir"));
+			String path = commandLine.getOptionValue("dir");
+			if (path.charAt(path.length() - 1) == File.separatorChar)
+				path = path.substring(0, path.length()-1);
+			directory = new Directory(path);
 		} else {
 			directory = currentDirectory();
 		}
@@ -146,7 +149,7 @@ public class Main {
 					Directory binDirectory = findBinDirectory(commandLine, decoder);
 					if (binDirectory != null)
 						binDirectory = canonise(binDirectory);
-					final String suiteName = createSuiteName(commandLine, regrDirectory);
+					final String suiteName = regrDirectory.getName();
 					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
 					final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
 					if (cases.length == 0)
@@ -172,10 +175,6 @@ public class Main {
 			System.exit(1);
 		}
 		return canonical;
-	}
-
-	private String createSuiteName(CommandLine commandLine, RegrDirectory regrDirectory) {
-		return commandLine.hasOption("dir") ? commandLine.getOptionValue("dir") : regrDirectory.getName();
 	}
 
 	private RegrCase[] findSelectedCases(CommandLine commandLine, RegrDirectory regrDirectory) {
