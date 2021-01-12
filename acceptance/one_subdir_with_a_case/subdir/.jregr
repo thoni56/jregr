@@ -1,1 +1,1 @@
-.tst : cat $2
+.tst : theSUT $2

@@ -15,7 +15,9 @@ public class AcceptanceRunner {
 				"java",
 				"-cp", "bin"+File.pathSeparator+"lib/commons-cli-1.4/*",
 				"se.alanif.jregr.Main",
-				"-noansi", "-nocolour"
+				"-noansi", "-nocolour",
+				// Assume we are running from top level, the -bin for acceptance tests are in "acceptance"
+				"-bin", "acceptance"
 		};
 		String[] allArguments = combine(jregr, arguments);
 		ProcessBuilder pb = new ProcessBuilder(allArguments);
