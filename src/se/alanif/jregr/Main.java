@@ -6,9 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
@@ -22,59 +19,13 @@ import se.alanif.jregr.reporters.RegrReporter;
 public class Main {
 	private static final String JREGR_VERSION = "0.0.0";
 
-	private void error(boolean usegui, final String message) {
-		if (usegui)
-			JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
-		else
-			System.out.println("Error: " + message);
+	private void error(final String message) {
+		System.out.println("Error: " + message);
 	}
 
-	private void wrongDirectory(boolean usegui, Directory directory, String reason) {
+	private void wrongDirectory(Directory directory, String reason) {
 		final String message = "Directory '" + directory.getName() + "' " + reason;
-		error(usegui, message);
-	}
-
-	private Directory chooseDirectory(String defaultDirectory, String title, String prompt) {
-		JFileChooser chooser = new JFileChooser(defaultDirectory);
-		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		chooser.setDialogTitle(title);
-		if (chooser.showDialog(null, prompt) == JFileChooser.APPROVE_OPTION)
-			return new Directory(chooser.getSelectedFile().getAbsolutePath());
-		else
-			return null;
-	}
-
-	private Directory selectRegrDirectory(Directory initialDirectory) throws IOException {
-		Directory directory = initialDirectory;
-		boolean correctSelection = false;
-		while (!correctSelection) {
-			correctSelection = true;
-			directory = chooseDirectory(directory.getAbsolutePath(), "Select directory of test cases",
-					"Run Regressions");
-			if (directory != null) {
-				RegrDirectory regrDirectory = new RegrDirectory(directory, Runtime.getRuntime());
-				if (!regrDirectory.hasCases()) {
-					wrongDirectory(true, directory, "has no cases to run");
-					correctSelection = false;
-				}
-			} else
-				directory = null;
-		}
-		return directory;
-	}
-
-	private Directory selectBinDirectory(Directory initialDirectory, CommandsDecoder decoder) {
-		Directory directory = initialDirectory;
-		boolean correctSelection = false;
-		while (!correctSelection) {
-			correctSelection = true;
-			directory = chooseDirectory(directory.getPath(), "Select directory for executable programs", "Select");
-			if (directory != null && !haveExecutables(directory, decoder)) {
-				wrongDirectory(true, directory, "does not have executable programs");
-				correctSelection = false;
-			}
-		}
-		return directory;
+		error(message);
 	}
 
 	private boolean haveExecutables(Directory directory, CommandsDecoder decoder) {
@@ -102,11 +53,9 @@ public class Main {
 		Directory binDirectory = null;
 		if (commandLine.hasOption("bin")) {
 			binDirectory = new Directory(commandLine.getOptionValue("bin"));
-		} else if (commandLine.hasOption("gui")) {
-			binDirectory = selectBinDirectory(currentDirectory(), decoder);
 		}
 		if (binDirectory != null && !haveExecutables(binDirectory, decoder)) {
-			wrongDirectory(commandLine.hasOption("gui"), binDirectory, "does not have executable programs");
+			wrongDirectory(binDirectory, "does not have executable programs");
 			System.exit(-1);
 		}
 		return binDirectory;
@@ -139,7 +88,7 @@ public class Main {
 	private boolean runCases(CommandLine commandLine) throws IOException {
 		Directory regressionDirectory = findRegressionDirectory(commandLine);
 		if (!regressionDirectory.exists())
-			wrongDirectory(commandLine.hasOption("gui"), regressionDirectory, "does not exist");
+			wrongDirectory(regressionDirectory, "does not exist");
 		else
 			try {
 				final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
@@ -157,11 +106,9 @@ public class Main {
 					else
 						return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
 				} else
-					wrongDirectory(commandLine.hasOption("gui"), regrDirectory.toDirectory(),
-							"- top level directory must have a non-empty .jregr file");
+					wrongDirectory(regrDirectory.toDirectory(), "- top level directory must have a non-empty .jregr file");
 			} catch (CommandSyntaxException e) {
-				wrongDirectory(commandLine.hasOption("gui"), regressionDirectory,
-						"- syntax error in .jregr file");
+				wrongDirectory(regressionDirectory, "- syntax error in .jregr file");
 			}
 		return false;
 	}
