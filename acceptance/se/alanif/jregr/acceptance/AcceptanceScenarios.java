@@ -34,23 +34,22 @@ public class AcceptanceScenarios {
 		String directory = "one_case";
 		String[] arguments = {
 				"-dir", "acceptance/"+directory,
-				"-nocolor",
-				"-bin", "acceptance"
+				"-bin", "acceptance",
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
 		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
-		assertEquals("one : Pending", outputLines[1]);
+		assertEquals("one : Pass", outputLines[1]);
 	}
 	
 	@Test
 	public void shouldRecurseThroughEmptyDirectoryIntoSubdirectoryWithSingleTest() throws Exception {
 		String directory = "one_subdir_with_a_case";
 		String[] arguments = {
-				"-dir", "acceptance/"+directory
+				"-dir", "acceptance/"+directory,
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
 		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);

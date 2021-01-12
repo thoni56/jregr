@@ -10,11 +10,12 @@ public class AcceptanceRunner {
 	public static final int STDOUT = 0;
 	public static final int STDERR = 1;
 	
-	public static String[] runCommandForOutput(String[] arguments) {
+	public static String[] runJregrForCleanOutput(String[] arguments) {
 		String[] jregr = {
 				"java",
 				"-cp", "bin"+File.pathSeparator+"lib/commons-cli-1.4/*",
-				"se.alanif.jregr.Main"
+				"se.alanif.jregr.Main",
+				"-noansi", "-nocolour"
 		};
 		String[] allArguments = combine(jregr, arguments);
 		ProcessBuilder pb = new ProcessBuilder(allArguments);

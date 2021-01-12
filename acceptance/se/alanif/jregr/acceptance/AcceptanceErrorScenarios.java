@@ -3,7 +3,7 @@ package se.alanif.jregr.acceptance;
 import static org.junit.Assert.assertEquals;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.STDERR;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.STDOUT;
-import static se.alanif.jregr.acceptance.AcceptanceRunner.runCommandForOutput;
+import static se.alanif.jregr.acceptance.AcceptanceRunner.runJregrForCleanOutput;
 
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ public class AcceptanceErrorScenarios {
 
 	@Test
 	public void shouldRequireJregrFileInImplicitTopDirectory() throws Exception {
-		String[] output = runCommandForOutput(new String[0]);
+		String[] output = runJregrForCleanOutput(new String[0]);
 		assertEquals("", output[STDERR]);
 		assertEquals("Error: Directory 'Jregr' - top level directory must have a non-empty .jregr file", output[STDOUT]);
 	}
@@ -23,7 +23,7 @@ public class AcceptanceErrorScenarios {
 		String[] arguments = {
 				"-dir", "acceptance/"+directory
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals("", output[STDERR]);
 		assertEquals("Error: Directory '"+directory+"' - top level directory must have a non-empty .jregr file", output[0]);
 	}
@@ -35,7 +35,7 @@ public class AcceptanceErrorScenarios {
 		String[] arguments = {
 				"-dir", "acceptance/"+directory
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals("", output[STDERR]);
 		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
 	}
@@ -47,7 +47,7 @@ public class AcceptanceErrorScenarios {
 		String[] arguments = {
 				"-dir", "acceptance/"+directory
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals("", output[STDERR]);
 		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
 	}
@@ -58,7 +58,7 @@ public class AcceptanceErrorScenarios {
 		String[] arguments = {
 				"-dir", "acceptance/"+directory
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals("", output[STDERR]);
 		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
 	}
@@ -69,7 +69,7 @@ public class AcceptanceErrorScenarios {
 		String[] arguments = {
 				"-dir", "acceptance/"+directory
 		};
-		String[] output = runCommandForOutput(arguments);
+		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals("", output[STDERR]);
 		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
 	}
