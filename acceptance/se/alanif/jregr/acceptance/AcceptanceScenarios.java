@@ -20,7 +20,7 @@ public class AcceptanceScenarios {
 	private void compile(String program) throws IOException, InterruptedException {
 		// If on actual Windows, you need pre-compile the programs to pure Windows binaries, unless you have Cygwin...
 		if (!System.getProperty("os.name").contains("Windows")) {
-			Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("unit"));
+			Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("acceptance"));
 			p.waitFor();
 		} else {
 			Process p = Runtime.getRuntime().exec(new String[]{"C:\\cygwin64\\bin\\bash.exe", "-c", "x86_64-w64-mingw32-gcc -o " + program + " " + program + ".c"},
