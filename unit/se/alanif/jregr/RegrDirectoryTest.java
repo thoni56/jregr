@@ -1,6 +1,7 @@
 package se.alanif.jregr;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -9,8 +10,6 @@ import java.io.BufferedReader;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-
-import junit.framework.TestCase;
 
 import org.junit.Before;
 import org.junit.Test;
