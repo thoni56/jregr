@@ -44,6 +44,19 @@ public class AcceptanceScenarios {
 	}
 	
 	@Test
+	public void shouldNotRecurseIntoSubdirectoryWithoutJregr() throws Exception {
+		String directory = "one_empty_subdir";
+		String[] arguments = {
+				"-dir", "acceptance/"+directory,
+		};
+		String[] output = runJregrForCleanOutput(arguments);
+		assertEquals(output[STDERR], "");
+		String[] outputLines = output[STDOUT].split("\n");
+		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
+		assertEquals("0 test(s)", outputLines[1]);
+	}
+	
+	@Test
 	public void shouldRecurseThroughEmptyDirectoryIntoSubdirectoryWithSingleTest() throws Exception {
 		String directory = "one_subdir_with_a_case";
 		String[] arguments = {
