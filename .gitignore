@@ -1,6 +1,7 @@
 jregr.jar
-/bin/
+bin
 test-bin
 outputFile
 .idea
 Jregr.iml
+*~
