@@ -27,6 +27,8 @@ public class RegrDirectory {
 
 	private Runtime runtime;
 
+	private CommandsDecoder decoder;
+
 	public RegrDirectory(Directory directory, Runtime runtime) throws IOException {
 		this.directory = directory;
 		this.runtime = runtime;
@@ -36,6 +38,11 @@ public class RegrDirectory {
 			commandsDecoder.reset();
 			caseExtension = commandsDecoder.getExtension();
 		}
+	}
+	
+	public void setDecoder(CommandsDecoder decoder) {
+		this.decoder = decoder;
+		caseExtension = decoder.getExtension();
 	}
 
 	private String stripExtension(String fileName) {
@@ -124,7 +131,7 @@ public class RegrDirectory {
 	}
 
 	public boolean runAllCases(RegrReporter reporter, Directory bindir, String suiteName,
-			CommandsDecoder decoder, CommandLine commandLine) throws IOException {
+			CommandsDecoder decoder2, CommandLine commandLine) throws IOException {
 		RegrCase[] cases = getCases();
 		reporter.start(suiteName, cases.length, commandLine);
 		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
@@ -163,6 +170,7 @@ public class RegrDirectory {
 			for (Directory subDirectory : subDirectories) {
 				if (subDirectory.hasFile(COMMANDS_FILE_NAME)) {
 					RegrDirectory regrDirectory = new RegrDirectory(subDirectory, runtime);
+					regrDirectory.setDecoder(decoder);
 					String subSuiteName = suiteName + "/" + subDirectory.getName();
 					if (!regrDirectory.runAllCases(reporter, bindir, subSuiteName, decoder, commandLine))
 						success = false;

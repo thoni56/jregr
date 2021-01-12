@@ -95,6 +95,7 @@ public class Main {
 				final File commandsFile = regrDirectory.getCommandsFile();
 				if (commandsFile != null && commandsFile.length() > 0) {
 					final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
+					regrDirectory.setDecoder(decoder);
 					Directory binDirectory = findBinDirectory(commandLine, decoder);
 					if (binDirectory != null)
 						binDirectory = canonise(binDirectory);

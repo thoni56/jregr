@@ -93,20 +93,20 @@ public class RegrDirectoryRecursionTest {
 	@Test
 	public void shouldReturnTrueIfNoSubdirectories() throws Exception {
 		when(mockedCurrentDirectory.getSubdirectories()).thenReturn(NO_SUBDIRECTORIES);
-		assertTrue(currentRegrDirectory.recurse(mockedReporter, mockedBinDirectory, null, null, null));
+		assertTrue(currentRegrDirectory.recurse(mockedReporter, mockedBinDirectory, "", mockedDecoder, mockedCommandLine));
 	}
 	
 	@Test
 	public void shouldReturnTrueIfNoSubdirectoriesWithJregr() throws Exception {
 		when(mockedCurrentDirectory.getSubdirectories()).thenReturn(ONE_SUBDIRECTORY_WITHOUT_JREGR);
-		assertTrue(currentRegrDirectory.recurse(mockedReporter, mockedBinDirectory, null, null, null));
+		assertTrue(currentRegrDirectory.recurse(mockedReporter, mockedBinDirectory, "", mockedDecoder, mockedCommandLine));
 	}
 	
 	@Test
 	public void shouldReturnTrueIfSingleSubdirectoryWithJregrButNoCases() throws Exception {
 		when(mockedCurrentDirectory.getSubdirectories()).thenReturn(ONE_SUBDIRECTORY_WITH_JREGR);
 		returnedCases = new RegrCase[0];
-		assertTrue(currentRegrDirectory.recurse(mockedReporter, mockedBinDirectory, null, null, null));
+		assertTrue(currentRegrDirectory.recurse(mockedReporter, mockedBinDirectory, "", mockedDecoder, mockedCommandLine));
 	}
 	
 	@Test

@@ -80,7 +80,7 @@ public class AcceptanceScenarios {
 		String[] outputLines = output[STDOUT].split("\n");
 		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
 		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"/subdir"+"' :", outputLines[1]);
-		assertEquals("a_case : Pass", outputLines[2]);
+		assertEquals("a_case_in_subdir : Pass", outputLines[2]);
 	}
 
 	@Test
@@ -94,6 +94,6 @@ public class AcceptanceScenarios {
 		String[] outputLines = output[STDOUT].split("\n");
 		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
 		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"/subdir"+"' :", outputLines[1]);
-		assertEquals("a_case : Pass", outputLines[2]);
+		assertEquals("a_case_in_subdir : Pass", outputLines[2]);
 	}
 }

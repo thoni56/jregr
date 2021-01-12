@@ -50,6 +50,7 @@ public class RegrRunnerTest extends TestCase {
 
 	protected void setUp() throws Exception {
 		regrDirectory = new MockedRegrDirectory(binDirectory, null);
+		regrDirectory.setDecoder(mockedDecoder);
 		
 		when(mockedOutputFile.getPath()).thenReturn("outputFile");
 		when(mockedCase.getName()).thenReturn(CASENAME);
