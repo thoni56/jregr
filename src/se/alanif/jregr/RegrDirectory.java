@@ -53,7 +53,7 @@ public class RegrDirectory {
 	}
 
 	public String getName() {
-		return directory.getName();
+		return directory.getPath();
 	}
 
 	public String getPath() {
