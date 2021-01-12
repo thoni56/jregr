@@ -137,7 +137,6 @@ public class CommandsDecoder {
 			jregrFileReader.reset();
 			readAndSplitLineIntoParts();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
