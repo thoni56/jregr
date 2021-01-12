@@ -16,7 +16,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	private static final String TEXT_COLOR_MAGENTA = ""+35;
 	private static final String TEXT_COLOR_CYAN = ""+36;
 	private static final String TEXT_COLOR_DEFAULT = ""+0;
-	
+
 	private static final String VIRGIN = TEXT_COLOR_CYAN;
 	private static final String PENDING = TEXT_COLOR_BLUE;
 	private static final String SUSPENDED = TEXT_COLOR_YELLOW;
@@ -28,7 +28,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	private String possibleComma = "";
 	private CommandLine commandLine;
 
-	
+
 	public void start(String suite, int numberOfTests, CommandLine commandLine) {
 		total = numberOfTests;
 		this.commandLine = commandLine;
@@ -126,14 +126,17 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		else color(PASSED);
 		System.out.printf("%d test(s)", total);
 		color(DEFAULT);
-		System.out.print(" (");
-		if (fatal > 0) record(fatal, "fatal", FATAL);
-		if (suspended > 0) recordSuspended();
-		if (pending > 0) recordPending();
-		if (failing > 0) recordFailing();
-		if (passing > 0) recordPassing();
-		color(DEFAULT);
-		System.out.printf(")\n");
+		if (fatal > 0 || suspended > 0 || pending > 0 || failing > 0 || passing > 0) {
+			System.out.print(" (");
+			if (fatal > 0) record(fatal, "fatal", FATAL);
+			if (suspended > 0) recordSuspended();
+			if (pending > 0) recordPending();
+			if (failing > 0) recordFailing();
+			if (passing > 0) recordPassing();
+			color(DEFAULT);
+			System.out.printf(")");
+		}
+		System.out.printf("\n");
 	}
 
 	private void recordPassing() {
