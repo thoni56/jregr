@@ -1,7 +1,6 @@
 package se.alanif.jregr;
 
 import java.io.FileNotFoundException;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -25,12 +24,6 @@ public class RegrDirectory {
 	private String caseExtension;
 
 	private Directory directory;
-
-	private FilenameFilter caseNameFilter = new FilenameFilter() {
-		public boolean accept(java.io.File dir, String name) {
-			return isCaseName(name);
-		}
-	};
 
 	private Runtime runtime;
 
@@ -65,8 +58,9 @@ public class RegrDirectory {
 		return getCases().length > 0;
 	}
 
+	// TODO Here files are probably enumerated multiple times since hasCases() does all the work too
 	public RegrCase[] getCases() {
-		String[] fileNames = directory.list(caseNameFilter);
+		String[] fileNames = directory.getFilenamesWithExtension(caseExtension);
 		return convertFilesToCases(fileNames);
 	}
 
@@ -120,16 +114,6 @@ public class RegrDirectory {
 	public boolean hasCaseFile(String caseName) {
 		return directory.hasFile(caseName + caseExtension);
 	}
-
-	private boolean isCaseName(String name) {
-		if (caseExtension.length() == 0)
-			return false;
-		else if (name.endsWith(caseExtension))
-			return true;
-		else
-			return directory.hasFile(name + caseExtension);
-	}
-
 
 	public boolean runSelectedCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
 			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 
 import se.alanif.jregr.CommandsDecoder;
 
@@ -25,6 +26,17 @@ public class Directory extends File {
 
 	public File getFile(String fileName) {
 		return new File(getAbsolutePath() + separator + fileName);
+	}
+	
+	public String[] getFilenamesWithExtension(String extension) {
+		String[] fileNames = list(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(java.io.File dir, String name) {
+				return name.endsWith(extension);
+			}
+		});
+		return fileNames;
 	}
 
 	public boolean executablesExist(CommandsDecoder decoder) {
