@@ -1,6 +1,8 @@
 package se.alanif.jregr;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -39,7 +41,7 @@ public class RegrDirectory {
 			caseExtension = commandsDecoder.getExtension();
 		}
 	}
-	
+
 	public void setDecoder(CommandsDecoder decoder) {
 		this.decoder = decoder;
 		caseExtension = decoder.getExtension();
@@ -98,6 +100,10 @@ public class RegrDirectory {
 			return null;
 	}
 
+	public boolean hasCaseFile(String caseName) {
+		return directory.hasFile(caseName + caseExtension);
+	}
+	
 	public boolean hasOutputFile(String caseName) {
 		return directory.hasFile(caseName + OUTPUT_EXTENSION);
 	}
@@ -118,30 +124,26 @@ public class RegrDirectory {
 		return directory.getFile(caseName + EXPECTED_EXTENSION);
 	}
 
-	public boolean hasCaseFile(String caseName) {
-		return directory.hasFile(caseName + caseExtension);
-	}
-
 	public boolean runSelectedCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
-			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+			CommandLine commandLine) throws FileNotFoundException {
 		reporter.start(suiteName, cases.length, commandLine);
-		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
+		boolean success = runTheCases(cases, reporter, bindir, suiteName, commandLine);
 		reporter.end();
 		return success;
 	}
 
 	public boolean runAllCases(RegrReporter reporter, Directory bindir, String suiteName,
-			CommandsDecoder decoder2, CommandLine commandLine) throws IOException {
+			CommandLine commandLine) throws IOException {
 		RegrCase[] cases = getCases();
 		reporter.start(suiteName, cases.length, commandLine);
-		boolean success = runTheCases(cases, reporter, bindir, suiteName, decoder, commandLine);
+		boolean success = runTheCases(cases, reporter, bindir, suiteName, commandLine);
 		recurse(reporter, bindir, suiteName, decoder, commandLine);
 		reporter.end();
 		return success;
 	}
 
 	private boolean runTheCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
-			CommandsDecoder decoder, CommandLine commandLine) throws FileNotFoundException {
+			CommandLine commandLine) throws FileNotFoundException {
 		boolean success = true;
 		for (RegrCase theCase : cases) {
 			PrintWriter printWriter = theCase.getPrintWriter();
@@ -170,9 +172,12 @@ public class RegrDirectory {
 			for (Directory subDirectory : subDirectories) {
 				if (subDirectory.hasFile(COMMANDS_FILE_NAME)) {
 					RegrDirectory regrDirectory = new RegrDirectory(subDirectory, runtime);
-					regrDirectory.setDecoder(decoder);
+					if (regrDirectory.hasCommands())
+						regrDirectory.setDecoder(new CommandsDecoder(readerFor(regrDirectory.getCommandsFile())));
+					else
+						regrDirectory.setDecoder(decoder);
 					String subSuiteName = suiteName + "/" + subDirectory.getName();
-					if (!regrDirectory.runAllCases(reporter, bindir, subSuiteName, decoder, commandLine))
+					if (!regrDirectory.runAllCases(reporter, bindir, subSuiteName, commandLine))
 						success = false;
 				}
 			}
@@ -180,4 +185,18 @@ public class RegrDirectory {
 		return success;
 	}
 
+	private boolean hasCommands() {
+		return getCommandsFile().length() > 0;
+	}
+
+	private BufferedReader readerFor(File commandsFile) {
+		if (commandsFile.exists())
+			try {
+				return new BufferedReader(new FileReader(commandsFile));
+			} catch (FileNotFoundException e) {
+				return null;
+			}
+		else
+			return null;
+	}
 }

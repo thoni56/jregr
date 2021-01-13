@@ -103,9 +103,9 @@ public class Main {
 					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
 					final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
 					if (cases.length == 0)
-						return regrDirectory.runAllCases(reporter, binDirectory, suiteName, decoder, commandLine);
+						return regrDirectory.runAllCases(reporter, binDirectory, suiteName, commandLine);
 					else
-						return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, decoder, commandLine);
+						return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, commandLine);
 				} else
 					wrongDirectory(regrDirectory.toDirectory(), "- top level directory must have a non-empty .jregr file");
 			} catch (CommandSyntaxException e) {
