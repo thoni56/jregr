@@ -55,8 +55,9 @@ public class RegrDirectory {
 	}
 
 	public String getName() {
+		return directory.getName();
 		// In case we are in Windows we want to normalize names to have separator '/'
-		return directory.getPath().replaceAll("\\\\", "/");
+		// return directory.getPath().replaceAll("\\\\", "/");
 	}
 
 	public String getPath() {
