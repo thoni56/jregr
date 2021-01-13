@@ -72,7 +72,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		color(PASSED);
 		System.out.print("Pass");
 		color(DEFAULT);
-		if (commandLine.hasOption("noansi")) {
+		if (commandLine.hasOption("noansi") || commandLine.hasOption("verbose")) {
 			System.out.println();
 		} else {
 			eraseLine();
@@ -80,10 +80,6 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	}
 
 	private void eraseLine() {
-		try {
-			Thread.sleep(20);
-		} catch (InterruptedException e) {
-		}
 		String beginningOfLine = CSI+"1G";
 		System.out.print(beginningOfLine);
 		String eraseLine = CSI+"2K";

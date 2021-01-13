@@ -12,6 +12,7 @@ public class OptionsManager extends Options {
 		addOption("help", false, "this help");
 		addOption("xml", false, "output XML according to ANT test format (junit et al.) instead of plain text");
 		addOption("noansi", false, "don't use ANSI control on the console to minimize output");
+		addOption("verbose", false, "show every case and it's result (passing cases are normally not shown)");
 		addOption("nocolor", false, "don't use ANSI control on the console to color output");
 		addOption("nocolour", false, "don't use ANSI control on the console to colour output");
 		addOption("version", false, "show version");
