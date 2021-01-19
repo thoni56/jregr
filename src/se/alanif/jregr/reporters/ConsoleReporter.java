@@ -75,13 +75,12 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		if (commandLine.hasOption("noansi") || commandLine.hasOption("verbose")) {
 			System.out.println();
 		} else {
-			eraseLine();
+			eraseRestOfLine();
+			System.out.print("\r");
 		}
 	}
 
-	private void eraseLine() {
-		String beginningOfLine = CSI+"1G";
-		System.out.print(beginningOfLine);
+	private void eraseRestOfLine() {
 		String eraseLine = CSI+"2K";
 		System.out.print(eraseLine);
 	}
