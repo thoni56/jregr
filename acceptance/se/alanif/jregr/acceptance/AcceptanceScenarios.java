@@ -39,7 +39,7 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
+		assertEquals("'"+directory+"': Running 1 test(s)...", outputLines[0]);
 		assertEquals("one : Pass", outputLines[1]);
 	}
 	
@@ -52,8 +52,8 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
-		assertEquals("0 test(s)", outputLines[1]);
+		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
+		assertEquals("'"+directory+"': ran 0 test(s)", outputLines[1]);
 	}
 	
 	@Test
@@ -65,8 +65,8 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
-		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"/subdir"+"' :", outputLines[1]);
+		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
+		assertEquals("'"+directory+"/subdir': Running 1 test(s)...", outputLines[2]);
 	}
 	
 	@Test
@@ -78,9 +78,9 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
-		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"/subdir"+"' :", outputLines[1]);
-		assertEquals("a_case_in_subdir : Pass", outputLines[2]);
+		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
+		assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
+		assertEquals("a_case_in_subdir : Pass", outputLines[3]);
 	}
 
 	@Test
@@ -92,8 +92,8 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("Running 0 test(s) in 'acceptance/"+directory+"' :", outputLines[0]);
-		assertEquals("Running 1 test(s) in 'acceptance/"+directory+"/subdir"+"' :", outputLines[1]);
-		assertEquals("a_case_in_subdir : Pass", outputLines[2]);
+		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
+		assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
+		assertEquals("a_case_in_subdir : Pass", outputLines[3]);
 	}
 }
