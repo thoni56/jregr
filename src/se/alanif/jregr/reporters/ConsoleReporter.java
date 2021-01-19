@@ -56,7 +56,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		suspended = 0;
 		pending = 0;
 		passing = 0;
-		System.out.println("Running " + numberOfTests + " test(s) in '" + suite + "' :");
+		System.out.println("'" + suite + "': Running " + numberOfTests + " test(s)...");
 	}
 
 	public void startTest(RegrCase theCase, long millis) {
@@ -143,7 +143,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		if (fatal > 0) color(FATAL);
 		else if (failing > 0) color(FAILED);
 		else color(PASSED);
-		System.out.printf("%s: %d test(s)", suite, tests);
+		System.out.printf("'%s': ran %d test(s)", suite, tests);
 		color(DEFAULT);
 		if (fatal > 0 || suspended > 0 || pending > 0 || failing > 0 || passing > 0) {
 			System.out.print(" (");
@@ -203,10 +203,10 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		if (total_fatal > 0 || total_suspended > 0 || total_pending > 0 || total_failing > 0 || total_passing > 0) {
 			System.out.print(" (");
 			if (total_fatal > 0) record(total_fatal, "fatal", FATAL);
-			if (total_suspended > 0) recordSuspended();
-			if (total_pending > 0) recordPending();
-			if (total_failing > 0) recordFailing();
-			if (total_passing > 0) recordPassing();
+			if (total_suspended > 0) record(total_suspended, "suspended", SUSPENDED);
+			if (total_pending > 0) record(total_pending, "pending", PENDING);
+			if (total_failing > 0) record(total_failing, "failing", FAILED);
+			if (total_passing > 0) record(total_passing, "passing", PASSED);
 			color(DEFAULT);
 			System.out.printf(")");
 		}
