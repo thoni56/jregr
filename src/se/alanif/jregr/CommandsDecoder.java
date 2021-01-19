@@ -31,6 +31,7 @@ public class CommandsDecoder {
 	private String[] parts;
 	private BufferedReader jregrFileReader;
 	private String stdinFilename;
+	private String stdoutFilename;
 
 	public CommandsDecoder(BufferedReader fileReader) throws IOException {
 		jregrFileReader = fileReader;
@@ -51,16 +52,24 @@ public class CommandsDecoder {
 		if (split.length < 3 || !split[1].equals(":")) {
 			throw new CommandSyntaxException("Syntax error in .jregr file");
 		}
-		split = decodeStdin(split);
+		split = decodeStdinout(split);
 		return removeColonInSecondPosition(split);
 	}
 
-	private String[] decodeStdin(String[] split) {
+	private String[] decodeStdinout(String[] split) {
+		stdinFilename = null; stdoutFilename = null;
 		if (split[split.length - 2].equals("<")) {
 			stdinFilename = split[split.length - 1];
 			split = Arrays.copyOf(split, split.length - 2);
-		} else
-			stdinFilename = null;
+		}
+		if (split[split.length - 2].equals(">")) {
+			stdoutFilename = split[split.length - 1];
+			split = Arrays.copyOf(split, split.length - 2);
+		}
+		if (split[split.length - 2].equals("<")) {
+			stdinFilename = split[split.length - 1];
+			split = Arrays.copyOf(split, split.length - 2);
+		}
 		return split;
 	}
 
@@ -95,6 +104,15 @@ public class CommandsDecoder {
 	public String getStdin(String caseName) {
 		String r;
 		r = stdinFilename;
+		if (r != null)
+			return expandSymbols(caseName, r);
+		else
+			return r;
+	}
+
+	public String getStdout(String caseName) {
+		String r;
+		r = stdoutFilename;
 		if (r != null)
 			return expandSymbols(caseName, r);
 		else
@@ -140,4 +158,5 @@ public class CommandsDecoder {
 			e.printStackTrace();
 		}
 	}
+
 }

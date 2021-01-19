@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import se.alanif.jregr.io.Directory;
@@ -37,6 +38,7 @@ public class CommandsDecoderTest {
 	private Directory binDirectoryWithoutExecutables = mock(Directory.class);
 	private CommandsDecoder decoder;
 
+	@Before
 	public void setUp() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION1+" : "+COMMAND1+" "+ARG11+" "+ARG12);
 		
@@ -110,5 +112,34 @@ public class CommandsDecoderTest {
 		verify(mockedFileReader).reset();
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
+	
+	@Test
+	public void canFindStdinWhenLast() throws Exception {
+		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments < input_file");
+		decoder.advance();
+		assertEquals("input_file", decoder.getStdin("aCase"));
+	}
+	
+	@Test
+	public void canFindStdoutWhenLast() throws Exception {
+		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments > output_file");
+		decoder.advance();
+		assertEquals("output_file", decoder.getStdout("aCase"));
+	}
 
+	@Test
+	public void canFindBothStdinAndStdout() throws Exception {
+		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments < input_file > output_file");
+		decoder.advance();
+		assertEquals("input_file", decoder.getStdin("aCase"));
+		assertEquals("output_file", decoder.getStdout("aCase"));
+	}
+
+	@Test
+	public void canFindBothStdoutAndStdin() throws Exception {
+		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments > output_file < input_file");
+		decoder.advance();
+		assertEquals("input_file", decoder.getStdin("aCase"));
+		assertEquals("output_file", decoder.getStdout("aCase"));
+	}
 }
