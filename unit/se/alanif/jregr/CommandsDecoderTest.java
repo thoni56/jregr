@@ -9,10 +9,10 @@ import org.junit.Test;
 
 import se.alanif.jregr.io.Directory;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class CommandsDecoderTest extends TestCase {
+public class CommandsDecoderTest {
 	
 	private static final String BINPATH = "binpath";
 	private static final String CASENAME = "case";
@@ -110,5 +110,7 @@ public class CommandsDecoderTest extends TestCase {
 		verify(mockedFileReader).reset();
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
+	
+	
 
 }
