@@ -51,22 +51,22 @@ public class CommandsDecoderTest {
 	}
 	
 	@Test
-	public void testCanGetExtensionFromCurrentJregrLine() throws Exception {
+	public void canGetExtensionFromCurrentJregrLine() throws Exception {
 		assertEquals(EXTENSION1, decoder.getExtension());
 	}
 
 	@Test
-	public void testShouldBuildCommandAndArgumentsFromCurrentJregrLine() throws Exception {
+	public void shouldBuildCommandAndArgumentsFromCurrentJregrLine() throws Exception {
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 	
 	@Test
-	public void testShouldBuildWithoutBinDirPathIfExecutableDoesNotExist() throws Exception {
+	public void shouldBuildWithoutBinDirPathIfExecutableDoesNotExist() throws Exception {
 		assertTrue(Arrays.equals(COMMAND_AND_ARGUMENTS_WITHOUT_PATH, decoder.buildCommandAndArguments(binDirectoryWithoutExecutables, CASENAME)));
 	}
 	
 	@Test
-	public void testShouldGetStdinFileFromCurrentJregrLine() throws Exception {
+	public void shouldGetStdinFileFromCurrentJregrLine() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION1+" : "+COMMAND1+" "+ARG11+" "+ARG12 + " < " + STDIN);
 		decoder = new CommandsDecoder(mockedFileReader);
 		
@@ -74,7 +74,7 @@ public class CommandsDecoderTest {
 	}
 
 	@Test
-	public void testReturnsFalseWhenAdvancingBeyondEndOfCommands() throws Exception {
+	public void returnsFalseWhenAdvancingBeyondEndOfCommands() throws Exception {
 		when(mockedFileReader.readLine())
 			.thenReturn(EXTENSION2+" : "+COMMAND2+" "+ARG21+" "+OPT21+" "+OPTION_VALUE_21)
 			.thenThrow(new IOException());
@@ -84,7 +84,7 @@ public class CommandsDecoderTest {
 	}
 
 	@Test
-	public void testShouldNotAdvanceAfterEndOfJregrFile() throws Exception {
+	public void shouldNotAdvanceAfterEndOfJregrFile() throws Exception {
 		when(mockedFileReader.readLine())
 			.thenReturn("extension : command")
 			.thenThrow(new IOException());
@@ -94,7 +94,7 @@ public class CommandsDecoderTest {
 	}
 
 	@Test
-	public void testShouldBuildCommandAndArgumentsAfterAdvancingToSecondLine() throws Exception {
+	public void shouldBuildCommandAndArgumentsAfterAdvancingToSecondLine() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION2+" : "+COMMAND2+" "+ARG21+" "+OPT21+" "+OPTION_VALUE_21);
 		
 		decoder.advance();
@@ -102,7 +102,7 @@ public class CommandsDecoderTest {
 	}
 	
 	@Test
-	public void testCanResetDecoderToReadFromBeginning() throws Exception {
+	public void canResetDecoderToReadFromBeginning() throws Exception {
 		decoder.advance();
 		decoder.reset();
 		
@@ -110,7 +110,5 @@ public class CommandsDecoderTest {
 		verify(mockedFileReader).reset();
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
-	
-	
 
 }
