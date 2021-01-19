@@ -4,7 +4,7 @@ import se.alanif.jregr.exec.RegrCase.State;
 
 public abstract class AbstractRegrReporter implements RegrReporter {
 
-	protected int total;
+	protected int tests;
 	protected int fatal;
 	protected int virgin;
 	protected int pending;

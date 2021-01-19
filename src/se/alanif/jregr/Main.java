@@ -96,16 +96,23 @@ public class Main {
 				if (commandsFile != null && commandsFile.length() > 0) {
 					final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
 					regrDirectory.setDecoder(decoder);
+					final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
+
 					Directory binDirectory = findBinDirectory(commandLine, decoder);
 					if (binDirectory != null)
 						binDirectory = canonise(binDirectory);
+					
 					final String suiteName = regrDirectory.getName();
 					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
-					final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
+					
+					boolean result;
+					reporter.start(commandLine);
 					if (cases.length == 0)
-						return regrDirectory.runAllCases(reporter, binDirectory, suiteName, commandLine);
+						result = regrDirectory.runAllCases(reporter, binDirectory, suiteName, commandLine);
 					else
-						return regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, commandLine);
+						result = regrDirectory.runSelectedCases(cases, reporter, binDirectory, suiteName, commandLine);
+					reporter.end();
+					return result;
 				} else
 					wrongDirectory(regrDirectory.toDirectory(), "- top level directory must have a non-empty .jregr file");
 			} catch (CommandSyntaxException e) {

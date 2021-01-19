@@ -127,19 +127,19 @@ public class RegrDirectory {
 
 	public boolean runSelectedCases(RegrCase[] cases, RegrReporter reporter, Directory bindir, String suiteName,
 			CommandLine commandLine) throws FileNotFoundException {
-		reporter.start(suiteName, cases.length, commandLine);
+		reporter.startSuite(suiteName, cases.length);
 		boolean success = runTheCases(cases, reporter, bindir, suiteName, commandLine);
-		reporter.end();
+		reporter.endSuite();
 		return success;
 	}
 
 	public boolean runAllCases(RegrReporter reporter, Directory bindir, String suiteName,
 			CommandLine commandLine) throws IOException {
 		RegrCase[] cases = getCases();
-		reporter.start(suiteName, cases.length, commandLine);
+		reporter.startSuite(suiteName, cases.length);
 		boolean success = runTheCases(cases, reporter, bindir, suiteName, commandLine);
+		reporter.endSuite();
 		recurse(reporter, bindir, suiteName, decoder, commandLine);
-		reporter.end();
 		return success;
 	}
 
@@ -158,7 +158,7 @@ public class RegrDirectory {
 			}
 
 			// TODO Until we use an XML framework we can't call starting() before the test because of the timing info
-			reporter.starting(theCase, end - start);
+			reporter.startTest(theCase, end - start);
 			reporter.report(theCase.status());
 		}
 		return success;

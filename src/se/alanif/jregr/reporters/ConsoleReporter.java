@@ -28,14 +28,38 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	private String possibleComma = "";
 	private CommandLine commandLine;
 
+	private int total_tests;
+	private int total_fatal;
+	private int total_failing;
+	private int total_suspended;
+	private int total_pending;
+	private int total_passing;
 
-	public void start(String suite, int numberOfTests, CommandLine commandLine) {
-		total = numberOfTests;
+	private String suite;
+
+	public void start(CommandLine commandLine) {
+		total_tests = 0;
+		total_fatal = 0;
+		total_failing = 0;
+		total_suspended = 0;
+		total_pending = 0;
+		total_passing = 0;
+
 		this.commandLine = commandLine;
+	}
+
+	public void startSuite(String suite, int numberOfTests) {
+		this.suite = suite;
+		tests = numberOfTests;
+		fatal = 0;
+		failing = 0;
+		suspended = 0;
+		pending = 0;
+		passing = 0;
 		System.out.println("Running " + numberOfTests + " test(s) in '" + suite + "' :");
 	}
 
-	public void starting(RegrCase theCase, long millis) {
+	public void startTest(RegrCase theCase, long millis) {
 		System.out.print(theCase.getName() + " : ");
 	}
 
@@ -81,7 +105,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 	}
 
 	private void eraseRestOfLine() {
-		String eraseLine = CSI+"2K";
+		String eraseLine = CSI+"1K";
 		System.out.print(eraseLine);
 	}
 
@@ -114,12 +138,12 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		color(DEFAULT);
 	}
 
-	public void end() {
+	public void endSuite() {
 		possibleComma = "";
 		if (fatal > 0) color(FATAL);
 		else if (failing > 0) color(FAILED);
 		else color(PASSED);
-		System.out.printf("%d test(s)", total);
+		System.out.printf("%s: %d test(s)", suite, tests);
 		color(DEFAULT);
 		if (fatal > 0 || suspended > 0 || pending > 0 || failing > 0 || passing > 0) {
 			System.out.print(" (");
@@ -132,6 +156,13 @@ public class ConsoleReporter extends AbstractRegrReporter {
 			System.out.printf(")");
 		}
 		System.out.printf("\n");
+		
+		total_fatal += fatal;
+		total_failing += failing;
+		total_suspended += suspended;
+		total_pending += pending;
+		total_passing += passing;
+		total_tests += tests;		
 	}
 
 	private void recordPassing() {
@@ -160,6 +191,26 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		color(typeColor);
 		System.out.printf("%d %s", count, type);
 		possibleComma = ", ";
+	}
+	
+	public void end() {
+		possibleComma = "";
+		if (total_fatal > 0) color(FATAL);
+		else if (total_failing > 0) color(FAILED);
+		else color(PASSED);
+		System.out.printf("Total %d test(s)", total_tests);
+		color(DEFAULT);
+		if (total_fatal > 0 || total_suspended > 0 || total_pending > 0 || total_failing > 0 || total_passing > 0) {
+			System.out.print(" (");
+			if (total_fatal > 0) record(total_fatal, "fatal", FATAL);
+			if (total_suspended > 0) recordSuspended();
+			if (total_pending > 0) recordPending();
+			if (total_failing > 0) recordFailing();
+			if (total_passing > 0) recordPassing();
+			color(DEFAULT);
+			System.out.printf(")");
+		}
+		System.out.printf("\n");
 	}
 
 }

@@ -60,14 +60,14 @@ public class RegrRunnerTest extends TestCase {
 	@Test
 	public void testRunnerOnNoCasesShouldNotReportAnyTests() throws Exception {
 		assertTrue(regrDirectory.runSelectedCases(NO_CASES, mockedReporter, null, SUITENAME, null));
-		verify(mockedReporter, never()).starting(mockedCase, 0);
+		verify(mockedReporter, never()).startTest(mockedCase, 0);
 	}
 
 	@Test
 	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
 		assertTrue(regrDirectory.runSelectedCases(ONE_CASE, mockedReporter, null, SUITENAME, null));
 
-		verify(mockedReporter).starting(eq(mockedCase), longThat(millis -> millis == 0));
+		verify(mockedReporter).startTest(eq(mockedCase), longThat(millis -> millis == 0));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class RegrRunnerTest extends TestCase {
 
 		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CaseRunner) any(),
 				(ProcessBuilder) any());
-		verify(mockedReporter).starting(eq(mockedCase), longThat(millis -> millis == 0));
+		verify(mockedReporter).startTest(eq(mockedCase), longThat(millis -> millis == 0));
 		verify(mockedReporter).report((State) any());
 	}
 

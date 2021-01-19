@@ -35,13 +35,16 @@ public class XMLReporter extends AbstractRegrReporter {
 	public XMLReporter() {
 	}
 
-	public void start(String suiteName, int numberOfTests, CommandLine commandLine) {
+	public void start(CommandLine commandLine) {
+	}
+
+	public void startSuite(String suiteName, int numberOfTests) {
 		this.suiteName = suiteName;
 		xmlOutput.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
 		xmlOutput.println("<testsuite name=\"" + suiteName + "\">");
 	}
 
-	public void starting(RegrCase caseName, long millis) {
+	public void startTest(RegrCase caseName, long millis) {
 		this.theCase = caseName;
 		this.millis = millis;
 	}
@@ -140,7 +143,7 @@ public class XMLReporter extends AbstractRegrReporter {
 		suspended();
 	}
 
-	public void end() {
+	public void endSuite() {
 		xmlOutput.println("</testsuite>");
 	}
 
@@ -155,6 +158,9 @@ public class XMLReporter extends AbstractRegrReporter {
 
 	public String removeControlCharactersFrom(String inputString) {
 		return inputString.replaceAll(CONTROL_CHARACTER_REGEX, "");
+	}
+	
+	public void end() {
 	}
 
 }
