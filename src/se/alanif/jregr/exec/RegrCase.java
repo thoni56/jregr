@@ -1,8 +1,10 @@
 package se.alanif.jregr.exec;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -46,9 +48,16 @@ public class RegrCase {
 							regrDirectory.getPath() + java.io.File.separator + stdin);
 					inputPusher = new StreamPusher(process.getOutputStream(), inputReader);
 				}
+				final String stdout = decoder.getStdout(caseName);
 				String output = caseRunner.run(process, new StreamGobbler(process.getErrorStream()),
 						new StreamGobbler(process.getInputStream()), inputPusher);
-				outputWriter.print(output);
+				if (stdout == null)
+					outputWriter.print(output);
+				else if (!stdout.equals("/dev/null")) {
+				    BufferedWriter writer = new BufferedWriter(new FileWriter(stdout));
+				    writer.write(output);
+				    writer.close();
+				}
 				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
