@@ -1,14 +1,15 @@
 package se.alanif.jregr.exec;
 
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import junit.framework.TestCase;
 import se.alanif.jregr.CommandsDecoder;
 import se.alanif.jregr.RegrDirectory;
 import se.alanif.jregr.exec.RegrCase.State;
@@ -16,7 +17,7 @@ import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.io.File;
 import se.alanif.jregr.reporters.RegrReporter;
 
-public class RegrRunnerTest extends TestCase {
+public class RegrRunnerTest {
 
 	private static final String CASENAME = "test1";
 	private static final String SUITENAME = "suite.name";
@@ -48,7 +49,8 @@ public class RegrRunnerTest extends TestCase {
 	}
 	private MockedRegrDirectory regrDirectory;
 
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		regrDirectory = new MockedRegrDirectory(binDirectory, null);
 		regrDirectory.setDecoder(mockedDecoder);
 		
