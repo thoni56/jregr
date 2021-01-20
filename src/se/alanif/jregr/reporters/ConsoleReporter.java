@@ -61,6 +61,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 
 	public void startTest(RegrCase theCase, long millis) {
 		System.out.print(theCase.getName() + " : ");
+		eraseRestOfLine();
 	}
 
 	public void fatal() {
@@ -99,13 +100,12 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		if (commandLine.hasOption("noansi") || commandLine.hasOption("verbose")) {
 			System.out.println();
 		} else {
-			eraseRestOfLine();
 			System.out.print("\r");
 		}
 	}
 
 	private void eraseRestOfLine() {
-		String eraseLine = CSI+"1K";
+		String eraseLine = CSI+"0K";
 		System.out.print(eraseLine);
 	}
 
