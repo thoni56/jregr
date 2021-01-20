@@ -61,7 +61,8 @@ public class ConsoleReporter extends AbstractRegrReporter {
 
 	public void startTest(RegrCase theCase, long millis) {
 		System.out.print(theCase.getName() + " : ");
-		eraseRestOfLine();
+		if (!commandLine.hasOption("noansi") && !commandLine.hasOption("verbose"))
+			eraseRestOfLine();
 	}
 
 	public void fatal() {
@@ -156,7 +157,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 			System.out.printf(")");
 		}
 		System.out.printf("\n");
-		
+
 		total_fatal += fatal;
 		total_failing += failing;
 		total_suspended += suspended;
@@ -192,7 +193,7 @@ public class ConsoleReporter extends AbstractRegrReporter {
 		System.out.printf("%d %s", count, type);
 		possibleComma = ", ";
 	}
-	
+
 	public void end() {
 		possibleComma = "";
 		if (total_fatal > 0) color(FATAL);
