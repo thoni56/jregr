@@ -10,8 +10,8 @@ import se.alanif.jregr.CommandsDecoder;
 
 public class Directory extends File {
 
-	public Directory(String pathname) {
-		super(pathname);
+	public Directory(String path) {
+		super(path);
 	}
 
 	private static final long serialVersionUID = 1L;

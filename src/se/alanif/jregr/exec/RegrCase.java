@@ -54,7 +54,7 @@ public class RegrCase {
 				if (stdout == null)
 					outputWriter.print(output);
 				else if (!stdout.equals("/dev/null")) {
-				    BufferedWriter writer = new BufferedWriter(new FileWriter(stdout));
+				    BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
 				    writer.write(output);
 				    writer.close();
 				}

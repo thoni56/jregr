@@ -1,6 +1,6 @@
 package se.alanif.jregr.acceptance;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.*;
 
 import java.io.File;
@@ -65,7 +65,6 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
 		assertEquals("'"+directory+"/subdir': Running 1 test(s)...", outputLines[2]);
 	}
 	
@@ -78,7 +77,6 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
 		assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
 		assertEquals("a_case_in_subdir : Pass", outputLines[3]);
 	}
@@ -92,8 +90,29 @@ public class AcceptanceScenarios {
 		String[] output = runJregrForCleanOutput(arguments);
 		assertEquals(output[STDERR], "");
 		String[] outputLines = output[STDOUT].split("\n");
-		assertEquals("'"+directory+"': Running 0 test(s)...", outputLines[0]);
 		assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
 		assertEquals("a_case_in_subdir : Pass", outputLines[3]);
+	}
+	
+	@Test
+	public void shouldCreateRedirectedOutputInCaseDirectory() {
+		String directory = "one_subdir_with_redirected_output";
+		String[] arguments = {
+				"-dir", "acceptance/"+directory,
+		};
+		
+		// Ensure the redirected output file does not exist
+		String redirectedOutputFilename = "acceptance"+File.separator+directory+File.separator+"subdir/a_case_in_subdir.out";
+		File stdoutFile = new File(redirectedOutputFilename);
+		stdoutFile.delete();
+		
+		String[] output = runJregrForCleanOutput(arguments);
+		assertEquals(output[STDERR], "");
+		String[] outputLines = output[STDOUT].split("\n");
+		assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
+		assertEquals("a_case_in_subdir : Pass", outputLines[3]);
+
+		// Assert it does
+		assertTrue(stdoutFile.exists());
 	}
 }
