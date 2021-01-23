@@ -91,7 +91,7 @@ public class AcceptanceScenarios {
         assertEquals(output[STDERR], "");
         String[] outputLines = output[STDOUT].split("\n");
         assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
-        assertEquals("a_case_in_subdir : Pass", outputLines[3]);
+        assertEquals("a_case_in_subdir_with_a_different_jregr : Pass", outputLines[3]);
     }
 
     @Test
