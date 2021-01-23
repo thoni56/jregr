@@ -34,7 +34,7 @@ public class AcceptanceScenarios {
         String directory = "one_case";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
-                "-bin", "acceptance",
+                "-bin", "acceptance"
         };
         String[] output = runJregrForCleanOutput(arguments);
         assertEquals(output[STDERR], "");
@@ -48,6 +48,7 @@ public class AcceptanceScenarios {
         String directory = "one_empty_subdir";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
+                "-bin", "acceptance"
         };
         String[] output = runJregrForCleanOutput(arguments);
         assertEquals(output[STDERR], "");
@@ -61,6 +62,7 @@ public class AcceptanceScenarios {
         String directory = "one_subdir_with_a_case";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
+                "-bin", "acceptance"
         };
         String[] output = runJregrForCleanOutput(arguments);
         assertEquals(output[STDERR], "");
@@ -73,6 +75,7 @@ public class AcceptanceScenarios {
         String directory = "one_subdir_with_empty_jregr";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
+                "-bin", "acceptance"
         };
         String[] output = runJregrForCleanOutput(arguments);
         assertEquals(output[STDERR], "");
@@ -86,12 +89,13 @@ public class AcceptanceScenarios {
         String directory = "one_subdir_with_different_jregr";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
+                "-bin", "acceptance"
         };
         String[] output = runJregrForCleanOutput(arguments);
         assertEquals(output[STDERR], "");
         String[] outputLines = output[STDOUT].split("\n");
         assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
-        assertEquals("a_case_in_subdir_with_a_different_jregr : Pass", outputLines[3]);
+        assertEquals("a_case_in_subdir_with_different_jregr : Pass", outputLines[3]);
     }
 
     @Test
@@ -99,6 +103,7 @@ public class AcceptanceScenarios {
         String directory = "one_subdir_with_redirected_output";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
+                "-bin", "acceptance"
         };
 
         // Ensure the redirected output file does not exist
