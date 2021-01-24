@@ -7,7 +7,8 @@ import se.alanif.jregr.io.Directory;
 
 public class ProcessBuilder {
 
-	public Process exec(Directory binDirectory, CommandsDecoder decoder, Directory directory, Runtime runtime, String caseName)
+	// TODO Refactor this to not be needed, instead use javas ProcessBuilder:
+	public Process exec(Directory binDirectory, CommandsDecoder decoder, Directory directory, Runtime runtime, String caseName, String[] commandAndArguments2)
 	throws IOException {
 		String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
 		return runtime.exec(commandAndArguments, null, directory);

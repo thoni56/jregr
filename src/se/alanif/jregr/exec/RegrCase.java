@@ -37,8 +37,9 @@ public class RegrCase {
 		outputWriter.printf("########## %s ##########%n", caseName);
 		try {
 			do {
+				String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
 				Process process = processBuilder.exec(binDirectory, decoder, regrDirectory.toDirectory(), runtime,
-						caseName);
+						caseName, commandAndArguments);
 				final String stdin = decoder.getStdin(caseName);
 				final StreamPusher inputPusher;
 				if (stdin == null)

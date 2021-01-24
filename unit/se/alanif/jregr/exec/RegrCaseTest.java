@@ -60,7 +60,7 @@ public class RegrCaseTest extends TestCase {
 		when(binDirectory.getAbsolutePath()).thenReturn(BIN_DIRECTORY_PATH);
 		when(mockedRuntime.exec((String[]) any())).thenReturn(mockedProcess);
 		when(mockedProcessBuilder.exec(eq(binDirectory), eq(mockedDecoder), (Directory) any(), eq(mockedRuntime),
-				eq(CASENAME))).thenReturn(mockedProcess);
+				eq(CASENAME), (String[]) any())).thenReturn(mockedProcess);
 		when(mockedProcess.getErrorStream()).thenReturn(mockedInputStream);
 		when(mockedProcess.getInputStream()).thenReturn(mockedInputStream);
 		when(mockedProcess.getOutputStream()).thenReturn(mockedOutputStream);
@@ -74,7 +74,7 @@ public class RegrCaseTest extends TestCase {
 
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCaseRunner, mockedProcessBuilder);
 
-		verify(mockedProcessBuilder).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime, CASENAME);
+		verify(mockedProcessBuilder).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime, CASENAME, COMMAND1_AND_CASENAME);
 	}
 
 	@Test
@@ -85,8 +85,10 @@ public class RegrCaseTest extends TestCase {
 
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCaseRunner, mockedProcessBuilder);
 
-		verify(mockedProcessBuilder, times(2)).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime,
-				CASENAME);
+		verify(mockedProcessBuilder).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime,
+				CASENAME, COMMAND1_AND_ARGUMENTS);
+		verify(mockedProcessBuilder).exec(binDirectory, mockedDecoder, mockedDirectory, mockedRuntime,
+				CASENAME, COMMAND2_AND_ARGUMENTS);
 	}
 
 	@Test

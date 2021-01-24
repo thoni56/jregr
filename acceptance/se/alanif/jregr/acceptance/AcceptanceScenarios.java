@@ -120,4 +120,18 @@ public class AcceptanceScenarios {
         // Assert it does
         assertTrue(stdoutFile.exists());
     }
+
+    //@Test
+    public void shouldFindExeWithRelativePathInJregr() throws Exception {
+        String directory = "one_subdir_with_relative_path_to_exe";
+        String[] arguments = {
+                "-dir", "acceptance/"+directory
+        };
+        String[] output = runJregrForCleanOutput(arguments);
+        assertEquals(output[STDERR], "");
+        String[] outputLines = output[STDOUT].split("\n");
+        assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
+        assertEquals("a_case_in_subdir_with_relative_path_to_exe : Pass", outputLines[3]);
+    }
+
 }
