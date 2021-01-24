@@ -38,8 +38,8 @@ public class RegrCase {
 		try {
 			do {
 				String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
-				Process process = processBuilder.exec(binDirectory, decoder, regrDirectory.toDirectory(), runtime,
-						caseName, commandAndArguments);
+				Process process = processBuilder.exec(binDirectory, regrDirectory.toDirectory(), runtime, caseName,
+						commandAndArguments);
 				final String stdin = decoder.getStdin(caseName);
 				final StreamPusher inputPusher;
 				if (stdin == null)
