@@ -7,7 +7,7 @@ import org.junit.Test;
 
 
 public class CaseRunnerTest extends TestCase {
-
+	
 	StreamGobbler mockedErrorGobbler = mock(StreamGobbler.class);
 	StreamGobbler mockedOutputGobbler = mock(StreamGobbler.class);
 	StreamPusher mockedInputPusher = mock(StreamPusher.class);
