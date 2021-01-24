@@ -121,18 +121,16 @@ public class CommandsDecoder {
 
 	public String[] buildCommandAndArguments(Directory binDirectory, String caseName) {
 		final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + java.io.File.separator : "";
-		String command;
-		if (binDirectory == null || !binDirectory.executableExist(getCommand()))
-			command = expandSymbols(caseName, getCommand());
+		String command = getCommand();
+		if (binDirectory == null || !binDirectory.executableExist(command))
+			command = expandSymbols(caseName, command);
 		else
-			command = binPath + expandSymbols(caseName, getCommand());
+			command = binPath + expandSymbols(caseName, command);
 		String[] arguments = getArguments();
 		String[] commandAndArguments = new String[arguments.length + 1];
 		commandAndArguments[0] = command;
 		for (int i = 0; i < arguments.length; i++) {
-			String argument = arguments[i];
-			argument = expandSymbols(caseName, argument);
-			commandAndArguments[i + 1] = argument;
+			commandAndArguments[i + 1] = expandSymbols(caseName, arguments[i]);;
 		}
 		return commandAndArguments;
 	}
