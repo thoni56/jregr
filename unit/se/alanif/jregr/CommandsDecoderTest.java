@@ -72,7 +72,7 @@ public class CommandsDecoderTest {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION1+" : "+COMMAND1+" "+ARG11+" "+ARG12 + " < " + STDIN);
 		decoder = new CommandsDecoder(mockedFileReader);
 		
-		assertEquals(STDIN, decoder.getStdin(CASENAME));
+		assertEquals(STDIN, decoder.getStdin());
 	}
 
 	@Test
@@ -117,29 +117,29 @@ public class CommandsDecoderTest {
 	public void canFindStdinWhenLast() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments < input_file");
 		decoder.advance();
-		assertEquals("input_file", decoder.getStdin("aCase"));
+		assertEquals("input_file", decoder.getStdin());
 	}
 	
 	@Test
 	public void canFindStdoutWhenLast() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments > output_file");
 		decoder.advance();
-		assertEquals("output_file", decoder.getStdout("aCase"));
+		assertEquals("output_file", decoder.getStdout());
 	}
 
 	@Test
 	public void canFindBothStdinAndStdout() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments < input_file > output_file");
 		decoder.advance();
-		assertEquals("input_file", decoder.getStdin("aCase"));
-		assertEquals("output_file", decoder.getStdout("aCase"));
+		assertEquals("input_file", decoder.getStdin());
+		assertEquals("output_file", decoder.getStdout());
 	}
 
 	@Test
 	public void canFindBothStdoutAndStdin() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments > output_file < input_file");
 		decoder.advance();
-		assertEquals("input_file", decoder.getStdin("aCase"));
-		assertEquals("output_file", decoder.getStdout("aCase"));
+		assertEquals("input_file", decoder.getStdin());
+		assertEquals("output_file", decoder.getStdout());
 	}
 }

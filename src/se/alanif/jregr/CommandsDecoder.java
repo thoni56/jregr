@@ -15,11 +15,9 @@ public class CommandsDecoder {
 
 	// It will work on one line at a time starting with the first
 	// Use advance() to advance to next line
-	// Feed it a BufferedReader in the constructor
+	// Feed it a BufferedReader for the .jregr file in the constructor
 
-	// It also handles the case where there is no .jregr file
-	// and then serves the standard commands ".alan : alan $1" + ".a3c : arun $1 <
-	// $1.input"
+	// You need to set the caseName to use for expansion using reset(caseName)
 	
 	@SuppressWarnings("serial")
 	public class CommandSyntaxException extends IOException {
@@ -102,7 +100,7 @@ public class CommandsDecoder {
 		return parts[0];
 	}
 
-	public String getStdin(String caseName) {
+	public String getStdin() {
 		String r;
 		r = stdinFilename;
 		if (r != null)
@@ -111,7 +109,7 @@ public class CommandsDecoder {
 			return r;
 	}
 
-	public String getStdout(String caseName) {
+	public String getStdout() {
 		String r;
 		r = stdoutFilename;
 		if (r != null)
