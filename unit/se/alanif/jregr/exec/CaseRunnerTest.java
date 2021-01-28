@@ -13,14 +13,14 @@ public class CaseRunnerTest extends TestCase {
 	StreamPusher mockedInputPusher = mock(StreamPusher.class);
 	Process p = mock(Process.class);
 
-	CommandRunner caseRunner = new CommandRunner();
+	CommandRunner commandRunner = new CommandRunner();
 
 	@Test
 	public void testShouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {
 		when(mockedErrorGobbler.output()).thenReturn("");
 		when(mockedOutputGobbler.output()).thenReturn("");
 
-		assertEquals("", caseRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher));
+		assertEquals("", commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher));
 	}
 	
 	@Test
@@ -28,7 +28,7 @@ public class CaseRunnerTest extends TestCase {
 		when(mockedErrorGobbler.output()).thenReturn("error");
 		when(mockedOutputGobbler.output()).thenReturn("output");
 
-		assertTrue(caseRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("error"));
-		assertTrue(caseRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("output"));
+		assertTrue(commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("error"));
+		assertTrue(commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("output"));
 	}
 }
