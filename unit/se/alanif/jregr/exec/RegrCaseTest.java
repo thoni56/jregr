@@ -51,7 +51,7 @@ public class RegrCaseTest {
 
 	private Directory mockedDirectory = mock(Directory.class);
 	private RegrDirectory mockedRegrDirectory = mock(RegrDirectory.class);
-	private CommandRunner mockedCaseRunner = mock(CommandRunner.class);
+	private CommandRunner mockedCommandRunner = mock(CommandRunner.class);
 	private PrintWriter mockedPrinter = mock(PrintWriter.class);
 
 	private Process mockedProcess = mock(Process.class);
@@ -81,7 +81,7 @@ public class RegrCaseTest {
 	public void shouldExecTheCommandAndArgumentsFromTheDecoder() throws Exception {
 		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_CASENAME);
 
-		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCaseRunner, mockedProcessBuilder);
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner, mockedProcessBuilder);
 
 		verify(mockedProcessBuilder).exec(mockedDirectory, mockedRuntime, COMMAND1_AND_CASENAME);
 	}
@@ -92,7 +92,7 @@ public class RegrCaseTest {
 				.thenReturn(COMMAND2_AND_ARGUMENTS);
 		when(mockedDecoder.advance()).thenReturn(true).thenReturn(false);
 
-		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCaseRunner, mockedProcessBuilder);
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner, mockedProcessBuilder);
 
 		verify(mockedProcessBuilder).exec(mockedDirectory, mockedRuntime, COMMAND1_AND_ARGUMENTS);
 		verify(mockedProcessBuilder).exec(mockedDirectory, mockedRuntime, COMMAND2_AND_ARGUMENTS);
@@ -144,12 +144,12 @@ public class RegrCaseTest {
 	@Test
 	public void shouldWriteToOutputFileAndCloseIt() throws Exception {
 		PrintWriter mockedWriter = mock(PrintWriter.class);
-		when(mockedCaseRunner.run((Process) any(), (StreamGobbler) any(), (StreamGobbler) any(), (StreamPusher) any()))
-				.thenReturn("");
+		when(mockedCommandRunner.run((Process) any(), (StreamGobbler) any(), (StreamGobbler) any(), (StreamPusher) any()))
+				.thenReturn("the output");
 
-		theCase.run(binDirectory, mockedDecoder, mockedWriter, mockedCaseRunner, mockedProcessBuilder);
+		theCase.run(binDirectory, mockedDecoder, mockedWriter, mockedCommandRunner, mockedProcessBuilder);
 
-		verify(mockedWriter, atLeastOnce()).print("");
+		verify(mockedWriter, atLeastOnce()).print("the output");
 		verify(mockedWriter).close();
 	}
 
