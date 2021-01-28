@@ -20,14 +20,12 @@ public class RegrCase {
 		VIRGIN, PENDING, FAIL, FATAL, PASS, SUSPENDED, SUSPENDED_FAIL, SUSPENDED_PASS
 	}
 
-	private Runtime runtime;
 	private String caseName;
 	private RegrDirectory regrDirectory;
 	private boolean fatal = false;
 
 	public RegrCase(Runtime runtime, String caseName, RegrDirectory directory) {
 		this.caseName = caseName;
-		this.runtime = runtime;
 		this.regrDirectory = directory;
 	}
 
