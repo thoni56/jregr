@@ -41,16 +41,10 @@ public class RegrCase {
 				String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
 				Process process = processBuilder.exec(regrDirectory.toDirectory(), runtime, commandAndArguments);
 				final String stdin = decoder.getStdin(caseName);
-				final StreamPusher inputPusher;
-				if (stdin == null)
-					inputPusher = null;
-				else {
-					final FileReader inputReader = new FileReader(
-							regrDirectory.getPath() + java.io.File.separator + stdin);
-					inputPusher = new StreamPusher(process.getOutputStream(), inputReader);
-				}
-				final String stdout = decoder.getStdout(caseName);
+
 				String output = commandRunner.runCommandForOutput(commandAndArguments, stdin);
+				
+				final String stdout = decoder.getStdout(caseName);
 				if (stdout == null)
 					outputWriter.print(output);
 				else if (!stdout.equals("/dev/null")) {
