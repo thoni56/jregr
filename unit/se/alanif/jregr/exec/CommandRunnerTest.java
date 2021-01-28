@@ -1,12 +1,12 @@
 package se.alanif.jregr.exec;
 
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import junit.framework.TestCase;
 import org.junit.Test;
 
 
-public class CommandRunnerTest extends TestCase {
+public class CommandRunnerTest {
 	
 	StreamGobbler mockedErrorGobbler = mock(StreamGobbler.class);
 	StreamGobbler mockedOutputGobbler = mock(StreamGobbler.class);
@@ -16,7 +16,7 @@ public class CommandRunnerTest extends TestCase {
 	CommandRunner commandRunner = new CommandRunner();
 
 	@Test
-	public void testShouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {
+	public void shouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {
 		when(mockedErrorGobbler.output()).thenReturn("");
 		when(mockedOutputGobbler.output()).thenReturn("");
 
@@ -24,7 +24,7 @@ public class CommandRunnerTest extends TestCase {
 	}
 	
 	@Test
-	public void testShouldReturnResultFromErrorAndOutput() throws Exception {
+	public void shouldReturnResultFromErrorAndOutput() throws Exception {
 		when(mockedErrorGobbler.output()).thenReturn("error");
 		when(mockedOutputGobbler.output()).thenReturn("output");
 
