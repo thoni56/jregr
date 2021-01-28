@@ -57,7 +57,7 @@ public class RegrCaseTest {
 	private Process mockedProcess = mock(Process.class);
 	private ProcessBuilder mockedProcessBuilder = mock(ProcessBuilder.class);
 
-	private RegrCase theCase = new RegrCase(mockedRuntime, CASENAME, mockedRegrDirectory);
+	private RegrCase theCase = new RegrCase(CASENAME, mockedRegrDirectory);
 
 	private InputStream mockedInputStream = mock(InputStream.class);
 

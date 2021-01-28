@@ -24,7 +24,7 @@ public class RegrCase {
 	private RegrDirectory regrDirectory;
 	private boolean fatal = false;
 
-	public RegrCase(Runtime runtime, String caseName, RegrDirectory directory) {
+	public RegrCase(String caseName, RegrDirectory directory) {
 		this.caseName = caseName;
 		this.regrDirectory = directory;
 	}

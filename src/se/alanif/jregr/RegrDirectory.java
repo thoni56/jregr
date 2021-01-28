@@ -77,7 +77,7 @@ public class RegrDirectory {
 		ArrayList<RegrCase> cases = new ArrayList<RegrCase>();
 		if (fileNames != null && fileNames.length > 0) {
 			for (String string : fileNames) {
-				cases.add(new RegrCase(runtime, stripExtension(string), this));
+				cases.add(new RegrCase(stripExtension(string), this));
 			}
 		}
 		return cases.toArray(new RegrCase[cases.size()]);
