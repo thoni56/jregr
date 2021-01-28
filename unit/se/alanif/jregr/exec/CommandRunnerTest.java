@@ -6,7 +6,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 
-public class CaseRunnerTest extends TestCase {
+public class CommandRunnerTest extends TestCase {
 	
 	StreamGobbler mockedErrorGobbler = mock(StreamGobbler.class);
 	StreamGobbler mockedOutputGobbler = mock(StreamGobbler.class);
