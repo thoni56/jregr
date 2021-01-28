@@ -31,7 +31,7 @@ public class RegrCase {
 		this.regrDirectory = directory;
 	}
 
-	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner caseRunner,
+	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner,
 			ProcessBuilder processBuilder) {
 		int linenumber = 1;
 		outputWriter.printf("########## %s ##########%n", caseName);
@@ -49,7 +49,7 @@ public class RegrCase {
 					inputPusher = new StreamPusher(process.getOutputStream(), inputReader);
 				}
 				final String stdout = decoder.getStdout(caseName);
-				String output = caseRunner.run(process, new StreamGobbler(process.getErrorStream()),
+				String output = commandRunner.run(process, new StreamGobbler(process.getErrorStream()),
 						new StreamGobbler(process.getInputStream()), inputPusher);
 				if (stdout == null)
 					outputWriter.print(output);
