@@ -148,7 +148,6 @@ public class RegrDirectory {
 		boolean success = true;
 		for (RegrCase theCase : cases) {
 			PrintWriter printWriter = theCase.getPrintWriter();
-			decoder.reset();
 			long start = System.currentTimeMillis();
 			theCase.run(bindir, decoder, printWriter, new CommandRunner(), new ProcessBuilder());
 			long end = System.currentTimeMillis();

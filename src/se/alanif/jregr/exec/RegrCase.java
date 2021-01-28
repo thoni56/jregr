@@ -34,6 +34,7 @@ public class RegrCase {
 	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner,
 			ProcessBuilder processBuilder) {
 		int linenumber = 1;
+		decoder.reset(caseName);
 		outputWriter.printf("########## %s ##########%n", caseName);
 		try {
 			do {
@@ -49,8 +50,7 @@ public class RegrCase {
 					inputPusher = new StreamPusher(process.getOutputStream(), inputReader);
 				}
 				final String stdout = decoder.getStdout(caseName);
-				String output = commandRunner.run(process, new StreamGobbler(process.getErrorStream()),
-						new StreamGobbler(process.getInputStream()), inputPusher);
+				String output = commandRunner.runCommandForOutput(commandAndArguments, stdin);
 				if (stdout == null)
 					outputWriter.print(output);
 				else if (!stdout.equals("/dev/null")) {

@@ -144,8 +144,7 @@ public class RegrCaseTest {
 	@Test
 	public void shouldWriteToOutputFileAndCloseIt() throws Exception {
 		PrintWriter mockedWriter = mock(PrintWriter.class);
-		when(mockedCommandRunner.run((Process) any(), (StreamGobbler) any(), (StreamGobbler) any(), (StreamPusher) any()))
-				.thenReturn("the output");
+		when(mockedCommandRunner.runCommandForOutput(any(), any())).thenReturn("the output");
 
 		theCase.run(binDirectory, mockedDecoder, mockedWriter, mockedCommandRunner, mockedProcessBuilder);
 

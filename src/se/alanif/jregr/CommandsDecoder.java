@@ -32,6 +32,7 @@ public class CommandsDecoder {
 	private BufferedReader jregrFileReader;
 	private String stdinFilename;
 	private String stdoutFilename;
+	private String caseName;
 
 	public CommandsDecoder(BufferedReader fileReader) throws IOException {
 		jregrFileReader = fileReader;
@@ -146,6 +147,11 @@ public class CommandsDecoder {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+
+	public void reset(String caseName) {
+		this.caseName = caseName;
+		reset();
 	}
 
 	public void reset() {
