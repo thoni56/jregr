@@ -1,6 +1,6 @@
 package se.alanif.jregr.exec;
 
-public class CaseRunner {
+public class CommandRunner {
 
 	public String run(Process p, StreamGobbler errorGobbler, StreamGobbler outputGobbler, StreamPusher inputPusher) {
 		errorGobbler.start();

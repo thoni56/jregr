@@ -31,7 +31,7 @@ public class RegrCase {
 		this.regrDirectory = directory;
 	}
 
-	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CaseRunner caseRunner,
+	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner caseRunner,
 			ProcessBuilder processBuilder) {
 		int linenumber = 1;
 		outputWriter.printf("########## %s ##########%n", caseName);
@@ -54,9 +54,9 @@ public class RegrCase {
 				if (stdout == null)
 					outputWriter.print(output);
 				else if (!stdout.equals("/dev/null")) {
-				    BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
-				    writer.write(output);
-				    writer.close();
+					BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
+					writer.write(output);
+					writer.close();
 				}
 				linenumber++;
 			} while (decoder.advance());
@@ -153,7 +153,7 @@ public class RegrCase {
 	public File getExpectedFile() {
 		return regrDirectory.getExpectedFile(caseName);
 	}
-	
+
 	public PrintWriter getPrintWriter() throws FileNotFoundException {
 		return new PrintWriter(getOutputFile().getPath());
 	}

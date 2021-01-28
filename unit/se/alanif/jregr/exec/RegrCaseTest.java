@@ -51,7 +51,7 @@ public class RegrCaseTest {
 
 	private Directory mockedDirectory = mock(Directory.class);
 	private RegrDirectory mockedRegrDirectory = mock(RegrDirectory.class);
-	private CaseRunner mockedCaseRunner = mock(CaseRunner.class);
+	private CommandRunner mockedCaseRunner = mock(CommandRunner.class);
 	private PrintWriter mockedPrinter = mock(PrintWriter.class);
 
 	private Process mockedProcess = mock(Process.class);

@@ -13,7 +13,7 @@ public class CaseRunnerTest extends TestCase {
 	StreamPusher mockedInputPusher = mock(StreamPusher.class);
 	Process p = mock(Process.class);
 
-	CaseRunner caseRunner = new CaseRunner();
+	CommandRunner caseRunner = new CommandRunner();
 
 	@Test
 	public void testShouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {

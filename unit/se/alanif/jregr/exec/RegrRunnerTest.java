@@ -78,7 +78,7 @@ public class RegrRunnerTest {
 
 		regrDirectory.runAllCases(mockedReporter, binDirectory, SUITENAME, null);
 
-		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CaseRunner) any(),
+		verify(mockedCase).run(eq(binDirectory), (CommandsDecoder) any(), (PrintWriter) any(), (CommandRunner) any(),
 				(ProcessBuilder) any());
 		verify(mockedReporter).startTest(eq(mockedCase), longThat(millis -> millis == 0));
 		verify(mockedReporter).report((State) any());
