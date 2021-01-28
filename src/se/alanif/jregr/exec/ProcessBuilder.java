@@ -15,4 +15,7 @@ public class ProcessBuilder {
 		return runtime.exec(commandAndArguments, null, directory);
 	}
 
+	public void command(String string) {
+	}
+
 }

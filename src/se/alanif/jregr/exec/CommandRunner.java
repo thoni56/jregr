@@ -19,4 +19,8 @@ public class CommandRunner {
 		return outputGobbler.output() + errorGobbler.output();
 	}
 
+	public String[] runCommandForOutput(String[] strings, ProcessBuilder mockedProcessBuilder) {
+		return null;
+	}
+
 }

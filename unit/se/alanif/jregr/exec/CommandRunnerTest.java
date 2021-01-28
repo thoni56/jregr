@@ -3,6 +3,7 @@ package se.alanif.jregr.exec;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import org.junit.Test;
 
 
@@ -14,6 +15,7 @@ public class CommandRunnerTest {
 	Process p = mock(Process.class);
 
 	CommandRunner commandRunner = new CommandRunner();
+	private ProcessBuilder mockedProcessBuilder;
 
 	@Test
 	public void shouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {
@@ -30,5 +32,11 @@ public class CommandRunnerTest {
 
 		assertTrue(commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("error"));
 		assertTrue(commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("output"));
+	}
+	
+	@Test
+	public void canRunACommandAndReturnOutputAsArrayOfStrings() {
+		String[] output = commandRunner.runCommandForOutput(new String[]{"command"}, mockedProcessBuilder);
+		verify(mockedProcessBuilder).command("command");
 	}
 }
