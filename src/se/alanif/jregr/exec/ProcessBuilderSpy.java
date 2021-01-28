@@ -20,8 +20,7 @@ public class ProcessBuilderSpy {
 		pb.directory(directory);
 	}
 
-	public void command(String[] string) {
-		// TODO Auto-generated method stub
-		
+	public void command(String[] commandAndArguments) {
+		pb.command(commandAndArguments);
 	}
 }
