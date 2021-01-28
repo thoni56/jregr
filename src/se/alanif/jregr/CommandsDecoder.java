@@ -32,7 +32,7 @@ public class CommandsDecoder {
 	private BufferedReader jregrFileReader;
 	private String stdinFilename;
 	private String stdoutFilename;
-	private String caseName;
+	private String caseName = "";
 
 	public CommandsDecoder(BufferedReader fileReader) throws IOException {
 		jregrFileReader = fileReader;
