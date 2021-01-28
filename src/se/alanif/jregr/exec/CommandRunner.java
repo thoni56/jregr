@@ -13,12 +13,12 @@ public class CommandRunner {
 	private StreamPusher inputPusher = null;
 	private ProcessBuilderSpy processBuilder;
 
-	// Set gobblers to be able to inject mocks
+	
+	// Setters for gobblers and input pusher so we can inject mocks
 	protected void setGobblers(StreamGobbler outputGobbler, StreamGobbler errorGobbler) {
 		this.outputGobbler = outputGobbler;
 		this.errorGobbler = errorGobbler;
 	}
-
 	protected void setInputPusher(StreamPusher inputPusher) {
 		this.inputPusher = inputPusher;
 	}
@@ -46,11 +46,12 @@ public class CommandRunner {
 		processBuilder.command(commandAndArguments);
 		try {
 			Process p = processBuilder.start();
-			if (outputGobbler == null) {
-				// No injected, possibly mocked, gobblers, create real ones
+			
+			// No injected, possibly mocked, gobblers, create real ones
+			if (outputGobbler == null)
 				outputGobbler = new StreamGobbler(p.getInputStream());
+			if (errorGobbler == null)
 				errorGobbler = new StreamGobbler(p.getErrorStream());
-			}
 			outputGobbler.start();
 			errorGobbler.start();
 
