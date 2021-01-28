@@ -83,7 +83,7 @@ public class RegrCaseTest {
 
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner, mockedProcessBuilder);
 
-		verify(mockedProcessBuilder).exec(mockedDirectory, mockedRuntime, COMMAND1_AND_CASENAME);
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_CASENAME), any());
 	}
 
 	@Test
@@ -94,8 +94,8 @@ public class RegrCaseTest {
 
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner, mockedProcessBuilder);
 
-		verify(mockedProcessBuilder).exec(mockedDirectory, mockedRuntime, COMMAND1_AND_ARGUMENTS);
-		verify(mockedProcessBuilder).exec(mockedDirectory, mockedRuntime, COMMAND2_AND_ARGUMENTS);
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_ARGUMENTS), any());
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND2_AND_ARGUMENTS), any());
 	}
 
 	@Test

@@ -33,25 +33,23 @@ public class RegrCase {
 
 	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner,
 			ProcessBuilder processBuilder) {
+
 		int linenumber = 1;
-		decoder.reset(caseName);
 		outputWriter.printf("########## %s ##########%n", caseName);
+
+		decoder.reset(caseName);
 		try {
 			do {
 				String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
-				Process process = processBuilder.exec(regrDirectory.toDirectory(), runtime, commandAndArguments);
 				final String stdin = decoder.getStdin();
 
 				String output = commandRunner.runCommandForOutput(commandAndArguments, stdin);
-				
+
 				final String stdout = decoder.getStdout();
 				if (stdout == null)
 					outputWriter.print(output);
-				else if (!stdout.equals("/dev/null")) {
-					BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
-					writer.write(output);
-					writer.close();
-				}
+				else if (!stdout.equals("/dev/null"))
+					writeOutputToRedirection(output, stdout);
 				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
@@ -64,6 +62,12 @@ public class RegrCase {
 		} finally {
 			outputWriter.close();
 		}
+	}
+
+	private void writeOutputToRedirection(String output, final String stdout) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
+		writer.write(output);
+		writer.close();
 	}
 
 	private void removeOutputFile() {
