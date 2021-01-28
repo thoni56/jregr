@@ -15,10 +15,6 @@ public class StreamPusher extends Thread {
 		this.reader = inputFileReader;
 	}
 
-	public StreamPusher(OutputStream outputStream, String string) {
-		this.stream = outputStream;
-	}
-
 	public void run() {
 		BufferedReader br = new BufferedReader(reader);
 		PrintStream out = new PrintStream(stream);

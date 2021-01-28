@@ -19,10 +19,9 @@ public class AcceptanceRunner {
 		};
 		String[] allArguments = combine(jregr, arguments);
 		ProcessBuilder pb = new ProcessBuilder(allArguments);
-		Process p = null;
 		String[] result = new String[2];
 		try {
-			p = pb.start();
+			Process p = pb.start();
 
 			final BufferedReader inputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			result[STDOUT] = inputReader.lines().collect(Collectors.joining("\n"));

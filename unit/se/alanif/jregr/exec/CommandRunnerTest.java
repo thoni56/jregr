@@ -1,42 +1,60 @@
 package se.alanif.jregr.exec;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.io.IOException;
+
+import org.junit.Before;
 import org.junit.Test;
 
 
 public class CommandRunnerTest {
 	
-	StreamGobbler mockedErrorGobbler = mock(StreamGobbler.class);
-	StreamGobbler mockedOutputGobbler = mock(StreamGobbler.class);
-	StreamPusher mockedInputPusher = mock(StreamPusher.class);
-	Process p = mock(Process.class);
+	private static final String OUTPUT = "output";
+	private static final String ERROR = "error";
+	
+	private StreamGobbler mockedErrorGobbler = mock(StreamGobbler.class);
+	private StreamGobbler mockedOutputGobbler = mock(StreamGobbler.class);
+	private StreamPusher mockedInputPusher = mock(StreamPusher.class);
+	private Process mockedProcess = mock(Process.class);
 
-	CommandRunner commandRunner = new CommandRunner();
-	private ProcessBuilder mockedProcessBuilder;
+	private CommandRunner commandRunner = new CommandRunner();
+	private ProcessBuilderSpy mockedProcessBuilder = mock(ProcessBuilderSpy.class);
+	
+	@Before
+	public void setUp() throws IOException {
+		commandRunner.setProcessBuilder(mockedProcessBuilder);
+		commandRunner.setGobblers(mockedOutputGobbler, mockedErrorGobbler);
+		commandRunner.setInputPusher(mockedInputPusher);
+
+		when(mockedProcessBuilder.start()).thenReturn(mockedProcess);
+
+		when(mockedErrorGobbler.output()).thenReturn(ERROR);
+		when(mockedOutputGobbler.output()).thenReturn(OUTPUT);
+	}
 
 	@Test
-	public void shouldReturnEmptyOutputIfGobblersReturnNothing() throws Exception {
-		when(mockedErrorGobbler.output()).thenReturn("");
-		when(mockedOutputGobbler.output()).thenReturn("");
-
-		assertEquals("", commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher));
+	public void shouldReturnResultFromOutputAndError() throws Exception {
+		assertTrue(commandRunner.run(mockedProcess, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("error"));
+		assertTrue(commandRunner.run(mockedProcess, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("output"));
 	}
 	
 	@Test
-	public void shouldReturnResultFromErrorAndOutput() throws Exception {
-		when(mockedErrorGobbler.output()).thenReturn("error");
-		when(mockedOutputGobbler.output()).thenReturn("output");
-
-		assertTrue(commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("error"));
-		assertTrue(commandRunner.run(p, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("output"));
+	public void canRunACommandForOutput() {
+		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null);
+		assertEquals(OUTPUT+ERROR, output);
+		verify(mockedProcessBuilder).command(new String[]{"command"});
 	}
 	
 	@Test
-	public void canRunACommandAndReturnOutputAsArrayOfStrings() {
-		String[] output = commandRunner.runCommandForOutput(new String[]{"command"}, mockedProcessBuilder);
-		verify(mockedProcessBuilder).command("command");
+	public void willStartInputPusherForInput() {
+		commandRunner.runCommandForOutput(new String[]{"command"}, "inputFile");
+		verify(mockedInputPusher).run();
 	}
+	
+	
 }
