@@ -31,8 +31,7 @@ public class RegrCase {
 		this.regrDirectory = directory;
 	}
 
-	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner,
-			ProcessBuilder processBuilder) {
+	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner) {
 
 		int linenumber = 1;
 		outputWriter.printf("########## %s ##########%n", caseName);

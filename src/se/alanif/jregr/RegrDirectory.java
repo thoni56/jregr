@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.apache.commons.cli.CommandLine;
 
 import se.alanif.jregr.exec.CommandRunner;
-import se.alanif.jregr.exec.ProcessBuilder;
 import se.alanif.jregr.exec.RegrCase;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.io.File;
@@ -149,7 +148,7 @@ public class RegrDirectory {
 		for (RegrCase theCase : cases) {
 			PrintWriter printWriter = theCase.getPrintWriter();
 			long start = System.currentTimeMillis();
-			theCase.run(bindir, decoder, printWriter, new CommandRunner(), new ProcessBuilder());
+			theCase.run(bindir, decoder, printWriter, new CommandRunner());
 			long end = System.currentTimeMillis();
 			theCase.clean();
 			if (theCase.failed()) {

@@ -81,7 +81,7 @@ public class RegrCaseTest {
 	public void shouldExecTheCommandAndArgumentsFromTheDecoder() throws Exception {
 		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_CASENAME);
 
-		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner, mockedProcessBuilder);
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
 
 		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_CASENAME), any());
 	}
@@ -92,7 +92,7 @@ public class RegrCaseTest {
 				.thenReturn(COMMAND2_AND_ARGUMENTS);
 		when(mockedDecoder.advance()).thenReturn(true).thenReturn(false);
 
-		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner, mockedProcessBuilder);
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
 
 		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_ARGUMENTS), any());
 		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND2_AND_ARGUMENTS), any());
@@ -146,7 +146,7 @@ public class RegrCaseTest {
 		PrintWriter mockedWriter = mock(PrintWriter.class);
 		when(mockedCommandRunner.runCommandForOutput(any(), any())).thenReturn("the output");
 
-		theCase.run(binDirectory, mockedDecoder, mockedWriter, mockedCommandRunner, mockedProcessBuilder);
+		theCase.run(binDirectory, mockedDecoder, mockedWriter, mockedCommandRunner);
 
 		verify(mockedWriter, atLeastOnce()).print("the output");
 		verify(mockedWriter).close();
