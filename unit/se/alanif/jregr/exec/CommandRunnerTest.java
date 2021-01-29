@@ -39,8 +39,9 @@ public class CommandRunnerTest {
 
 	@Test
 	public void shouldReturnResultFromOutputAndError() throws Exception {
-		assertTrue(commandRunner.run(mockedProcess, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("error"));
-		assertTrue(commandRunner.run(mockedProcess, mockedErrorGobbler, mockedOutputGobbler, mockedInputPusher).contains("output"));
+		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null);
+		assertTrue(output.contains(ERROR));
+		assertTrue(output.contains(OUTPUT));
 	}
 	
 	@Test

@@ -65,10 +65,13 @@ public class CommandRunner {
 			}
 
 			p.waitFor();
-			errorGobbler.join();
-			outputGobbler.join();
+			p.destroy();
 
-			return outputGobbler.output() + errorGobbler.output();
+			String output = outputGobbler.output() + errorGobbler.output();
+			outputGobbler.join(); outputGobbler = null;
+			errorGobbler.join(); errorGobbler = null;
+			
+			return output;
 		} catch (InterruptedException e) {
 			return "*** InterruptedException in Jregr ***";
 		} catch (IOException e) {
