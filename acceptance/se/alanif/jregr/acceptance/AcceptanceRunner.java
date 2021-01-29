@@ -23,8 +23,8 @@ public class AcceptanceRunner {
 		try {
 			Process p = pb.start();
 
-			final BufferedReader inputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			result[STDOUT] = inputReader.lines().collect(Collectors.joining("\n"));
+			final BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			result[STDOUT] = outputReader.lines().collect(Collectors.joining("\n"));
 
 			final BufferedReader errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
 			result[STDERR] = errorReader.lines().collect(Collectors.joining("\n"));
