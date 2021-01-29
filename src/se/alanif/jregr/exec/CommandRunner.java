@@ -14,13 +14,16 @@ public class CommandRunner {
 	private ProcessBuilderSpy processBuilder;
 
 	
-	// Setters for gobblers and input pusher so we can inject mocks
+	// Setters for gobblers, input pusher and ProcessBuilder so we can inject mocks
 	protected void setGobblers(StreamGobbler outputGobbler, StreamGobbler errorGobbler) {
 		this.outputGobbler = outputGobbler;
 		this.errorGobbler = errorGobbler;
 	}
 	protected void setInputPusher(StreamPusher inputPusher) {
 		this.inputPusher = inputPusher;
+	}
+	public void setProcessBuilder(ProcessBuilderSpy processBuilder) {
+		this.processBuilder = processBuilder;
 	}
 
 	public String run(Process p, StreamGobbler errorGobbler, StreamGobbler outputGobbler, StreamPusher inputPusher) {
@@ -71,11 +74,6 @@ public class CommandRunner {
 		} catch (IOException e) {
 			return "*** IOException in Jregr ***";
 		}
-	}
-
-
-	public void setProcessBuilder(ProcessBuilderSpy processBuilder) {
-		this.processBuilder = processBuilder;
 	}
 
 }
