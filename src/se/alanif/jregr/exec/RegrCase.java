@@ -55,7 +55,7 @@ public class RegrCase {
 			outputWriter.println("WARNING! Could not find input file for command line " + linenumber + " in .jregr file");
 		} catch (IOException | InterruptedException e) {
 			fatal = true;
-			outputWriter.print(e.getMessage());
+			outputWriter.println(e.getMessage());
 		} finally {
 			outputWriter.close();
 		}
