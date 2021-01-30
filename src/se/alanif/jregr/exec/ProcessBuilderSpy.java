@@ -8,8 +8,8 @@ public class ProcessBuilderSpy {
 
 	private java.lang.ProcessBuilder pb;
 
-	public ProcessBuilderSpy(String... command) {
-		pb = new java.lang.ProcessBuilder(command);
+	public ProcessBuilderSpy() {
+		pb = new java.lang.ProcessBuilder();
 	}
 	
 	public Process start() throws IOException {

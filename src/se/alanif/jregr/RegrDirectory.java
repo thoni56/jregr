@@ -32,8 +32,8 @@ public class RegrDirectory {
 		this.directory = directory;
 		File commandsFile = getCommandsFile();
 		if (commandsFile != null) {
-			CommandsDecoder commandsDecoder = new CommandsDecoder(directory.getBufferedReaderForFile(commandsFile));
-			caseExtension = commandsDecoder.getExtension();
+			decoder = new CommandsDecoder(directory.getBufferedReaderForFile(commandsFile));
+			caseExtension = decoder.getExtension();
 		}
 	}
 
@@ -51,8 +51,6 @@ public class RegrDirectory {
 
 	public String getName() {
 		return directory.getName();
-		// In case we are in Windows we want to normalize names to have separator '/'
-		// return directory.getPath().replaceAll("\\\\", "/");
 	}
 
 	public String getPath() {

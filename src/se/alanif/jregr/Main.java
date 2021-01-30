@@ -1,9 +1,6 @@
 package se.alanif.jregr;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 
 import org.apache.commons.cli.CommandLine;
@@ -28,10 +25,6 @@ public class Main {
 		error(message);
 	}
 
-	private boolean haveExecutables(Directory directory, CommandsDecoder decoder) {
-		return directory.executablesExist(decoder);
-	}
-
 	private Directory currentDirectory() {
 		return new Directory(System.getProperty("user.dir"));
 	}
@@ -49,14 +42,10 @@ public class Main {
 		return directory;
 	}
 
-	private Directory findBinDirectory(CommandLine commandLine, CommandsDecoder decoder) {
+	private Directory findBinDirectory(CommandLine commandLine) {
 		Directory binDirectory = null;
 		if (commandLine.hasOption("bin")) {
 			binDirectory = new Directory(commandLine.getOptionValue("bin"));
-		}
-		if (binDirectory != null && !haveExecutables(binDirectory, decoder)) {
-			wrongDirectory(binDirectory, "does not have executable programs");
-			System.exit(-1);
 		}
 		return binDirectory;
 	}
@@ -94,11 +83,9 @@ public class Main {
 				final RegrDirectory regrDirectory = new RegrDirectory(directory);
 				final File commandsFile = regrDirectory.getCommandsFile();
 				if (commandsFile != null && commandsFile.length() > 0) {
-					final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
-					regrDirectory.setDecoder(decoder);
 					final RegrCase[] cases = findSelectedCases(commandLine, regrDirectory);
 
-					Directory binDirectory = findBinDirectory(commandLine, decoder);
+					Directory binDirectory = findBinDirectory(commandLine);
 					if (binDirectory != null)
 						binDirectory = canonise(binDirectory);
 					
@@ -141,17 +128,6 @@ public class Main {
 			cases = new RegrCase[0];
 		}
 		return cases;
-	}
-
-	private BufferedReader readerFor(File commandsFile) {
-		if (commandsFile.exists())
-			try {
-				return new BufferedReader(new FileReader(commandsFile));
-			} catch (FileNotFoundException e) {
-				return null;
-			}
-		else
-			return null;
 	}
 
 	public static void main(String[] args) {
