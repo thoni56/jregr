@@ -47,29 +47,29 @@ public class CommandsDecoder {
 	}
 
 	private String[] splitIntoParts(String line) throws CommandSyntaxException {
-		String[] split = line.split(" ");
-		if (split.length < 3 || !split[1].equals(":")) {
+		String[] parts = line.split(" ");
+		if (parts.length < 3 || !parts[1].equals(":")) {
 			throw new CommandSyntaxException("Syntax error in .jregr file");
 		}
-		split = decodeStdinout(split);
-		return removeColonInSecondPosition(split);
+		parts = decodeStdinout(parts);
+		return removeColonInSecondPosition(parts);
 	}
 
-	private String[] decodeStdinout(String[] split) {
+	private String[] decodeStdinout(String[] parts) {
 		stdinFilename = null; stdoutFilename = null;
-		if (split[split.length - 2].equals("<")) {
-			stdinFilename = split[split.length - 1];
-			split = Arrays.copyOf(split, split.length - 2);
+		if (parts[parts.length - 2].equals("<")) {
+			stdinFilename = parts[parts.length - 1];
+			parts = Arrays.copyOf(parts, parts.length - 2);
 		}
-		if (split[split.length - 2].equals(">")) {
-			stdoutFilename = split[split.length - 1];
-			split = Arrays.copyOf(split, split.length - 2);
+		if (parts[parts.length - 2].equals(">")) {
+			stdoutFilename = parts[parts.length - 1];
+			parts = Arrays.copyOf(parts, parts.length - 2);
 		}
-		if (split[split.length - 2].equals("<")) {
-			stdinFilename = split[split.length - 1];
-			split = Arrays.copyOf(split, split.length - 2);
+		if (parts[parts.length - 2].equals("<")) {
+			stdinFilename = parts[parts.length - 1];
+			parts = Arrays.copyOf(parts, parts.length - 2);
 		}
-		return split;
+		return parts;
 	}
 
 	private String[] removeColonInSecondPosition(String[] split) {

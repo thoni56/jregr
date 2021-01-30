@@ -33,7 +33,6 @@ public class RegrDirectoryTest {
 	private final Directory mockedDirectoryWithoutCommandsFile = mock(Directory.class);
 	private final Directory mockedDirectoryWithCommandsFile = mock(Directory.class);
 
-	private final Runtime mockedRuntime = mock(Runtime.class);
 	private final File mockedFile = new File("mockedFile");
 
 	private RegrDirectory regrDirectoryWithoutCommandsFile;
@@ -56,8 +55,8 @@ public class RegrDirectoryTest {
 		when(mockedDirectoryWithCommandsFile.getBufferedReaderForFile((File) any())).thenReturn(mockedBufferReader);
 		when(mockedBufferReader.readLine()).thenReturn(EXTENSION + " : command");
 
-		regrDirectoryWithoutCommandsFile = new RegrDirectory(mockedDirectoryWithoutCommandsFile, mockedRuntime);
-		regrDirectoryWithCommandsFile = new RegrDirectory(mockedDirectoryWithCommandsFile, mockedRuntime);
+		regrDirectoryWithoutCommandsFile = new RegrDirectory(mockedDirectoryWithoutCommandsFile);
+		regrDirectoryWithCommandsFile = new RegrDirectory(mockedDirectoryWithCommandsFile);
 	}
 
 	@Test

@@ -52,7 +52,7 @@ public class RegrDirectoryRecursionTest {
 	private class RegrDirectoryDouble extends RegrDirectory {
 
 		public RegrDirectoryDouble(Directory directory, Runtime runtime) throws IOException {
-			super(directory, runtime);
+			super(directory);
 		}
 		
 		@Override

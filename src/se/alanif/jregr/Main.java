@@ -86,12 +86,12 @@ public class Main {
 	}
 
 	private boolean runCases(CommandLine commandLine) throws IOException {
-		Directory regressionDirectory = findRegressionDirectory(commandLine);
-		if (!regressionDirectory.exists())
-			wrongDirectory(regressionDirectory, "does not exist");
+		Directory directory = findRegressionDirectory(commandLine);
+		if (!directory.exists())
+			wrongDirectory(directory, "does not exist");
 		else
 			try {
-				final RegrDirectory regrDirectory = new RegrDirectory(regressionDirectory, Runtime.getRuntime());
+				final RegrDirectory regrDirectory = new RegrDirectory(directory);
 				final File commandsFile = regrDirectory.getCommandsFile();
 				if (commandsFile != null && commandsFile.length() > 0) {
 					final CommandsDecoder decoder = new CommandsDecoder(readerFor(commandsFile));
@@ -103,7 +103,7 @@ public class Main {
 						binDirectory = canonise(binDirectory);
 					
 					final String suiteName = regrDirectory.getName();
-					final RegrReporter reporter = RegrReporter.createReporter(commandLine, regressionDirectory);
+					final RegrReporter reporter = RegrReporter.createReporter(commandLine, directory);
 					
 					boolean result;
 					reporter.start(commandLine);
@@ -116,7 +116,7 @@ public class Main {
 				} else
 					wrongDirectory(regrDirectory.toDirectory(), "- top level directory must have a non-empty .jregr file");
 			} catch (CommandSyntaxException e) {
-				wrongDirectory(regressionDirectory, "- syntax error in .jregr file");
+				wrongDirectory(directory, "- syntax error in .jregr file");
 			}
 		return false;
 	}

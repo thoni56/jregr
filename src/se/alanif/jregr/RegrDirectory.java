@@ -26,17 +26,13 @@ public class RegrDirectory {
 
 	private Directory directory;
 
-	private Runtime runtime;
-
 	private CommandsDecoder decoder;
 
-	public RegrDirectory(Directory directory, Runtime runtime) throws IOException {
+	public RegrDirectory(Directory directory) throws IOException {
 		this.directory = directory;
-		this.runtime = runtime;
 		File commandsFile = getCommandsFile();
 		if (commandsFile != null) {
 			CommandsDecoder commandsDecoder = new CommandsDecoder(directory.getBufferedReaderForFile(commandsFile));
-			commandsDecoder.reset();
 			caseExtension = commandsDecoder.getExtension();
 		}
 	}
@@ -170,7 +166,7 @@ public class RegrDirectory {
 		} else {
 			for (Directory subDirectory : subDirectories) {
 				if (subDirectory.hasFile(COMMANDS_FILE_NAME)) {
-					RegrDirectory regrDirectory = new RegrDirectory(subDirectory, runtime);
+					RegrDirectory regrDirectory = new RegrDirectory(subDirectory);
 					if (regrDirectory.hasCommands())
 						regrDirectory.setDecoder(new CommandsDecoder(readerFor(regrDirectory.getCommandsFile())));
 					else

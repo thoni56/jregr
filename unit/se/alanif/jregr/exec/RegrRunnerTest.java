@@ -39,7 +39,7 @@ public class RegrRunnerTest {
 	private class MockedRegrDirectory extends RegrDirectory {
 
 		public MockedRegrDirectory(Directory directory, Runtime runtime) throws IOException {
-			super(directory, runtime);
+			super(directory);
 		}
 
 		@Override
