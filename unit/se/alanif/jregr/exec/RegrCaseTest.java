@@ -55,7 +55,6 @@ public class RegrCaseTest {
 	private PrintWriter mockedPrinter = mock(PrintWriter.class);
 
 	private Process mockedProcess = mock(Process.class);
-	private ProcessBuilder mockedProcessBuilder = mock(ProcessBuilder.class);
 
 	private RegrCase theCase = new RegrCase(CASENAME, mockedRegrDirectory);
 
@@ -69,7 +68,6 @@ public class RegrCaseTest {
 	public void setUp() throws Exception {
 		when(binDirectory.getAbsolutePath()).thenReturn(BIN_DIRECTORY_PATH);
 		when(mockedRuntime.exec((String[]) any())).thenReturn(mockedProcess);
-		when(mockedProcessBuilder.exec((Directory) any(), eq(mockedRuntime), (String[]) any())).thenReturn(mockedProcess);
 		when(mockedProcess.getErrorStream()).thenReturn(mockedInputStream);
 		when(mockedProcess.getInputStream()).thenReturn(mockedInputStream);
 		when(mockedProcess.getOutputStream()).thenReturn(mockedOutputStream);

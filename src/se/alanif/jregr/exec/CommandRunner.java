@@ -41,6 +41,7 @@ public class CommandRunner {
 			outputGobbler.start();
 			errorGobbler.start();
 
+			// Ditto for inputPusher
 			if (inputFilename != null) {
 				if (inputPusher == null) // No injected, possibly mocked, pusher? Create a real one!
 					inputPusher  = new StreamPusher(p.getOutputStream(), new FileReader(inputFilename));
