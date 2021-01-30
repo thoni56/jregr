@@ -50,6 +50,7 @@ public class CommandsDecoderTest {
 		when(binDirectoryWithoutExecutables.executableExist(anyString())).thenReturn(false);
 		
 		decoder = new CommandsDecoder(mockedFileReader);
+		decoder.reset(CASENAME);
 	}
 	
 	@Test
@@ -109,7 +110,7 @@ public class CommandsDecoderTest {
 		decoder.reset();
 		
 		verify(mockedFileReader).mark(anyInt());
-		verify(mockedFileReader).reset();
+		verify(mockedFileReader, atLeast(1)).reset();
 		assertTrue(Arrays.equals(FIRST_COMMAND_AND_ARGUMENTS, decoder.buildCommandAndArguments(binDirectory, CASENAME)));
 	}
 	
@@ -141,5 +142,12 @@ public class CommandsDecoderTest {
 		decoder.advance();
 		assertEquals("input_file", decoder.getStdin());
 		assertEquals("output_file", decoder.getStdout());
+	}
+
+	@Test
+	public void canExandSymbolsStdin() throws Exception {
+		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments < $1.input");
+		decoder.advance();
+		assertEquals(CASENAME+".input", decoder.getStdin());
 	}
 }
