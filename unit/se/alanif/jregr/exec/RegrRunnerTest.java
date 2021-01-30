@@ -60,20 +60,20 @@ public class RegrRunnerTest {
 	}
 
 	@Test
-	public void testRunnerOnNoCasesShouldNotReportAnyTests() throws Exception {
+	public void runNoCasesShouldNotReportAnyTests() throws Exception {
 		assertTrue(regrDirectory.runSelectedCases(NO_CASES, mockedReporter, null, SUITENAME, null));
 		verify(mockedReporter, never()).startTest(mockedCase, 0);
 	}
 
 	@Test
-	public void testRunnerInDirectoryWithOneTestShouldReport() throws Exception {
+	public void runInDirectoryWithOneTestShouldReportIt() throws Exception {
 		assertTrue(regrDirectory.runSelectedCases(ONE_CASE, mockedReporter, null, SUITENAME, null));
 
 		verify(mockedReporter).startTest(eq(mockedCase), longThat(millis -> millis == 0));
 	}
 
 	@Test
-	public void testRunCasesInADirectoryWithASingleCaseShouldRunOneCaseAndReport() throws Exception {
+	public void runInADirectoryWithASingleCaseShouldRunOneCaseAndReport() throws Exception {
 		casesToReturn = ONE_CASE;
 
 		regrDirectory.runAllCases(mockedReporter, binDirectory, SUITENAME, null);
