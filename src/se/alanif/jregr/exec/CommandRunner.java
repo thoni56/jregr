@@ -13,7 +13,6 @@ public class CommandRunner {
 	private StreamPusher inputPusher = null;
 	private ProcessBuilderSpy processBuilder;
 
-	
 	// Setters for gobblers, input pusher and ProcessBuilder so we can inject mocks
 	protected void setGobblers(StreamGobbler outputGobbler, StreamGobbler errorGobbler) {
 		this.outputGobbler = outputGobbler;
@@ -26,41 +25,35 @@ public class CommandRunner {
 		this.processBuilder = processBuilder;
 	}
 
-	public String runCommandForOutput(String[] commandAndArguments, String inputFilename) {
+	public String runCommandForOutput(String[] commandAndArguments, String inputFilename) throws IOException, InterruptedException {
 		if (processBuilder == null) processBuilder = new ProcessBuilderSpy();
 
 		processBuilder.command(commandAndArguments);
-		try {
-			Process p = processBuilder.start();
-			
-			// No injected, possibly mocked, gobblers, create real ones
-			if (outputGobbler == null)
-				outputGobbler = new StreamGobbler(p.getInputStream());
-			if (errorGobbler == null)
-				errorGobbler = new StreamGobbler(p.getErrorStream());
-			outputGobbler.start();
-			errorGobbler.start();
+		Process p = processBuilder.start();
 
-			// Ditto for inputPusher
-			if (inputFilename != null) {
-				if (inputPusher == null) // No injected, possibly mocked, pusher? Create a real one!
-					inputPusher  = new StreamPusher(p.getOutputStream(), new FileReader(inputFilename));
-				inputPusher.run();
-			}
+		// No injected, possibly mocked, gobblers, create real ones
+		if (outputGobbler == null)
+			outputGobbler = new StreamGobbler(p.getInputStream());
+		if (errorGobbler == null)
+			errorGobbler = new StreamGobbler(p.getErrorStream());
+		outputGobbler.start();
+		errorGobbler.start();
 
-			p.waitFor();
-			outputGobbler.join(); 
-			errorGobbler.join(); 
-			String output = outputGobbler.output() + errorGobbler.output();
-			outputGobbler = null;
-			errorGobbler = null;
-			
-			return output;
-		} catch (InterruptedException e) {
-			return "*** InterruptedException in Jregr ***";
-		} catch (IOException e) {
-			return "*** IOException in Jregr ***";
+		// Ditto for inputPusher
+		if (inputFilename != null) {
+			if (inputPusher == null) // No injected, possibly mocked, pusher? Create a real one!
+				inputPusher  = new StreamPusher(p.getOutputStream(), new FileReader(inputFilename));
+			inputPusher.run();
 		}
+
+		p.waitFor();
+		outputGobbler.join(); 
+		errorGobbler.join(); 
+		String output = outputGobbler.output() + errorGobbler.output();
+		outputGobbler = null;
+		errorGobbler = null;
+
+		return output;
 	}
 
 }

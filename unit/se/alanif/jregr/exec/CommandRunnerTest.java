@@ -45,14 +45,14 @@ public class CommandRunnerTest {
 	}
 	
 	@Test
-	public void canRunACommandForOutput() {
+	public void canRunACommandForOutput() throws Exception {
 		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null);
 		assertEquals(OUTPUT+ERROR, output);
 		verify(mockedProcessBuilder).command(new String[]{"command"});
 	}
 	
 	@Test
-	public void willStartInputPusherForInput() {
+	public void willStartInputPusherForInput() throws Exception {
 		commandRunner.runCommandForOutput(new String[]{"command"}, "inputFile");
 		verify(mockedInputPusher).run();
 	}
