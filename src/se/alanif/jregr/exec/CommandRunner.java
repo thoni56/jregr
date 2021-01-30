@@ -49,11 +49,11 @@ public class CommandRunner {
 			}
 
 			p.waitFor();
-			p.destroy();
-
+			outputGobbler.join(); 
+			errorGobbler.join(); 
 			String output = outputGobbler.output() + errorGobbler.output();
-			outputGobbler.join(); outputGobbler = null;
-			errorGobbler.join(); errorGobbler = null;
+			outputGobbler = null;
+			errorGobbler = null;
 			
 			return output;
 		} catch (InterruptedException e) {
