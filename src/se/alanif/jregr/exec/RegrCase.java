@@ -33,7 +33,7 @@ public class RegrCase {
 	public void run(Directory binDirectory, CommandDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner) {
 
 		int linenumber = 1;
-		outputWriter.printf("########## %s ##########%n", caseName);
+		outputWriter.printf("########## %s ##########\n", caseName);
 
 		decoder.reset(caseName);
 		try {
@@ -50,15 +50,16 @@ public class RegrCase {
 						String output = commandRunner.runCommandForOutput(commandAndArguments, stdin, regrDirectory.toDirectory());
 
 						final String stdout = decoder.getStdout();
-						if (stdout == null)
-							outputWriter.print(output);
-						else if (!stdout.equals("/dev/null"))
-							writeOutputToRedirection(output, stdout);
+						if (!decoder.isOptional())
+							if (stdout == null)
+								outputWriter.print(output);
+							else if (!stdout.equals("/dev/null"))
+								writeOutputToRedirection(output, stdout);
 					}
-				} else {
+				} else if (!decoder.isOptional()) {
 					outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!");
 				}
-				
+
 				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {

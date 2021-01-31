@@ -150,12 +150,14 @@ public class RegrCaseTest {
 	@Test
 	public void canSeeIfACaseExists() throws Exception {
 		when(mockedRegrDirectory.hasCaseFile(CASENAME)).thenReturn(true);
+		
 		assertTrue(theCase.exists());
 	}
 
 	@Test
 	public void canGetOutputFile() throws Exception {
 		File mockedOutputFile = mock(File.class);
+		
 		when(mockedRegrDirectory.getOutputFile(CASENAME)).thenReturn(mockedOutputFile);
 		assertEquals(mockedOutputFile, theCase.getOutputFile());
 	}
@@ -164,16 +166,34 @@ public class RegrCaseTest {
 	public void willNotExecuteIfFileWithExtensionDoesNotExist() throws Exception {
 		when(mockedDecoder.getExtension()).thenReturn(".ext");
 		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(false);
+		
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+		
 		verify(mockedCommandRunner, never()).runCommandForOutput(any(), any(), any());
 	}
 
 	@Test
 	public void willNotPrintMessageForFileThatDoesNotExistIfOptional() throws Exception {
 		when(mockedDecoder.getExtension()).thenReturn(".ext");
+		when(mockedDecoder.isOptional()).thenReturn(true);
 		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(false);
+		
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
-		verify(mockedPrinter, never()).println(anyString());
+		
+		verify(mockedPrinter, never()).print(anyString());
+	}
+
+	@Test
+	public void willNotPrintOutputIfOptional() throws Exception {
+		when(mockedDecoder.getExtension()).thenReturn(".ext");
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS);
+		when(mockedCommandRunner.runCommandForOutput(any(), any(), any())).thenReturn("the output");
+		when(mockedDecoder.isOptional()).thenReturn(true);
+		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(true);
+		
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+		
+		verify(mockedPrinter, never()).print(anyString());
 	}
 
 }

@@ -33,7 +33,7 @@ This makes `Jregr` an excellent tool also for what is called ["Approval Testing"
 Format of configuration file
 ----------------------------
 
-The following is the simplest configuration file imaginable:
+The following is a very simple configuration file:
 
     .sh : sh $1.sh
 
@@ -46,34 +46,36 @@ It should be read like:
 
 The general pattern is
 
-    <extension> ':' [ <command> { <arg> } { <input_output_redirection> } ]
+    <extension> (':'|'?') [ <command> { <arg> } { <input_output_redirection> } ]
 
-The elements are space separated, so e.g. you need a space between `<extension>` and the `:`.
+All elements are space separated, so e.g. you need a space between `<extension>` and the separator.
+
+The normal separator is the colon (`:`), but for conditional commands (see below) you can use the question mark (`?`).
 
 A `.jregr` file may consist of multiple lines.
 They will be run in sequence, with each line having an `<extension>` which needs to be matched, and its own command, arguments and optional redirection.
 
-If there are multiple lines in the configuration file, the extension for test cases is the extension on the first line.
-
-A line may exclude the command and arguments completely.
-This will effectively be a check that the file that is indicated by the extension on that line exists, since `Jregr` will print a message in the output if not.
-Since that output will go into the `.expected` file too, it can also serve as a check that a particular file *doesn't* exist.
+The extension that should match for test cases is the extension on the first line.
 
 The actual output of the test will be the total output of running all lines.
+
+A line may exclude the command and arguments completely.
+This will effectively be a check that the file that is indicated by the extension on that line exists. `Jregr` will print a message included in the output if not.
+Since that message can be in the `.expected` file too, it can also serve as a check that a particular file *doesn't* exist.
 
 Note1: You can often use relative paths in the command.
 Absolute paths will of course not be portable.
 It is generally better to use the `-bin` option to find executables that are not in the path.
 
-Note2: Currently there is no way to use the `-bin` option more than once, so if you need multiple executables they must exist in the same directory (for now).
+Note2: Currently it is not possible to use the `-bin` option more than once, so if you need multiple executables they must exist in the same directory (for now).
 
 
 Input and output redirection
 ----------------------------
 
-You can redirect input (mostly), but also output from a particular command.
+You can redirect input and output from a particular command.
 
-For input redirection, which is the most common case, if the `<` is present, Jregr will use the next item as the standard input to the `<command>`.
+For input redirection, which is the most common case, if the `<` is present, `Jregr` will use the item following it as the filename to use as the standard input to the `<command>`.
 
 If the output is redirected using `>` the next item will be the name of the file which will get the output of that line.
 Note that that output will then *not* be part of the output of the test.
@@ -98,6 +100,19 @@ With the case name "test1" this will be translated to the command
 
     $ sut test1 test1.ext
     
+
+Conditional output
+------------------
+
+Sometimes you need to run a command and don't care about the result.
+One example is when a command creates an output file and you want to make sure it does not exist before running the test.
+
+For lines that have a question mark instead of the standard separator (`:`) `Jregr` will not save the output of the command in the output.
+This is also handy when the command is not completely portable, e.g. prints different output on different platforms.
+An example of this is how `rm` prints errors for non-existent files.
+
+`Jregr` will also not print a message for non-existing extension matching files, so it can serve as a conditional command that does not affect the actual output of the test, thus making it more robust.
+
 
 Limitations of commands
 -----------------------
