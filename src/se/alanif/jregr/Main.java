@@ -14,7 +14,7 @@ import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.reporters.RegrReporter;
 
 public class Main {
-	private static final String JREGR_VERSION = "0.1.2";
+	private static final String JREGR_VERSION = "0.1.3";
 
 	private void error(final String message) {
 		System.out.println("Error: " + message);
