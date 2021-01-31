@@ -192,4 +192,8 @@ public class RegrDirectory {
 		else
 			return null;
 	}
+
+	public boolean exists(String filename) {
+		return directory.exists(filename);
+	}
 }

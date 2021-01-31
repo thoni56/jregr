@@ -4,10 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,7 +43,6 @@ public class RegrCaseTest {
 			ARGUMENT2_2 };
 
 	private CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
-	private Runtime mockedRuntime = mock(Runtime.class);
 	private Directory binDirectory = mock(Directory.class);
 
 	private Directory mockedDirectory = mock(Directory.class);
@@ -67,12 +63,12 @@ public class RegrCaseTest {
 	@Before
 	public void setUp() throws Exception {
 		when(binDirectory.getAbsolutePath()).thenReturn(BIN_DIRECTORY_PATH);
-		when(mockedRuntime.exec((String[]) any())).thenReturn(mockedProcess);
 		when(mockedProcess.getErrorStream()).thenReturn(mockedInputStream);
 		when(mockedProcess.getInputStream()).thenReturn(mockedInputStream);
 		when(mockedProcess.getOutputStream()).thenReturn(mockedOutputStream);
 		when(mockedRegrDirectory.getExpectedFile(CASENAME)).thenReturn(mockedExpectedFile);
 		when(mockedRegrDirectory.toDirectory()).thenReturn(mockedDirectory);
+		when(mockedRegrDirectory.exists(any())).thenReturn(true);
 	}
 
 	@Test
@@ -81,7 +77,7 @@ public class RegrCaseTest {
 
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
 
-		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_CASENAME), any());
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_CASENAME), any(), any());
 	}
 
 	@Test
@@ -92,8 +88,8 @@ public class RegrCaseTest {
 
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
 
-		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_ARGUMENTS), any());
-		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND2_AND_ARGUMENTS), any());
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_ARGUMENTS), any(), any());
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND2_AND_ARGUMENTS), any(), any());
 	}
 
 	@Test
@@ -142,7 +138,7 @@ public class RegrCaseTest {
 	@Test
 	public void shouldWriteToOutputFileAndCloseIt() throws Exception {
 		PrintWriter mockedWriter = mock(PrintWriter.class);
-		when(mockedCommandRunner.runCommandForOutput(any(), any())).thenReturn("the output");
+		when(mockedCommandRunner.runCommandForOutput(any(), any(), any())).thenReturn("the output");
 
 		theCase.run(binDirectory, mockedDecoder, mockedWriter, mockedCommandRunner);
 
@@ -161,6 +157,14 @@ public class RegrCaseTest {
 		File mockedOutputFile = mock(File.class);
 		when(mockedRegrDirectory.getOutputFile(CASENAME)).thenReturn(mockedOutputFile);
 		assertEquals(mockedOutputFile, theCase.getOutputFile());
+	}
+	
+	@Test
+	public void willNotExecuteIfFileWithExtensionDoesNotExist() throws Exception {
+		when(mockedDecoder.getExtension()).thenReturn(".ext");
+		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(false);
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+		verify(mockedCommandRunner, never()).runCommandForOutput(any(), any(), any());
 	}
 
 }

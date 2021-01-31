@@ -1,7 +1,10 @@
 package se.alanif.jregr.exec;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
+import se.alanif.jregr.io.Directory;
 
 public class CommandRunner {
 
@@ -25,10 +28,11 @@ public class CommandRunner {
 		this.processBuilder = processBuilder;
 	}
 
-	public String runCommandForOutput(String[] commandAndArguments, String inputFilename) throws IOException, InterruptedException {
+	public String runCommandForOutput(String[] commandAndArguments, String inputFilename, Directory directory) throws IOException, InterruptedException {
 		if (processBuilder == null) processBuilder = new ProcessBuilderSpy();
 
 		processBuilder.command(commandAndArguments);
+		processBuilder.directory(directory);
 		Process p = processBuilder.start();
 
 		// No injected, possibly mocked, gobblers, create real ones
@@ -42,7 +46,7 @@ public class CommandRunner {
 		// Ditto for inputPusher
 		if (inputFilename != null) {
 			if (inputPusher == null) // No injected, possibly mocked, pusher? Create a real one!
-				inputPusher  = new StreamPusher(p.getOutputStream(), new FileReader(inputFilename));
+				inputPusher  = new StreamPusher(p.getOutputStream(), new FileReader(directory.getPath()+File.separator+inputFilename));
 			inputPusher.run();
 		}
 

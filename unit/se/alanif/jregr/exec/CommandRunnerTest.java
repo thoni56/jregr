@@ -39,21 +39,21 @@ public class CommandRunnerTest {
 
 	@Test
 	public void shouldReturnResultFromOutputAndError() throws Exception {
-		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null);
+		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null, null);
 		assertTrue(output.contains(ERROR));
 		assertTrue(output.contains(OUTPUT));
 	}
 	
 	@Test
 	public void canRunACommandForOutput() throws Exception {
-		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null);
+		String output = commandRunner.runCommandForOutput(new String[]{"command"}, null, null);
 		assertEquals(OUTPUT+ERROR, output);
 		verify(mockedProcessBuilder).command(new String[]{"command"});
 	}
 	
 	@Test
 	public void willStartInputPusherForInput() throws Exception {
-		commandRunner.runCommandForOutput(new String[]{"command"}, "inputFile");
+		commandRunner.runCommandForOutput(new String[]{"command"}, "inputFile", null);
 		verify(mockedInputPusher).run();
 	}
 	

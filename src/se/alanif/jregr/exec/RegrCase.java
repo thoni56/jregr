@@ -38,16 +38,24 @@ public class RegrCase {
 		try {
 			do {
 				String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
-				final String stdin = decoder.getStdin();
 
-				String output = commandRunner.runCommandForOutput(commandAndArguments, stdin);
+				String extension = decoder.getExtension();
 
-				final String stdout = decoder.getStdout();
-				if (stdout == null)
-					outputWriter.print(output);
-				else if (!stdout.equals("/dev/null"))
-					writeOutputToRedirection(output, stdout);
-				linenumber++;
+				if (regrDirectory.exists(caseName+extension)) {
+
+					final String stdin = decoder.getStdin();
+
+					String output = commandRunner.runCommandForOutput(commandAndArguments, stdin, regrDirectory.toDirectory());
+
+					final String stdout = decoder.getStdout();
+					if (stdout == null)
+						outputWriter.print(output);
+					else if (!stdout.equals("/dev/null"))
+						writeOutputToRedirection(output, stdout);
+					linenumber++;
+				} else {
+					outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!");
+				}
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
 			// did not find the .input file, but that might not be a problem, could be a

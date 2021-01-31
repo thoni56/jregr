@@ -73,4 +73,8 @@ public class Directory extends File {
 		return subdirectories;
 	}
 
+	public boolean exists(String filename) {
+		return new java.io.File(getPath(), filename).isFile();
+	}
+
 }
