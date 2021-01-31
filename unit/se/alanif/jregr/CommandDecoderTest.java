@@ -171,4 +171,20 @@ public class CommandDecoderTest {
 		String[] commands = decoder.buildCommandAndArguments(binDirectory, CASENAME);
 		assertNull(commands);
 	}
+	
+	@Test
+	public void willSayOptionalForLineWithQuestionMark() throws IOException {
+		when(mockedFileReader.readLine()).thenReturn(".ext ?");
+		decoder = new CommandDecoder(mockedFileReader);
+		decoder.reset("case");
+		assertTrue(decoder.isOptional());
+	}	
+
+	@Test
+	public void willNotSayOptionalForLineWithColon() throws IOException {
+		when(mockedFileReader.readLine()).thenReturn(".ext :");
+		decoder = new CommandDecoder(mockedFileReader);
+		decoder.reset("case");
+		assertFalse(decoder.isOptional());
+	}	
 }

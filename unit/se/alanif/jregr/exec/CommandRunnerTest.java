@@ -57,5 +57,4 @@ public class CommandRunnerTest {
 		verify(mockedInputPusher).run();
 	}
 	
-	
 }

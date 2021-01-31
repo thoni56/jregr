@@ -170,11 +170,10 @@ public class RegrCaseTest {
 
 	@Test
 	public void willNotPrintMessageForFileThatDoesNotExistIfOptional() throws Exception {
-		PrintWriter mockedWriter = mock(PrintWriter.class);
 		when(mockedDecoder.getExtension()).thenReturn(".ext");
 		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(false);
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
-		verify(mockedWriter, never()).println(anyString());
+		verify(mockedPrinter, never()).println(anyString());
 	}
 
 }

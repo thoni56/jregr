@@ -31,6 +31,7 @@ public class CommandDecoder {
 	private String stdinFilename;
 	private String stdoutFilename;
 	private String caseName = "";
+	private boolean optional;
 
 	public CommandDecoder(BufferedReader fileReader) throws IOException {
 		jregrFileReader = fileReader;
@@ -39,20 +40,23 @@ public class CommandDecoder {
 	}
 
 	private void readAndSplitLineIntoParts() throws IOException {
+		optional = false;
 		String line = this.jregrFileReader.readLine();
-		if (line != null)
-			parts = splitIntoParts(line);
-		else
-			parts = new String[] { "", "", "" };
+		parts = splitIntoParts(line);
 	}
 
 	private String[] splitIntoParts(String line) throws CommandSyntaxException {
-		String[] parts = line.split(" ");
-		if (parts.length < 2 || !parts[1].equals(":")) {
-			throw new CommandSyntaxException("Syntax error: \""+line+"\"");
+		if (line != null) {
+			String[] parts = line.split(" ");
+			if (parts.length < 2 || (!parts[1].equals(":") && !parts[1].equals("?"))) {
+				throw new CommandSyntaxException("Syntax error: \""+line+"\"");
+			}
+			optional = parts[1].equals("?");
+			parts = decodeStdinout(parts);
+			return removeSeparatorInSecondPosition(parts);
+		} else {
+			return new String[] { "", "", "" };
 		}
-		parts = decodeStdinout(parts);
-		return removeColonInSecondPosition(parts);
 	}
 
 	private String[] decodeStdinout(String[] parts) {
@@ -72,7 +76,7 @@ public class CommandDecoder {
 		return parts;
 	}
 
-	private String[] removeColonInSecondPosition(String[] split) {
+	private String[] removeSeparatorInSecondPosition(String[] split) {
 		String[] w = Arrays.copyOf(split, split.length - 1);
 		for (int i = 1; i < w.length; i++)
 			w[i] = split[i + 1];
@@ -169,6 +173,10 @@ public class CommandDecoder {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public boolean isOptional() {
+		return optional;
 	}
 
 }
