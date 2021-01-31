@@ -8,6 +8,7 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
+import se.alanif.jregr.CommandsDecoder.CommandSyntaxException;
 import se.alanif.jregr.io.Directory;
 
 import static org.junit.Assert.*;
@@ -149,5 +150,17 @@ public class CommandsDecoderTest {
 		when(mockedFileReader.readLine()).thenReturn(".ext : command with arguments < $1.input");
 		decoder.advance();
 		assertEquals(CASENAME+".input", decoder.getStdin());
+	}
+	
+	@Test
+	public void willThrowCommandSyntaxErrorForMissingColon() throws IOException {
+		when(mockedFileReader.readLine()).thenReturn(".ext command with arguments");
+		try {
+			new CommandsDecoder(mockedFileReader);
+			fail();
+		} catch (CommandSyntaxException e) {
+			// Pass
+		}
+		
 	}
 }
