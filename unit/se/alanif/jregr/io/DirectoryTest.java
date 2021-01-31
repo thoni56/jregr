@@ -2,7 +2,7 @@ package se.alanif.jregr.io;
 
 import java.io.BufferedReader;
 
-import se.alanif.jregr.CommandsDecoder;
+import se.alanif.jregr.CommandDecoder;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -34,14 +34,14 @@ public class DirectoryTest {
 	
 	@Test
 	public void testCanSeeIfFirstExecutableFromJRegrFileExists() throws Exception {
-		CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
+		CommandDecoder mockedDecoder = mock(CommandDecoder.class);
 		when(mockedDecoder.getCommand()).thenReturn(EXISTING_COMMAND_NAME_WITHOUT_EXE);
 		assertTrue(mockedDirectory.executablesExist(mockedDecoder));
 	}
 	
 	@Test
 	public void testWillSayExecutablesDoNotExistsIfNoneExistsInBinDir() throws Exception {
-		CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
+		CommandDecoder mockedDecoder = mock(CommandDecoder.class);
 		when(mockedDecoder.getCommand())
 			.thenReturn(NON_EXISTING_COMMAND_NAME)
 			.thenReturn(NON_EXISTING_COMMAND_NAME)
@@ -55,7 +55,7 @@ public class DirectoryTest {
 	
 	@Test
 	public void testWillSayExecutablesExistIfLastExecutableFromJRegrFileDoes() throws Exception {
-		CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
+		CommandDecoder mockedDecoder = mock(CommandDecoder.class);
 		when(mockedDecoder.getCommand())
 			.thenReturn(NON_EXISTING_COMMAND_NAME)
 			.thenReturn(NON_EXISTING_COMMAND_NAME)

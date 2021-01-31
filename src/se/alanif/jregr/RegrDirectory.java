@@ -26,18 +26,18 @@ public class RegrDirectory {
 
 	private Directory directory;
 
-	private CommandsDecoder decoder;
+	private CommandDecoder decoder;
 
 	public RegrDirectory(Directory directory) throws IOException {
 		this.directory = directory;
 		File commandsFile = getCommandsFile();
 		if (commandsFile != null) {
-			decoder = new CommandsDecoder(directory.getBufferedReaderForFile(commandsFile));
+			decoder = new CommandDecoder(directory.getBufferedReaderForFile(commandsFile));
 			caseExtension = decoder.getExtension();
 		}
 	}
 
-	public void setDecoder(CommandsDecoder decoder) {
+	public void setDecoder(CommandDecoder decoder) {
 		this.decoder = decoder;
 		caseExtension = decoder.getExtension();
 	}
@@ -156,7 +156,7 @@ public class RegrDirectory {
 		return success;
 	}
 
-	public boolean recurse(RegrReporter reporter, Directory bindir, String suiteName, CommandsDecoder decoder, CommandLine commandLine) throws IOException {
+	public boolean recurse(RegrReporter reporter, Directory bindir, String suiteName, CommandDecoder decoder, CommandLine commandLine) throws IOException {
 		boolean success = true;
 		Directory[] subDirectories = directory.getSubdirectories();
 		if (subDirectories == null || subDirectories.length == 0) {
@@ -166,7 +166,7 @@ public class RegrDirectory {
 				if (subDirectory.hasFile(COMMANDS_FILE_NAME)) {
 					RegrDirectory regrDirectory = new RegrDirectory(subDirectory);
 					if (regrDirectory.hasCommands())
-						regrDirectory.setDecoder(new CommandsDecoder(readerFor(regrDirectory.getCommandsFile())));
+						regrDirectory.setDecoder(new CommandDecoder(readerFor(regrDirectory.getCommandsFile())));
 					else
 						regrDirectory.setDecoder(decoder);
 					String subSuiteName = suiteName + "/" + subDirectory.getName();

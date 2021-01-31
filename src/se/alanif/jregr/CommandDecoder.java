@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 import se.alanif.jregr.io.Directory;
 
-public class CommandsDecoder {
+public class CommandDecoder {
 
 	// The RegrDecoder decodes a file (presumably a .jregr file) into
 	// <extension> ':' <command> {<arg>} [ '<' <stdin> ]
@@ -32,7 +32,7 @@ public class CommandsDecoder {
 	private String stdoutFilename;
 	private String caseName = "";
 
-	public CommandsDecoder(BufferedReader fileReader) throws IOException {
+	public CommandDecoder(BufferedReader fileReader) throws IOException {
 		jregrFileReader = fileReader;
 		fileReader.mark(10000);
 		readAndSplitLineIntoParts();

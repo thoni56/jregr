@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 import org.junit.Before;
 import org.junit.Test;
 
-import se.alanif.jregr.CommandsDecoder;
+import se.alanif.jregr.CommandDecoder;
 import se.alanif.jregr.RegrDirectory;
 import se.alanif.jregr.exec.RegrCase.State;
 import se.alanif.jregr.io.Directory;
@@ -42,7 +42,7 @@ public class RegrCaseTest {
 	private static final String[] COMMAND2_AND_ARGUMENTS = { COMMAND2_PREPENDED_WITH_BIN_DIRECTORY, ARGUMENT2_1,
 			ARGUMENT2_2 };
 
-	private CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
+	private CommandDecoder mockedDecoder = mock(CommandDecoder.class);
 	private Directory binDirectory = mock(Directory.class);
 
 	private Directory mockedDirectory = mock(Directory.class);

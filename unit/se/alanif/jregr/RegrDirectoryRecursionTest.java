@@ -66,7 +66,7 @@ public class RegrDirectoryRecursionTest {
 
 	private static final CommandLine mockedCommandLine = mock(CommandLine.class);
 	
-	private static final CommandsDecoder mockedDecoder = mock(CommandsDecoder.class);
+	private static final CommandDecoder mockedDecoder = mock(CommandDecoder.class);
 	
 	@Before
 	public void setUp() throws Exception {

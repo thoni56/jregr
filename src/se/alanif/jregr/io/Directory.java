@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 
-import se.alanif.jregr.CommandsDecoder;
+import se.alanif.jregr.CommandDecoder;
 
 public class Directory extends File {
 
@@ -39,7 +39,7 @@ public class Directory extends File {
 		return fileNames;
 	}
 
-	public boolean executablesExist(CommandsDecoder decoder) {
+	public boolean executablesExist(CommandDecoder decoder) {
 		decoder.reset();
 		do {
 			if (hasFile(decoder.getCommand()) || hasFile(decoder.getCommand() + ".exe"))

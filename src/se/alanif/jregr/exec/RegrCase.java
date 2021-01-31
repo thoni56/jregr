@@ -8,7 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import se.alanif.jregr.CommandsDecoder;
+import se.alanif.jregr.CommandDecoder;
 import se.alanif.jregr.RegrDirectory;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.io.File;
@@ -29,7 +29,7 @@ public class RegrCase {
 		this.regrDirectory = directory;
 	}
 
-	public void run(Directory binDirectory, CommandsDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner) {
+	public void run(Directory binDirectory, CommandDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner) {
 
 		int linenumber = 1;
 		outputWriter.printf("########## %s ##########%n", caseName);

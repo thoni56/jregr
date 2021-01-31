@@ -8,7 +8,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.ParseException;
 
-import se.alanif.jregr.CommandsDecoder.CommandSyntaxException;
+import se.alanif.jregr.CommandDecoder.CommandSyntaxException;
 import se.alanif.jregr.exec.RegrCase;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.reporters.RegrReporter;

@@ -8,13 +8,13 @@ import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 
-import se.alanif.jregr.CommandsDecoder.CommandSyntaxException;
+import se.alanif.jregr.CommandDecoder.CommandSyntaxException;
 import se.alanif.jregr.io.Directory;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class CommandsDecoderTest {
+public class CommandDecoderTest {
 	
 	private static final String BINPATH = "binpath";
 	private static final String CASENAME = "case";
@@ -37,7 +37,7 @@ public class CommandsDecoderTest {
 	private BufferedReader mockedFileReader = mock(BufferedReader.class);
 	private Directory binDirectory = mock(Directory.class);
 	private Directory binDirectoryWithoutExecutables = mock(Directory.class);
-	private CommandsDecoder decoder;
+	private CommandDecoder decoder;
 
 	@Before
 	public void setUp() throws Exception {
@@ -50,7 +50,7 @@ public class CommandsDecoderTest {
 		when(binDirectory.executableExist(anyString())).thenReturn(true);
 		when(binDirectoryWithoutExecutables.executableExist(anyString())).thenReturn(false);
 		
-		decoder = new CommandsDecoder(mockedFileReader);
+		decoder = new CommandDecoder(mockedFileReader);
 		decoder.reset(CASENAME);
 	}
 	
@@ -72,7 +72,7 @@ public class CommandsDecoderTest {
 	@Test
 	public void shouldGetStdinFileFromCurrentJregrLine() throws Exception {
 		when(mockedFileReader.readLine()).thenReturn(EXTENSION1+" : "+COMMAND1+" "+ARG11+" "+ARG12 + " < " + STDIN);
-		decoder = new CommandsDecoder(mockedFileReader);
+		decoder = new CommandDecoder(mockedFileReader);
 		
 		assertEquals(STDIN, decoder.getStdin());
 	}
@@ -156,7 +156,7 @@ public class CommandsDecoderTest {
 	public void willThrowCommandSyntaxErrorForMissingColon() throws IOException {
 		when(mockedFileReader.readLine()).thenReturn(".ext command with arguments");
 		try {
-			new CommandsDecoder(mockedFileReader);
+			new CommandDecoder(mockedFileReader);
 			fail();
 		} catch (CommandSyntaxException e) {
 			// Pass
