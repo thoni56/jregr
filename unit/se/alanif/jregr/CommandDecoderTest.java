@@ -161,6 +161,14 @@ public class CommandDecoderTest {
 		} catch (CommandSyntaxException e) {
 			// Pass
 		}
-		
+	}
+	
+	@Test
+	public void willReturnNullAsCommandIfEmpty() throws IOException {
+		when(mockedFileReader.readLine()).thenReturn(".ext :");
+		decoder = new CommandDecoder(mockedFileReader);
+		decoder.reset("case");
+		String[] commands = decoder.buildCommandAndArguments(binDirectory, CASENAME);
+		assertNull(commands);
 	}
 }

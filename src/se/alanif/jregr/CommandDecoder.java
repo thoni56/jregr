@@ -48,8 +48,8 @@ public class CommandDecoder {
 
 	private String[] splitIntoParts(String line) throws CommandSyntaxException {
 		String[] parts = line.split(" ");
-		if (parts.length < 3 || !parts[1].equals(":")) {
-			throw new CommandSyntaxException("Syntax error: "+line);
+		if (parts.length < 2 || !parts[1].equals(":")) {
+			throw new CommandSyntaxException("Syntax error: \""+line+"\"");
 		}
 		parts = decodeStdinout(parts);
 		return removeColonInSecondPosition(parts);
@@ -86,14 +86,20 @@ public class CommandDecoder {
 	}
 
 	public String getCommand() {
-		return parts[1];
+		if (parts.length > 2)
+			return parts[1];
+		else
+			return null;
 	}
 
 	private String[] getArguments() {
-		String[] arguments = new String[parts.length - 2];
-		for (int i = 2; i < parts.length; i++)
-			arguments[i - 2] = parts[i];
-		return arguments;
+		if (parts.length > 2) {
+			String[] arguments = new String[parts.length - 2];
+			for (int i = 2; i < parts.length; i++)
+				arguments[i - 2] = parts[i];
+			return arguments;
+		} else
+			return new String[]{""};
 	}
 
 	public String getExtension() {
@@ -121,17 +127,20 @@ public class CommandDecoder {
 	public String[] buildCommandAndArguments(Directory binDirectory, String caseName) {
 		final String binPath = binDirectory != null ? binDirectory.getAbsolutePath() + java.io.File.separator : "";
 		String command = getCommand();
-		if (binDirectory == null || !binDirectory.executableExist(command))
-			command = expandSymbols(caseName, command);
-		else
-			command = binPath + expandSymbols(caseName, command);
-		String[] arguments = getArguments();
-		String[] commandAndArguments = new String[arguments.length + 1];
-		commandAndArguments[0] = command;
-		for (int i = 0; i < arguments.length; i++) {
-			commandAndArguments[i + 1] = expandSymbols(caseName, arguments[i]);;
-		}
-		return commandAndArguments;
+		if (command != null) {
+			if (binDirectory == null || !binDirectory.executableExist(command))
+				command = expandSymbols(caseName, command);
+			else
+				command = binPath + expandSymbols(caseName, command);
+			String[] arguments = getArguments();
+			String[] commandAndArguments = new String[arguments.length + 1];
+			commandAndArguments[0] = command;
+			for (int i = 0; i < arguments.length; i++) {
+				commandAndArguments[i + 1] = expandSymbols(caseName, arguments[i]);;
+			}
+			return commandAndArguments;
+		} else
+			return null;
 	}
 
 	public boolean advance() throws CommandSyntaxException {

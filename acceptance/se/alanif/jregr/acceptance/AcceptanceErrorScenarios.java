@@ -53,17 +53,6 @@ public class AcceptanceErrorScenarios {
 	}
 	
 	@Test
-	public void shouldSignalErrorForJregrFileWithNoCommand() throws Exception {
-		String directory = "malformed_jregr_without_command";
-		String[] arguments = {
-				"-dir", "acceptance/"+directory
-		};
-		String[] output = runJregrForCleanOutput(arguments);
-		assertEquals("", output[STDERR]);
-		assertEquals("Error: Directory '"+directory+"' - syntax error in .jregr file", output[0]);
-	}
-	
-	@Test
 	public void shouldSignalErrorForJregrFileWithNoSeparatedColon() throws Exception {
 		String directory = "malformed_jregr_with_no_separated_colon";
 		String[] arguments = {

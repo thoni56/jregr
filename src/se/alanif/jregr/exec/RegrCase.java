@@ -44,18 +44,21 @@ public class RegrCase {
 
 				if (regrDirectory.exists(caseName+extension)) {
 
-					final String stdin = decoder.getStdin();
+					if (commandAndArguments != null) {
+						final String stdin = decoder.getStdin();
 
-					String output = commandRunner.runCommandForOutput(commandAndArguments, stdin, regrDirectory.toDirectory());
+						String output = commandRunner.runCommandForOutput(commandAndArguments, stdin, regrDirectory.toDirectory());
 
-					final String stdout = decoder.getStdout();
-					if (stdout == null)
-						outputWriter.print(output);
-					else if (!stdout.equals("/dev/null"))
-						writeOutputToRedirection(output, stdout);
+						final String stdout = decoder.getStdout();
+						if (stdout == null)
+							outputWriter.print(output);
+						else if (!stdout.equals("/dev/null"))
+							writeOutputToRedirection(output, stdout);
+					}
 				} else {
 					outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!");
 				}
+				
 				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
