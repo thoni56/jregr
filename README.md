@@ -9,9 +9,9 @@ There are some tools to do this already, like DejaGnu, Expect etc., but for some
 Synopsis
 --------
 
-In a configuration file per directory, `.jregr`, you specify a file extension for what files are considered being test cases in this directory, and the command(s) that should be performed on each of those est cases.
+In a configuration file per directory, `.jregr`, you specify a file extension for what files are considered being test cases in this directory, and the command(s) that should be performed on each of those test cases.
 
-The test case name is the basename of a file with matching extension.
+The test case name is the basename of a file that matches the extension on the first line in the `.jregr` file.
 
 The output of those commands (meaning everything that is sent to the standard and/or error outputs) is considered the actual output of the test case.
 This is compared to the expected output, which is the content of a file with the same basename (the "casename") but with extension `.expected`.
@@ -22,8 +22,8 @@ The expected output
 -------------------
 
 You get to decide what is the expected output.
-For a test that does what it should, you simply copy the `.output` file to `.expected`.
-Or you can create an `.expected` file manually, but it tends to be rather difficult to anticipate the correct output.
+For a test that does what it should, after running the test and examining the `.output` file you can simply copy the `.output` file to the `.expected` file.
+You can also create an `.expected` file manually, but it tends to be rather difficult to anticipate the correct output.
 
 This makes `Jregr` an excellent tool also for what is called ["Approval Testing"](https://approvaltests.com/).
 
@@ -108,22 +108,24 @@ Finally `jregr` will give a summary of the number of tests run.
 
 You can run a single test by just adding its full name as an argument.
 
-For convenience there is a script, `jregr`, which finds the jar file in the same directory as the script it self, so you can link to the script and get the correct jar.
+For convenience there is a script, `jregr`, which finds the jar file in the same directory as the script itself, so you can link to the script and get the correct jar.
 
-The script also handles the case where you are running `jregr` from a cywin environment using your Windows java.
+The script also handles the case where you are running `jregr` from a Cygwin environment using your Windows java, since then file paths have to be converted.
 
 Options
 -------
 
 `-bin` find any executable files in this directory
 
-`-dir` find testcases and expected output in this directory, also write actual output there
+`-dir` look for test cases and expected output in this directory, and of course also write actual output there
 
 `-xml` create Junit/Ant compatible `xml` files instead of output to console (to collect in Jenkins etc.)
 
 `-verbose` print also all passing test names on the console output (which is done using ANSI control codes), normally they will be overwritten to make output more compact
 
 `-version` print the version of Jregr
+
+`-nocolour` or `-nocolor` don't color the output
 
 Character Encodings
 -------------------
@@ -156,12 +158,27 @@ Then suspend the case. When running all cases you will still get green, but you 
 Recursion
 ---------
 
-Jregr will automatically recurse into subdirectories.
+`Jregr` will automatically recurse into subdirectories.
 
--   Recursion will only happen if the subdirectory contains a `.jregr`     file.
+-   `Jregr` will only recurse into subdirectories that contain a `.jregr`     file.
 
 -   If the `.jregr` in the subdirectory is empty, Jregr will re-use the commands from the `.jregr` file in the directory above.
 
 -   If a `-bin` option was given on the command line and it was relative, it will be adjusted accordingly.
 
--   There is no way to give specific `-bin` options for subdirectories so all required `-bin` directories need to be specified on the command line. (NYI - multiple `-bin` options)
+-   There is no way to give specific `-bin` options for subdirectories so all required `-bin` directories need to be specified on the command line.
+(NOTE multiple `-bin` options is not yet implemented)
+
+FUTURE
+======
+
+Ideas are welcome!
+
+At some point I'd like to add commands to the `Jregr` CLI in the same manner as Git (and actually some really cool tools I used already in the 80's ;-), something like:
+
+    $ jregr [run]
+    $ jregr diff <case>
+    $ jregr suspend <case>
+    $ jregr ok <case>
+
+
