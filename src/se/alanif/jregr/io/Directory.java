@@ -39,15 +39,6 @@ public class Directory extends File {
 		return fileNames;
 	}
 
-	public boolean executablesExist(CommandDecoder decoder) {
-		decoder.reset();
-		do {
-			if (hasFile(decoder.getCommand()) || hasFile(decoder.getCommand() + ".exe"))
-				return true;
-		} while (decoder.advance());
-		return false;
-	}
-
 	public BufferedReader getBufferedReaderForFile(File file) {
 		if (file.exists())
 			try {

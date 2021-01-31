@@ -18,12 +18,12 @@ public class CommandDecoder {
 	// Feed it a BufferedReader for the .jregr file in the constructor
 
 	// You need to set the caseName to use for expansion using reset(caseName)
-	
+
 	@SuppressWarnings("serial")
 	public class CommandSyntaxException extends IOException {
 		public CommandSyntaxException(String errorMessage) {
-	        super(errorMessage);
-	    }
+			super(errorMessage);
+		}
 	}
 
 	private String[] parts;
@@ -134,17 +134,18 @@ public class CommandDecoder {
 		return commandAndArguments;
 	}
 
-	public boolean advance() {
+	public boolean advance() throws CommandSyntaxException {
+		String line = "";
 		try {
-			final String line = jregrFileReader.readLine();
-			if (line == null || line.equals(""))
-				return false;
-			else
-				parts = splitIntoParts(line);
-			return true;
+			line = jregrFileReader.readLine();
 		} catch (IOException e) {
 			return false;
 		}
+		if (line == null || line.equals(""))
+			return false;
+		else
+			parts = splitIntoParts(line);
+		return true;
 	}
 
 	public void reset(String caseName) {
