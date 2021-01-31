@@ -137,6 +137,7 @@ public class RegrCaseTest {
 
 	@Test
 	public void shouldWriteToOutputFileAndCloseIt() throws Exception {
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS);
 		PrintWriter mockedWriter = mock(PrintWriter.class);
 		when(mockedCommandRunner.runCommandForOutput(any(), any(), any())).thenReturn("the output");
 
@@ -165,6 +166,15 @@ public class RegrCaseTest {
 		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(false);
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
 		verify(mockedCommandRunner, never()).runCommandForOutput(any(), any(), any());
+	}
+
+	@Test
+	public void willNotPrintMessageForFileThatDoesNotExistIfOptional() throws Exception {
+		PrintWriter mockedWriter = mock(PrintWriter.class);
+		when(mockedDecoder.getExtension()).thenReturn(".ext");
+		when(mockedRegrDirectory.exists(CASENAME+".ext")).thenReturn(false);
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+		verify(mockedWriter, never()).println(anyString());
 	}
 
 }
