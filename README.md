@@ -6,6 +6,7 @@ This is often done as regression tests, and should be able to run fairly quickly
 
 There are some tools to do this already, like DejaGnu, Expect etc., but for some reason or other these did not fit my purpose, or possibly taste.
 
+
 Synopsis
 --------
 
@@ -18,6 +19,7 @@ This is compared to the expected output, which is the content of a file with the
 
 If they are identical the test case passed, if not, it failed.
 
+
 The expected output
 -------------------
 
@@ -26,6 +28,7 @@ For a test that does what it should, after running the test and examining the `.
 You can also create an `.expected` file manually, but it tends to be rather difficult to anticipate the correct output.
 
 This makes `Jregr` an excellent tool also for what is called ["Approval Testing"](https://approvaltests.com/).
+
 
 Format of configuration file
 ----------------------------
@@ -64,6 +67,7 @@ It is generally better to use the `-bin` option to find executables that are not
 
 Note2: Currently there is no way to use the `-bin` option more than once, so if you need multiple executables they must exist in the same directory (for now).
 
+
 Input and output redirection
 ----------------------------
 
@@ -76,6 +80,7 @@ Note that that output will then *not* be part of the output of the test.
 
 A special case is if the name of the output file is exactly `/dev/null` in which case the output of that line will not be saved anywhere.
 
+
 Configuration File Variables
 ----------------------------
 
@@ -85,8 +90,14 @@ There are some 'variables' available for use in the configuration file:
 
 `$2` - the complete file name for the file matching the extension on the current line
 
-So in the example above of the shortest possible `.jregr` file, since `$2` is the complete testname matched with the extension `.sh` it will be the same as the test name with the extension concatenated at the end.
-(Again, except that 'sh' does not exist on all platforms...)
+Assume the following line in a `.jregr` file
+
+    .ext : sut $1 $2
+
+With the case name "test1" this will be translated to the command
+
+    $ sut test1 test1.ext
+    
 
 Limitations of commands
 -----------------------
@@ -94,6 +105,7 @@ Limitations of commands
 The command is executed with Javas `Runtime.exec()` so it must be directly executable (e.g. shell scripts might be executable on some platforms but are not on others) and it does not handle wildcards or pipes.
 Although this might work it is not by design but an effect of how Java on that particular OS happens to perform the `exec()` call.
 E.g. with a Windows Java it won't work, but might on Linux et.al.
+
 
 Running
 -------
@@ -112,6 +124,7 @@ For convenience there is a script, `jregr`, which finds the jar file in the same
 
 The script also handles the case where you are running `jregr` from a Cygwin environment using your Windows java, since then file paths have to be converted.
 
+
 Options
 -------
 
@@ -127,13 +140,15 @@ Options
 
 `-nocolour` or `-nocolor` don't color the output
 
-Character Encodings
+
+Character encodings
 -------------------
 
 Sometimes it might be important to preserve character encodings so that the expected output can be matched correctly.
 There is no option for this, instead use the Java VM option '-Dfile.encoding=<encoding>', like
 
     java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar $@
+
 
 Test case status
 ----------------
@@ -155,6 +170,7 @@ This is useful for test cases that run but produces the wrong output.
 Adjust the output to what it should be, save that as the expected output.
 Then suspend the case. When running all cases you will still get green, but you can see what suspended test cases you have, and how they are doing.
 
+
 Recursion
 ---------
 
@@ -168,6 +184,7 @@ Recursion
 
 -   There is no way to give specific `-bin` options for subdirectories so all required `-bin` directories need to be specified on the command line.
 (NOTE multiple `-bin` options is not yet implemented)
+
 
 FUTURE
 ======
