@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import se.alanif.jregr.CommandDecoder;
+import se.alanif.jregr.CommandDecoder.CommandSyntaxException;
 import se.alanif.jregr.RegrDirectory;
 import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.io.File;
@@ -52,15 +53,17 @@ public class RegrCase {
 						outputWriter.print(output);
 					else if (!stdout.equals("/dev/null"))
 						writeOutputToRedirection(output, stdout);
-					linenumber++;
 				} else {
 					outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!");
 				}
+				linenumber++;
 			} while (decoder.advance());
 		} catch (FileNotFoundException e) {
 			// did not find the .input file, but that might not be a problem, could be a
 			// virgin test case but it could also be a mistake in the .jregr file
 			outputWriter.println("WARNING! Could not find input file for command line " + linenumber + " in .jregr file");
+		} catch (CommandSyntaxException e) {
+			outputWriter.println(".jregr:"+linenumber+" "+e.getMessage());
 		} catch (IOException | InterruptedException e) {
 			fatal = true;
 			outputWriter.println(e.getMessage());

@@ -49,7 +49,7 @@ public class CommandDecoder {
 	private String[] splitIntoParts(String line) throws CommandSyntaxException {
 		String[] parts = line.split(" ");
 		if (parts.length < 3 || !parts[1].equals(":")) {
-			throw new CommandSyntaxException("Syntax error in .jregr file");
+			throw new CommandSyntaxException("Syntax error: "+line);
 		}
 		parts = decodeStdinout(parts);
 		return removeColonInSecondPosition(parts);
