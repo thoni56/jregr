@@ -90,7 +90,7 @@ public class CommandDecoder {
 	}
 
 	public String getCommand() {
-		if (parts.length > 2)
+		if (parts.length > 1)
 			return parts[1];
 		else
 			return null;

@@ -56,6 +56,7 @@ public class RegrCase {
 							else if (!stdout.equals("/dev/null"))
 								writeOutputToRedirection(output, stdout);
 					}
+					
 				} else if (!decoder.isOptional()) {
 					outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!\n");
 				}
