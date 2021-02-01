@@ -1,3 +1,5 @@
 theSUT.exe
 theSUT
+stderr.exe
+stderr
 *.output
