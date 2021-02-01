@@ -32,11 +32,13 @@ public class CommandDecoder {
 	private String stdoutFilename;
 	private String caseName = "";
 	private boolean optional;
+	private int lineNumber;
 
 	public CommandDecoder(BufferedReader fileReader) throws IOException {
 		jregrFileReader = fileReader;
 		fileReader.mark(10000);
 		readAndSplitLineIntoParts();
+		lineNumber = 1;
 	}
 
 	private void readAndSplitLineIntoParts() throws IOException {
@@ -49,7 +51,7 @@ public class CommandDecoder {
 		if (line != null) {
 			String[] parts = line.split(" ");
 			if (parts.length < 2 || (!parts[1].equals(":") && !parts[1].equals("?"))) {
-				throw new CommandSyntaxException("Syntax error: \""+line+"\"");
+				throw new CommandSyntaxException(".jregr:"+lineNumber+": Syntax error: \""+line+"\"");
 			}
 			optional = parts[1].equals("?");
 			parts = decodeStdinout(parts);
@@ -151,6 +153,7 @@ public class CommandDecoder {
 		String line = "";
 		try {
 			line = jregrFileReader.readLine();
+			lineNumber++;
 		} catch (IOException e) {
 			return false;
 		}
@@ -170,6 +173,7 @@ public class CommandDecoder {
 		try {
 			jregrFileReader.reset();
 			readAndSplitLineIntoParts();
+			lineNumber = 1;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

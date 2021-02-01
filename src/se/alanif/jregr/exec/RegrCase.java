@@ -68,7 +68,7 @@ public class RegrCase {
 			// virgin test case but it could also be a mistake in the .jregr file
 			outputWriter.println("WARNING! Could not find input file for command line " + linenumber + " in .jregr file");
 		} catch (CommandSyntaxException e) {
-			outputWriter.println(".jregr:"+linenumber+" "+e.getMessage());
+			outputWriter.println(".jregr:"+linenumber+": "+e.getMessage());
 		} catch (IOException | InterruptedException e) {
 			fatal = true;
 			outputWriter.println(e.getMessage());

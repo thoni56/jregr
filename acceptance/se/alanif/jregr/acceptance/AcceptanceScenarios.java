@@ -15,6 +15,7 @@ public class AcceptanceScenarios {
     @Before
     public void setUp() throws Exception {
         compile("theSUT");
+        compile("crash");
     }
 
     private void compile(String program) throws IOException, InterruptedException {
@@ -121,7 +122,7 @@ public class AcceptanceScenarios {
         assertTrue(stdoutFile.exists());
     }
 
-    //@Test
+    @Test
     public void shouldFindExeWithRelativePathInJregr() throws Exception {
         String directory = "one_subdir_with_relative_path_to_exe";
         String[] arguments = {
@@ -133,5 +134,17 @@ public class AcceptanceScenarios {
         assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
         assertEquals("a_case_in_subdir_with_relative_path_to_exe : Pass", outputLines[3]);
     }
-
+      
+    @Test
+    public void shouldCatchStderr() {
+        String directory = "should_catch_stderr";
+        String[] arguments = {
+                "-dir", "acceptance/"+directory
+        };
+        String[] output = runJregrForCleanOutput(arguments);
+        assertEquals(output[STDERR], "");
+        String[] outputLines = output[STDOUT].split("\n");
+        assertEquals("'"+directory+"': Running 1 test(s)...", outputLines[0]);
+        assertEquals("should_catch_stderr : Pass", outputLines[1]);
+    }
 }
