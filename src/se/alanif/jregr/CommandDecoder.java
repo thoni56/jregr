@@ -97,7 +97,7 @@ public class CommandDecoder {
 	}
 
 	private String[] getArguments() {
-		if (parts.length > 2) {
+		if (parts.length > 1) {
 			String[] arguments = new String[parts.length - 2];
 			for (int i = 2; i < parts.length; i++)
 				arguments[i - 2] = parts[i];
