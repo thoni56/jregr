@@ -16,157 +16,155 @@ import se.alanif.jregr.io.File;
 
 public class RegrCase {
 
-	// Status values for cases
-	public enum State {
-		VIRGIN, PENDING, FAIL, FATAL, PASS, SUSPENDED, SUSPENDED_FAIL, SUSPENDED_PASS
-	}
+    // Status values for cases
+    public enum State {
+        VIRGIN, PENDING, FAIL, FATAL, PASS, SUSPENDED, SUSPENDED_FATAL, SUSPENDED_FAIL, SUSPENDED_PASS
+    }
 
-	private String caseName;
-	private RegrDirectory regrDirectory;
-	private boolean fatal = false;
+    private String caseName;
+    private RegrDirectory regrDirectory;
+    private boolean fatal = false;
 
-	public RegrCase(String caseName, RegrDirectory directory) {
-		this.caseName = caseName;
-		this.regrDirectory = directory;
-	}
+    public RegrCase(String caseName, RegrDirectory directory) {
+        this.caseName = caseName;
+        this.regrDirectory = directory;
+    }
 
-	public void run(Directory binDirectory, CommandDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner) {
+    public void run(Directory binDirectory, CommandDecoder decoder, PrintWriter outputWriter, CommandRunner commandRunner) {
 
-		int linenumber = 1;
-		outputWriter.printf("########## %s ##########\n", caseName);
+        int linenumber = 1;
+        outputWriter.printf("########## %s ##########\n", caseName);
 
-		decoder.reset(caseName);
-		try {
-			do {
-				String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
+        decoder.reset(caseName);
+        try {
+            do {
+                String[] commandAndArguments = decoder.buildCommandAndArguments(binDirectory, caseName);
 
-				String extension = decoder.getExtension();
+                String extension = decoder.getExtension();
 
-				if (regrDirectory.exists(caseName+extension)) {
+                if (regrDirectory.exists(caseName+extension)) {
 
-					if (commandAndArguments != null) {
-						final String stdin = decoder.getStdin();
+                    if (commandAndArguments != null) {
+                        final String stdin = decoder.getStdin();
 
-						String output = commandRunner.runCommandForOutput(commandAndArguments, stdin, regrDirectory.toDirectory());
+                        String output = commandRunner.runCommandForOutput(commandAndArguments, stdin, regrDirectory.toDirectory());
 
-						final String stdout = decoder.getStdout();
-						if (!decoder.isOptional())
-							if (stdout == null)
-								outputWriter.print(output);
-							else if (!stdout.equals("/dev/null"))
-								writeOutputToRedirection(output, stdout);
-					}
-					
-				} else if (!decoder.isOptional()) {
-					outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!\n");
-				}
+                        final String stdout = decoder.getStdout();
+                        if (!decoder.isOptional())
+                            if (stdout == null)
+                                outputWriter.print(output);
+                            else if (!stdout.equals("/dev/null"))
+                                writeOutputToRedirection(output, stdout);
+                    }
 
-				linenumber++;
-			} while (decoder.advance());
-		} catch (FileNotFoundException e) {
-			// did not find the .input file, but that might not be a problem, could be a
-			// virgin test case but it could also be a mistake in the .jregr file
-			outputWriter.println("WARNING! Could not find input file for command line " + linenumber + " in .jregr file");
-		} catch (CommandSyntaxException e) {
-			outputWriter.println(".jregr:"+linenumber+": "+e.getMessage());
-		} catch (IOException | InterruptedException e) {
-			fatal = true;
-			outputWriter.println(e.getMessage());
-		} finally {
-			outputWriter.close();
-		}
-	}
+                } else if (!decoder.isOptional()) {
+                    outputWriter.print(".jregr:"+linenumber+" "+caseName+extension+" does not exist!\n");
+                }
 
-	private void writeOutputToRedirection(String output, final String stdout) throws IOException {
-		BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
-		writer.write(output);
-		writer.close();
-	}
+                linenumber++;
+            } while (decoder.advance());
+        } catch (FileNotFoundException e) {
+            // did not find the .input file, but that might not be a problem, could be a
+            // virgin test case but it could also be a mistake in the .jregr file
+            outputWriter.println("WARNING! Could not find input file for command line " + linenumber + " in .jregr file");
+        } catch (CommandSyntaxException e) {
+            outputWriter.println(".jregr:"+linenumber+": "+e.getMessage());
+        } catch (IOException | InterruptedException e) {
+            fatal = true;
+            outputWriter.println(e.getMessage());
+        } finally {
+            outputWriter.close();
+        }
+    }
 
-	private void removeOutputFile() {
-		if (!getOutputFile().delete())
-			System.out.println("Error : could not delete output file");
-	}
+    private void writeOutputToRedirection(String output, final String stdout) throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
+        writer.write(output);
+        writer.close();
+    }
 
-	private boolean outputSameAsExpected() {
-		File expectedFile = getExpectedFile();
-		if (expectedFile.exists()) {
-			File outputFile = getOutputFile();
-			try (BufferedReader expectedReader = new BufferedReader(new FileReader(expectedFile));
-					BufferedReader outputReader = new BufferedReader(new FileReader(outputFile));) {
-				return fileContentsAreEqual(expectedReader, outputReader);
-			} catch (FileNotFoundException e) {
-				return false;
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return false;
+    private void removeOutputFile() {
+        if (!getOutputFile().delete())
+            System.out.println("Error : could not delete output file");
+    }
 
-	}
+    private boolean outputSameAsExpected() {
+        File expectedFile = getExpectedFile();
+        if (expectedFile.exists()) {
+            File outputFile = getOutputFile();
+            try (BufferedReader expectedReader = new BufferedReader(new FileReader(expectedFile));
+                    BufferedReader outputReader = new BufferedReader(new FileReader(outputFile));) {
+                return fileContentsAreEqual(expectedReader, outputReader);
+            } catch (FileNotFoundException e) {
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
 
-	private boolean fileContentsAreEqual(BufferedReader expectedReader, BufferedReader outputReader) {
-		String outputLine = "";
-		String expectedLine = "";
-		while (outputLine != null && expectedLine != null) {
-			if (!outputLine.equals(expectedLine))
-				return false;
-			try {
-				outputLine = outputReader.readLine();
-				expectedLine = expectedReader.readLine();
-			} catch (IOException e) {
-				return false;
-			}
-		}
-		return outputLine == null && expectedLine == null;
-	}
+    }
 
-	public void clean() {
-		if (outputSameAsExpected())
-			removeOutputFile();
-	}
+    private boolean fileContentsAreEqual(BufferedReader expectedReader, BufferedReader outputReader) {
+        String outputLine = "";
+        String expectedLine = "";
+        while (outputLine != null && expectedLine != null) {
+            if (!outputLine.equals(expectedLine))
+                return false;
+            try {
+                outputLine = outputReader.readLine();
+                expectedLine = expectedReader.readLine();
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return outputLine == null && expectedLine == null;
+    }
 
-	public String getName() {
-		return caseName;
-	}
+    public void clean() {
+        if (outputSameAsExpected())
+            removeOutputFile();
+    }
 
-	public String toString() {
-		return getName();
-	}
+    public String getName() {
+        return caseName;
+    }
 
-	public State status() {
-		if (fatal)
-			return State.FATAL;
-		boolean isSuspended = false;
-		if (regrDirectory.hasSuspendedFile(caseName))
-			isSuspended = true;
-		if (!regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
-			return isSuspended ? State.SUSPENDED : State.VIRGIN;
-		if (!regrDirectory.hasExpectedFile(caseName) && regrDirectory.hasOutputFile(caseName))
-			return isSuspended ? State.SUSPENDED : State.PENDING;
-		if (regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
-			return isSuspended ? State.SUSPENDED_PASS : State.PASS;
-		return isSuspended ? State.SUSPENDED_FAIL : State.FAIL;
-	}
+    public String toString() {
+        return getName();
+    }
 
-	public boolean failed() {
-		return fatal || status() == State.FAIL;
-	}
+    public State status() {
+        boolean isSuspended = regrDirectory.hasSuspendedFile(caseName);
+        if (fatal)
+            return isSuspended ? State.SUSPENDED_FATAL : State.FATAL;
+        if (!regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
+            return isSuspended ? State.SUSPENDED : State.VIRGIN;
+        if (!regrDirectory.hasExpectedFile(caseName) && regrDirectory.hasOutputFile(caseName))
+            return isSuspended ? State.SUSPENDED : State.PENDING;
+        if (regrDirectory.hasExpectedFile(caseName) && !regrDirectory.hasOutputFile(caseName))
+            return isSuspended ? State.SUSPENDED_PASS : State.PASS;
+        return isSuspended ? State.SUSPENDED_FAIL : State.FAIL;
+    }
 
-	public boolean exists() {
-		return regrDirectory.hasCaseFile(caseName);
-	}
+    public boolean failed() {
+        return status() == State.FAIL;
+    }
 
-	public File getOutputFile() {
-		return regrDirectory.getOutputFile(caseName);
-	}
+    public boolean exists() {
+        return regrDirectory.hasCaseFile(caseName);
+    }
 
-	public File getExpectedFile() {
-		return regrDirectory.getExpectedFile(caseName);
-	}
+    public File getOutputFile() {
+        return regrDirectory.getOutputFile(caseName);
+    }
 
-	public PrintWriter getPrintWriter() throws FileNotFoundException {
-		return new PrintWriter(getOutputFile().getPath());
-	}
+    public File getExpectedFile() {
+        return regrDirectory.getExpectedFile(caseName);
+    }
+
+    public PrintWriter getPrintWriter() throws FileNotFoundException {
+        return new PrintWriter(getOutputFile().getPath());
+    }
 
 }

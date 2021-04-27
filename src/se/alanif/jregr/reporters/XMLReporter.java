@@ -37,16 +37,22 @@ public class XMLReporter extends AbstractRegrReporter {
 
     public void start(CommandLine commandLine) {
         xmlOutput.println("<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>");
+        xmlOutput.println("<testsuites>");
     }
 
     public void startSuite(String suiteName, int numberOfTests) {
         this.suiteName = suiteName;
-        xmlOutput.println("<testsuite name=\"" + suiteName + "\">");
+        xmlOutput.println("  <testsuite name=\"" + suiteName + "\">");
     }
 
     public void startTest(RegrCase caseName, long millis) {
         this.theCase = caseName;
         this.millis = millis;
+    }
+
+    private void header(String caseName, long millis) {
+        xmlOutput.println("    <testcase classname=\"" + suiteName + "\" name=\"" + caseName + "\" time=\""
+                + (float) millis / 1000 + "\">");
     }
 
     public void fatal() {
@@ -135,6 +141,10 @@ public class XMLReporter extends AbstractRegrReporter {
         tail();
     }
 
+    public void suspendedAndFatal() {
+        suspended();
+    }
+
     public void suspendedAndFailed() {
         suspended();
     }
@@ -143,24 +153,20 @@ public class XMLReporter extends AbstractRegrReporter {
         suspended();
     }
 
-    public void endSuite() {
-        xmlOutput.println("</testsuite>");
-    }
-
-    private void header(String caseName, long millis) {
-        xmlOutput.println("  <testcase classname=\"" + suiteName + "\" name=\"" + caseName + "\" time=\""
-                + (float) millis / 1000 + "\">");
-    }
-
     private void tail() {
-        xmlOutput.println("  </testcase>");
+        xmlOutput.println("    </testcase>");
+    }
+
+    public void endSuite() {
+        xmlOutput.println("  </testsuite>");
+    }
+
+    public void end() {
+        xmlOutput.println("</testsuites>");
     }
 
     public String removeControlCharactersFrom(String inputString) {
         return inputString.replaceAll(CONTROL_CHARACTER_REGEX, "");
-    }
-
-    public void end() {
     }
 
 }
