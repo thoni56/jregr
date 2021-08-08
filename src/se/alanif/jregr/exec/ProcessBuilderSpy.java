@@ -11,7 +11,7 @@ public class ProcessBuilderSpy {
 	public ProcessBuilderSpy() {
 		pb = new java.lang.ProcessBuilder();
 	}
-	
+
 	public Process start() throws IOException {
 		return pb.start();
 	}

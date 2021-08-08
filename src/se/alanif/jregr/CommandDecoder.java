@@ -49,13 +49,13 @@ public class CommandDecoder {
 
 	private String[] splitIntoParts(String line) throws CommandSyntaxException {
 		if (line != null) {
-			String[] parts = line.split(" ");
-			if (parts.length < 2 || (!parts[1].equals(":") && !parts[1].equals("?"))) {
+			String[] segments = line.split(" ");
+			if (segments.length < 2 || (!segments[1].equals(":") && !segments[1].equals("?"))) {
 				throw new CommandSyntaxException(".jregr:"+lineNumber+": Syntax error: \""+line+"\"");
 			}
-			optional = parts[1].equals("?");
-			parts = decodeStdinout(parts);
-			return removeSeparatorInSecondPosition(parts);
+			optional = segments[1].equals("?");
+			segments = decodeStdinout(segments);
+			return removeSeparatorInSecondPosition(segments);
 		} else {
 			return new String[] { "", "", "" };
 		}
@@ -142,7 +142,7 @@ public class CommandDecoder {
 			String[] commandAndArguments = new String[arguments.length + 1];
 			commandAndArguments[0] = command;
 			for (int i = 0; i < arguments.length; i++) {
-				commandAndArguments[i + 1] = expandSymbols(caseName, arguments[i]);;
+				commandAndArguments[i + 1] = expandSymbols(caseName, arguments[i]);
 			}
 			return commandAndArguments;
 		} else

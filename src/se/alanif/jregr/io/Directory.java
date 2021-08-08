@@ -27,16 +27,15 @@ public class Directory extends File {
 	public File getFile(String fileName) {
 		return new File(getAbsolutePath() + separator + fileName);
 	}
-	
+
 	public String[] getFilenamesWithExtension(String extension) {
-		String[] fileNames = list(new FilenameFilter() {
-			
+		return list(new FilenameFilter() {
+
 			@Override
 			public boolean accept(java.io.File dir, String name) {
 				return name.endsWith(extension);
 			}
 		});
-		return fileNames;
 	}
 
 	public BufferedReader getBufferedReaderForFile(File file) {
@@ -59,7 +58,7 @@ public class Directory extends File {
 	public Directory[] getSubdirectories() {
 		java.io.File javaFiles[] = listFiles(subDirectoryFilter);
 		Directory subdirectories[] = new Directory[javaFiles.length];
-        for (int i = 0; i < javaFiles.length; i++)
+        for (var i = 0; i < javaFiles.length; i++)
             subdirectories[i] = new Directory(javaFiles[i].getPath());
 		return subdirectories;
 	}

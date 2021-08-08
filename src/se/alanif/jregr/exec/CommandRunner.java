@@ -51,8 +51,8 @@ public class CommandRunner {
 		}
 
 		p.waitFor();
-		outputGobbler.join(); 
-		errorGobbler.join(); 
+		outputGobbler.join();
+		errorGobbler.join();
 		String output = outputGobbler.output() + errorGobbler.output();
 		outputGobbler = null;
 		errorGobbler = null;
