@@ -134,7 +134,7 @@ public class AcceptanceScenarios {
         assertEquals("'"+directory+"/subdir"+"': Running 1 test(s)...", outputLines[2]);
         assertEquals("a_case_in_subdir_with_relative_path_to_exe : Pass", outputLines[3]);
     }
-      
+
     @Test
     public void shouldCatchStderr() {
         String directory = "should_catch_stderr";
@@ -145,6 +145,6 @@ public class AcceptanceScenarios {
         assertEquals(output[STDERR], "");
         String[] outputLines = output[STDOUT].split("\n");
         assertEquals("'"+directory+"': Running 1 test(s)...", outputLines[0]);
-        assertEquals("should_catch_stderr : Pass", outputLines[1]);
+        assertEquals("should_catch_stderr : Fatal", outputLines[1]);
     }
 }
