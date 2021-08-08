@@ -59,7 +59,7 @@ public class AcceptanceScenarios {
     }
 
     @Test
-    public void shouldRecurseThroughEmptyDirectoryIntoSubdirectoryWithSingleTest() throws Exception {
+    public void shouldRecurseThroughEmptyDirectoryWithJregrFileIntoSubdirectoryWithSingleTest() throws Exception {
         String directory = "one_subdir_with_a_case";
         String[] arguments = {
                 "-dir", "acceptance/"+directory,
@@ -146,5 +146,18 @@ public class AcceptanceScenarios {
         String[] outputLines = output[STDOUT].split("\n");
         assertEquals("'"+directory+"': Running 1 test(s)...", outputLines[0]);
         assertEquals("should_catch_stderr : Fatal", outputLines[1]);
+    }
+
+    @Test
+    public void shouldRunTwoCasesInSubdirectory() {
+        String directory = "one_subdir_with_two_cases";
+        String[] arguments = {
+                "-dir", "acceptance/"+directory
+        };
+        String[] output = runJregrForCleanOutput(arguments);
+        assertEquals(output[STDERR], "");
+        String[] outputLines = output[STDOUT].split("\n");
+        assertEquals("'one_subdir_with_two_cases': Running 2 test(s)...", outputLines[0]);
+
     }
 }

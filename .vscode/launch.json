@@ -129,7 +129,7 @@
             "projectName": "Jregr",
             "args": [
                 "-dir",
-                "test/examples"
+                "acceptance"
             ]
         },
         {
@@ -137,7 +137,7 @@
             "name": "Jregr example - one.case",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
-            "cwd": "${workspaceRoot}/test/examples/one_case",
+            "cwd": "${workspaceRoot}/acceptance/one_case",
             "projectName": "Jregr",
             "args": []
         },
@@ -146,7 +146,7 @@
             "name": "Jregr example - no .jregr",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
-            "cwd": "${workspaceRoot}/test/examples/nojregr",
+            "cwd": "${workspaceRoot}/acceptance/nojregr",
             "projectName": "Jregr",
             "args": []
         },
@@ -155,11 +155,19 @@
             "name": "Jregr example - empty .jregr",
             "request": "launch",
             "mainClass": "se.alanif.jregr.Main",
-            "cwd": "${workspaceRoot}/test/examples/emptyjregr",
+            "cwd": "${workspaceRoot}/acceptance/emptyjregr",
             "projectName": "Jregr",
             "args": []
         },
         {
+            "type": "java",
+            "name": "Jregr example - two cases in subdir",
+            "request": "launch",
+            "mainClass": "se.alanif.jregr.Main",
+            "cwd": "${workspaceRoot}/acceptance/one_subdir_with_two_cases",
+            "projectName": "Jregr",
+            "args": []
+        },       {
             "type": "java",
             "name": "Debug (Launch)-Platform<Jregr>",
             "request": "launch",
