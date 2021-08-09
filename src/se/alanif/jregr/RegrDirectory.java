@@ -39,6 +39,7 @@ public class RegrDirectory {
 
 	public void setDecoder(CommandDecoder decoder) {
 		this.decoder = decoder;
+        this.decoder.reset();
 		caseExtension = decoder.getExtension();
 	}
 
@@ -97,7 +98,7 @@ public class RegrDirectory {
 	public boolean hasCaseFile(String caseName) {
 		return directory.hasFile(caseName + caseExtension);
 	}
-	
+
 	public boolean hasOutputFile(String caseName) {
 		return directory.hasFile(caseName + OUTPUT_EXTENSION);
 	}
@@ -156,7 +157,7 @@ public class RegrDirectory {
 		return success;
 	}
 
-	public boolean recurse(RegrReporter reporter, Directory bindir, String suiteName, CommandDecoder decoder, CommandLine commandLine) throws IOException {
+	public boolean recurse(RegrReporter reporter, Directory bindir, String suiteName, CommandDecoder defaultDecoder, CommandLine commandLine) throws IOException {
 		boolean success = true;
 		Directory[] subDirectories = directory.getSubdirectories();
 		if (subDirectories == null || subDirectories.length == 0) {
@@ -168,7 +169,7 @@ public class RegrDirectory {
 					if (regrDirectory.hasCommands())
 						regrDirectory.setDecoder(new CommandDecoder(readerFor(regrDirectory.getCommandsFile())));
 					else
-						regrDirectory.setDecoder(decoder);
+						regrDirectory.setDecoder(defaultDecoder);
 					String subSuiteName = suiteName + "/" + subDirectory.getName();
 					if (!regrDirectory.runAllCases(reporter, bindir, subSuiteName, commandLine))
 						success = false;

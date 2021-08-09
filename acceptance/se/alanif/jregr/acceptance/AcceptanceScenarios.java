@@ -157,7 +157,8 @@ public class AcceptanceScenarios {
         String[] output = runJregrForCleanOutput(arguments);
         assertEquals(output[STDERR], "");
         String[] outputLines = output[STDOUT].split("\n");
-        assertEquals("'one_subdir_with_two_cases': Running 2 test(s)...", outputLines[0]);
+        assertEquals("'one_subdir_with_two_cases': Running 0 test(s)...", outputLines[0]);
+        assertEquals("'one_subdir_with_two_cases/subdir': Running 2 test(s)...", outputLines[2]);
 
     }
 }
