@@ -15,6 +15,7 @@ public class CommandRunner {
 	private StreamGobbler errorGobbler = null;
 	private StreamPusher inputPusher = null;
 	private ProcessBuilderSpy processBuilder;
+	private int exitValue = 0;
 
 	// Setters for gobblers, input pusher and ProcessBuilder so we can inject mocks
 	protected void setGobblers(StreamGobbler outputGobbler, StreamGobbler errorGobbler) {
@@ -50,7 +51,7 @@ public class CommandRunner {
 			inputPusher.run();
 		}
 
-		p.waitFor();
+		exitValue = p.waitFor();
 		outputGobbler.join();
 		errorGobbler.join();
 		String output = outputGobbler.output() + errorGobbler.output();
@@ -58,6 +59,13 @@ public class CommandRunner {
 		errorGobbler = null;
 
 		return output;
+	}
+
+	// The exit value of the last command run, as Process.waitFor() reported
+	// it. On Unix a process killed by a signal shows up as 128+signal, on
+	// Windows an unhandled exception shows up as its (negative) status code.
+	public int getExitValue() {
+		return exitValue;
 	}
 
 }

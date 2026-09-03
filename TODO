@@ -6,17 +6,25 @@
 ☐ Remove any non-XML-compliant characters when generating XML-file
 
 Crash handling:
-☐ CommandRunner: keep the value of p.waitFor(), expose it as getExitValue()
-☐ RegrCase: set fatal on signal death (exit > 128 on Unix, < 0 on Windows).
+✔ CommandRunner: keep the value of p.waitFor(), expose it as getExitValue() @done(26-09-03 10:49)
+✔ RegrCase: set fatal on signal death (exit > 128 on Unix, < 0 on Windows).
   NOT on any non-zero exit -- Alan's compiler suite is full of cases that
-  legitimately exit non-zero, and that would turn 362 passing tests red
-☐ RegrCase: write a diagnostic into the .output naming the signal, so a
-  fatal case says why instead of being empty
-☐ RegrCase: break out of the command loop, so later .jregr lines do not
-  run after a crash
-☐ Decide the fate of crash_should_stop_execution.expected -- status()
-  short-circuits on fatal, so the file no longer affects the result
-  (this group closes "Place any error output in the .output" above)
+  legitimately exit non-zero, and that would turn 362 passing tests red @done(26-09-03 10:49)
+✔ RegrCase: write a diagnostic into the .output naming the signal, so a
+  fatal case says why instead of being empty @done(26-09-03 10:49)
+  Reads ".jregr:1: '../crash' terminated by signal 11 (SIGSEGV)"
+✔ RegrCase: break out of the command loop, so later .jregr lines do not
+  run after a crash @done(26-09-03 10:49)
+✔ Decide the fate of crash_should_stop_execution.expected -- deleted it.
+  status() short-circuits on fatal so it could not affect the result, and
+  had it ever matched the .output, clean() would have deleted the .output
+  that shouldStopExecutingCommandsAfterACrash reads @done(26-09-03 10:49)
+☐ Windows wording: a crash there is reported as "terminated by exception
+  0xC0000005", but shouldStopExecutingCommandsAfterACrash asserts on
+  "terminated by signal". Only bites when the suite is run on Windows
+☐ signalName() covers the signals that Linux and macOS agree on. 7 and 10
+  are left out on purpose (SIGBUS/SIGUSR1 vs SIGEMT/SIGBUS) and print as a
+  bare number -- resolve per-platform if that ever matters
 
 Test-suite defects:
 ☐ shouldCatchStderr asserts ": Fatal" and setUp() never compiles stderr,

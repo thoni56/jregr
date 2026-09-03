@@ -56,5 +56,14 @@ public class CommandRunnerTest {
 		commandRunner.runCommandForOutput(new String[]{"command"}, "inputFile", null);
 		verify(mockedInputPusher).run();
 	}
+
+	@Test
+	public void shouldRememberTheExitValueOfTheProcess() throws Exception {
+		when(mockedProcess.waitFor()).thenReturn(139);
+
+		commandRunner.runCommandForOutput(new String[]{"command"}, null, null);
+
+		assertEquals(139, commandRunner.getExitValue());
+	}
 	
 }

@@ -1,6 +1,7 @@
 package se.alanif.jregr.exec;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -41,6 +42,11 @@ public class RegrCaseTest {
 	private static final String ARGUMENT2_2 = "-opt";
 	private static final String[] COMMAND2_AND_ARGUMENTS = { COMMAND2_PREPENDED_WITH_BIN_DIRECTORY, ARGUMENT2_1,
 			ARGUMENT2_2 };
+
+	// How a process killed by SIGSEGV, and one killed by an access
+	// violation on Windows, surface through Process.waitFor()
+	private static final int TERMINATED_BY_SIGSEGV = 128 + 11;
+	private static final int WINDOWS_ACCESS_VIOLATION = 0xC0000005;
 
 	private CommandDecoder mockedDecoder = mock(CommandDecoder.class);
 	private Directory binDirectory = mock(Directory.class);
@@ -181,6 +187,62 @@ public class RegrCaseTest {
 		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
 		
 		verify(mockedPrinter, never()).print(anyString());
+	}
+
+	@Test
+	public void shouldBeFatalWhenACommandIsTerminatedBySignal() throws Exception {
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS);
+		when(mockedCommandRunner.getExitValue()).thenReturn(TERMINATED_BY_SIGSEGV);
+
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+
+		assertEquals(State.FATAL, theCase.status());
+	}
+
+	@Test
+	public void shouldBeFatalWhenACommandIsTerminatedByAWindowsException() throws Exception {
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS);
+		when(mockedCommandRunner.getExitValue()).thenReturn(WINDOWS_ACCESS_VIOLATION);
+
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+
+		assertEquals(State.FATAL, theCase.status());
+	}
+
+	// Alan's suites are full of cases that legitimately exit non-zero,
+	// so only a signal death, never any non-zero exit, is fatal
+	@Test
+	public void shouldNotBeFatalWhenACommandMerelyExitsNonZero() throws Exception {
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS);
+		when(mockedCommandRunner.getExitValue()).thenReturn(1);
+
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+
+		assertFalse("a plain non-zero exit is not a crash", theCase.status() == State.FATAL);
+	}
+
+	@Test
+	public void shouldNameTheSignalInTheOutputWhenACommandIsTerminated() throws Exception {
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS);
+		when(mockedCommandRunner.getExitValue()).thenReturn(TERMINATED_BY_SIGSEGV);
+
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+
+		verify(mockedPrinter).println(
+				".jregr:1: '" + COMMAND1_PREPENDED_WITH_BIN_DIRECTORY + "' terminated by signal 11 (SIGSEGV)");
+	}
+
+	@Test
+	public void shouldNotRunAnyFurtherCommandsAfterACrash() throws Exception {
+		when(mockedDecoder.buildCommandAndArguments(binDirectory, CASENAME)).thenReturn(COMMAND1_AND_ARGUMENTS)
+				.thenReturn(COMMAND2_AND_ARGUMENTS);
+		when(mockedDecoder.advance()).thenReturn(true).thenReturn(false);
+		when(mockedCommandRunner.getExitValue()).thenReturn(TERMINATED_BY_SIGSEGV);
+
+		theCase.run(binDirectory, mockedDecoder, mockedPrinter, mockedCommandRunner);
+
+		verify(mockedCommandRunner).runCommandForOutput(eq(COMMAND1_AND_ARGUMENTS), any(), any());
+		verify(mockedCommandRunner, never()).runCommandForOutput(eq(COMMAND2_AND_ARGUMENTS), any(), any());
 	}
 
 	@Test
