@@ -72,6 +72,10 @@ Build:
   Bumping JREGR_VERSION in Main.java is still a manual step beforehand,
   and ~/bin/jregr is still outside the repo's reach
 
+☐ Publish releases on GitHub, with the jar as a release asset, instead of
+  copying it by hand into whatever consumes it. The release target would
+  then point at the tag rather than at a directory
+
 Repo hygiene:
 ✔ Commit acceptance/crash.c; add crash and crash.exe to acceptance/.gitignore
   (theSUT and stderr are ignored, crash was missed) @done(26-09-03 10:37)

@@ -114,7 +114,7 @@
     <java jar="${basedir}/jregr.jar" fork="true" failonerror="true">
       <arg value="-version" />
     </java>
-    <echo message="Built ${basedir}/jregr.jar. It is gitignored here - to ship it, commit it in the Alan repo." />
+    <echo message="Built ${basedir}/jregr.jar. It is gitignored here, so releasing it means copying it to wherever it is consumed." />
   </target>
 
   <target name="create_run_jar" depends="compile">
