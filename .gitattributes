@@ -1,0 +1,9 @@
+# Line endings are LF in the repository. core.autocrlf=input did that for
+# whoever had it set, but that is a per-clone setting, so a dozen files were
+# committed with CRLF before anyone did. This makes it a property of the
+# repository instead of of the checkout.
+* text=auto
+
+# and never let the above near the prebuilt libraries
+*.jar binary
+*.zip binary
