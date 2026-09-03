@@ -2,13 +2,62 @@
 <project default="create_run_jar" name="Create Runnable Jar for Project JRegr">
   <!--This ANT file should be used to manually compile and package
       Jregr as a jar. ANT 1.7 is required. -->
+
+  <!-- Which tests 'test' runs. Override to narrow while working, e.g.
+       ant test -Dtests=**/AcceptanceScenarios.java -->
+  <property name="tests" value="**/*Test.java,**/Acceptance*Scenarios.java" />
+
   <path id="classpath">
     <fileset dir="." includes="**/*.jar" />
   </path>
+
+  <!-- The tests need Jregr itself, plus junit and mockito. The
+       -sources/-javadoc/-tests jars that ship alongside some of the
+       libraries are not excluded above, but must be here, or batchtest
+       picks up the test classes packaged inside junit's own jar. -->
+  <path id="test.classpath">
+    <pathelement location="bin" />
+    <pathelement location="test-bin" />
+    <fileset dir="lib" includes="**/*.jar"
+             excludes="**/*-sources.jar,**/*-javadoc.jar,**/*-tests.jar,**/*-test-sources.jar" />
+  </path>
+
+  <target name="clean" description="Remove all build products">
+    <delete dir="bin" />
+    <delete dir="test-bin" />
+    <delete file="jregr.jar" />
+  </target>
+
   <target name="compile">
     <mkdir dir="bin" />
     <javac includeantruntime="false" srcdir="src" destdir="bin" classpathref="classpath" target="1.8" source="1.8" />
   </target>
+
+  <target name="compile-tests" depends="compile" description="Compile the unit and acceptance tests">
+    <mkdir dir="test-bin" />
+    <javac includeantruntime="false" destdir="test-bin" classpathref="test.classpath"
+           target="1.8" source="1.8" nowarn="true">
+      <src path="unit" />
+      <src path="acceptance" />
+    </javac>
+  </target>
+
+  <target name="test" depends="compile-tests" description="Run the unit and acceptance tests">
+    <!-- Forked with dir set to the project root because the acceptance
+         tests run Jregr as a subprocess and address both it and their
+         own fixtures by relative path ('bin', 'acceptance/...'). -->
+    <junit fork="true" dir="${basedir}" printsummary="true"
+           haltonfailure="false" failureproperty="tests.failed">
+      <classpath refid="test.classpath" />
+      <formatter type="brief" usefile="false" />
+      <batchtest>
+        <fileset dir="unit" includes="${tests}" />
+        <fileset dir="acceptance" includes="${tests}" />
+      </batchtest>
+    </junit>
+    <fail if="tests.failed" message="There were test failures." />
+  </target>
+
   <target name="create_run_jar" depends="compile">
     <jar destfile="./jregr.jar">
       <manifest>
