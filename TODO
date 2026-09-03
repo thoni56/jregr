@@ -47,11 +47,16 @@ Build:
 ☐ Raise -source/-target from 1.8. Deprecated on current JDKs and due to
   be removed. Nothing requires a Java 8 compatible jar -- the java8
   commits in the log are an old upgrade, not a standing constraint
-☐ Narrow the 'classpath' path id from "." to "lib" -- it currently globs
+✔ Narrow the 'classpath' path id from "." to "lib" -- it currently globs
   jregr.jar itself onto the compile classpath, where a stale jar can mask
-  a deleted class
-☐ A stale bin/ silently tests old code: javac's up-to-date check compares
+  a deleted class @done(26-09-03 12:41)
+  Confirmed: with src/io/File.java deleted, the old glob compiled clean
+  against the copy inside jregr.jar; it now fails loudly
+✔ A stale bin/ silently tests old code: javac's up-to-date check compares
   mtimes, and a fresh checkout can have sources older than old classes
+  @done(26-09-03 12:41) compile and compile-tests now empty bin/ and
+  test-bin/ first. Confirmed: a backdated Main.java was skipped by javac
+  entirely, and bare 'ant' shipped a jar reporting the old version
 ☐ Release process for jregr.jar. It sat at 0.2.4 for years while the
   source said 0.2.5, and ~/bin/jregr was pointing straight at it
 

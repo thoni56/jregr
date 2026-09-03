@@ -7,14 +7,18 @@
        ant test -Dtests=**/AcceptanceScenarios.java -->
   <property name="tests" value="**/*Test.java,**/Acceptance*Scenarios.java" />
 
+  <!-- Only the libraries. Globbing '.' would put jregr.jar itself on the
+       compile classpath, where a stale jar can mask a class that has been
+       deleted from src. The -sources jars are excluded so javac cannot
+       quietly compile against a packaged copy of someone else's sources. -->
   <path id="classpath">
-    <fileset dir="." includes="**/*.jar" />
+    <fileset dir="lib" includes="**/*.jar"
+             excludes="**/*-sources.jar,**/*-javadoc.jar,**/*-tests.jar,**/*-test-sources.jar" />
   </path>
 
-  <!-- The tests need Jregr itself, plus junit and mockito. The
-       -sources/-javadoc/-tests jars that ship alongside some of the
-       libraries are not excluded above, but must be here, or batchtest
-       picks up the test classes packaged inside junit's own jar. -->
+  <!-- The tests need Jregr itself, plus junit and mockito. The same
+       -sources/-javadoc/-tests exclusions apply here, or batchtest picks up
+       the test classes packaged inside junit's own jar. -->
   <path id="test.classpath">
     <pathelement location="bin" />
     <pathelement location="test-bin" />
@@ -28,12 +32,18 @@
     <delete file="jregr.jar" />
   </target>
 
+  <!-- bin and test-bin are emptied before each build rather than left to
+       javac's up-to-date check, which compares mtimes. A fresh checkout can
+       have sources older than the classes of an earlier build, and javac
+       would then silently jar up and test the old code. -->
   <target name="compile">
+    <delete dir="bin" />
     <mkdir dir="bin" />
     <javac includeantruntime="false" srcdir="src" destdir="bin" classpathref="classpath" target="1.8" source="1.8" />
   </target>
 
   <target name="compile-tests" depends="compile" description="Compile the unit and acceptance tests">
+    <delete dir="test-bin" />
     <mkdir dir="test-bin" />
     <javac includeantruntime="false" destdir="test-bin" classpathref="test.classpath"
            target="1.8" source="1.8" nowarn="true">
