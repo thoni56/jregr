@@ -27,11 +27,16 @@ Crash handling:
   bare number -- resolve per-platform if that ever matters
 
 Test-suite defects:
-☐ shouldCatchStderr asserts ": Fatal" and setUp() never compiles stderr,
+✔ shouldCatchStderr asserts ": Fatal" and setUp() never compiles stderr,
   so the result depends on whether a stale gitignored binary happens to
-  be on disk. Add compile("stderr") and assert ": Pass"
-☐ AcceptanceScenarios.compile() ignores cc's exit status, so a failed
+  be on disk. Add compile("stderr") and assert ": Pass" @done(26-09-03 12:24)
+  The binary on disk was from Feb 2021, and .expected holds exactly the
+  stderr text, so a correct run Passes -- the test only ever went green
+  when the binary was missing
+✔ AcceptanceScenarios.compile() ignores cc's exit status, so a failed
   compile silently becomes a missing binary and a misleading Fatal
+  @done(26-09-03 12:24) Now drains cc's diagnostics and asserts on the
+  exit status, so a broken .c names itself
 ☐ RegrDirectoryRecursionTest mocks java.lang.Runtime, which is final as
   of ~JDK 26. Introduce a seam (RegrDirectoryDouble already takes a
   Runtime), upgrade to Mockito 5, or pin the JDK

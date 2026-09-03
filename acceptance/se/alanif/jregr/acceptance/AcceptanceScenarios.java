@@ -3,10 +3,14 @@ package se.alanif.jregr.acceptance;
 import static org.junit.Assert.*;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.*;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.stream.Collectors;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -18,17 +22,30 @@ public class AcceptanceScenarios {
     public void setUp() throws Exception {
         compile("theSUT");
         compile("crash");
+        compile("stderr");
     }
 
     private void compile(String program) throws IOException, InterruptedException {
         // If on actual Windows, you need pre-compile the programs to pure Windows binaries, unless you have Cygwin...
+        Process p;
         if (!System.getProperty("os.name").contains("Windows")) {
-            Process p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("acceptance"));
-            p.waitFor();
+            p = Runtime.getRuntime().exec("cc -o " + program + " " + program + ".c", null, new File("acceptance"));
         } else {
-            Process p = Runtime.getRuntime().exec(new String[]{"C:\\cygwin64\\bin\\bash.exe", "-c", "x86_64-w64-mingw32-gcc -o " + program + " " + program + ".c"},
+            p = Runtime.getRuntime().exec(new String[]{"C:\\cygwin64\\bin\\bash.exe", "-c", "x86_64-w64-mingw32-gcc -o " + program + " " + program + ".c"},
                     new String[]{"PATH=/usr/bin"}, new File("acceptance"));
-            p.waitFor();
+        }
+        // Drain the diagnostics before waiting, then insist the compile
+        // worked. A silently failed compile used to surface much later, as a
+        // missing binary and a misleading Fatal
+        String diagnostics = contentsOfStream(p.getErrorStream());
+        assertEquals("could not compile " + program + ".c:\n" + diagnostics, 0, p.waitFor());
+    }
+
+    private String contentsOfStream(InputStream stream) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
+            return reader.lines().collect(Collectors.joining("\n"));
+        } catch (IOException e) {
+            return "";
         }
     }
 
@@ -147,7 +164,7 @@ public class AcceptanceScenarios {
         assertEquals(output[STDERR], "");
         String[] outputLines = output[STDOUT].split("\n");
         assertEquals("'"+directory+"': Running 1 test(s)...", outputLines[0]);
-        assertEquals("should_catch_stderr : Fatal", outputLines[1]);
+        assertEquals("should_catch_stderr : Pass", outputLines[1]);
     }
 
     @Test
