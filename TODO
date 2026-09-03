@@ -66,7 +66,9 @@ Build:
   source said 0.2.5, and ~/bin/jregr was pointing straight at it
   @done(26-09-03 12:58) 'ant release' is now the one command: clean, then
   test, then package, then run the jar with -version so the release states
-  what it actually contains. Verified that a failing test produces no jar.
+  what it actually contains. Bare 'ant' is 'build' and tests too, so no
+  route to a jar skips the suite except asking for create_run_jar by name.
+  Verified that a failing test produces no jar.
   Bumping JREGR_VERSION in Main.java is still a manual step beforehand,
   and ~/bin/jregr is still outside the repo's reach
 

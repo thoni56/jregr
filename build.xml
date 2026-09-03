@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="create_run_jar" name="Create Runnable Jar for Project JRegr">
+<project default="build" name="Create Runnable Jar for Project JRegr">
   <!--This ANT file should be used to manually compile and package
-      Jregr as a jar. ANT 1.7 is required. -->
+      Jregr as a jar. ANT 1.7 is required.
+
+      'ant' compiles, runs the tests, and packages the jar. 'ant release'
+      does the same from a clean tree and reports the version it built.
+      'create_run_jar' packages without testing, and is only there for
+      when you deliberately want that. -->
 
   <!-- Which tests 'test' runs. Override to narrow while working, e.g.
        ant test -Dtests=**/AcceptanceScenarios.java -->
@@ -98,11 +103,14 @@
     <fail if="tests.failed" message="There were test failures." />
   </target>
 
-  <target name="release" depends="clean,test,create_run_jar"
+  <target name="build" depends="test,create_run_jar"
+          description="Compile, run the tests, then package the jar. The default.">
+  </target>
+
+  <target name="release" depends="clean,build"
           description="Build a releasable jregr.jar: clean tree, then tests, then package">
-    <!-- The one command that produces a jar worth shipping. 'create_run_jar'
-         on its own depends only on 'compile', so it will happily package red
-         code; this runs the tests first, and from a clean tree. -->
+    <!-- The one command that produces a jar worth shipping: 'build' from a
+         clean tree, then say which version came out of it. -->
     <java jar="${basedir}/jregr.jar" fork="true" failonerror="true">
       <arg value="-version" />
     </java>
