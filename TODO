@@ -42,8 +42,13 @@ Test-suite defects:
   Runtime), upgrade to Mockito 5, or pin the JDK
 
 Build:
-☐ Pin JAVA_HOME. Homebrew's ant depends on openjdk and forks JDK 26,
+✔ Pin JAVA_HOME. Homebrew's ant depends on openjdk and forks JDK 26,
   while java on PATH is 21 -- so 'ant test' and a hand-run java disagree
+  @done(26-09-03 12:52) 'test' now forks a JDK located off
+  /usr/libexec/java_home -v ${test.jdk.version}, default 21, and echoes
+  which one. Override with -Dtest.jdk=<home> or -Dtest.jdk.version=N.
+  Plain 'ant test' is green; -Dtest.jdk=<a 26> still gives the 4
+  RegrDirectoryRecursionTest errors, so the pin is doing the work
 ☐ Raise -source/-target from 1.8. Deprecated on current JDKs and due to
   be removed. Nothing requires a Java 8 compatible jar -- the java8
   commits in the log are an old upgrade, not a standing constraint

@@ -7,6 +7,15 @@
        ant test -Dtests=**/AcceptanceScenarios.java -->
   <property name="tests" value="**/*Test.java,**/Acceptance*Scenarios.java" />
 
+  <!-- Which JDK runs the tests. RegrDirectoryRecursionTest mocks
+       java.lang.Runtime, which Mockito 3 cannot do once it is final, as it
+       is from JDK 26. Homebrew's ant depends on openjdk and so forks 26 no
+       matter which java is on PATH, which is how a green hand-run and a red
+       'ant test' came to disagree. Override the whole thing with
+       -Dtest.jdk=/path/to/jdk-home, or just the version with
+       -Dtest.jdk.version=N. -->
+  <property name="test.jdk.version" value="21" />
+
   <!-- Only the libraries. Globbing '.' would put jregr.jar itself on the
        compile classpath, where a stale jar can mask a class that has been
        deleted from src. The -sources jars are excluded so javac cannot
@@ -52,11 +61,32 @@
     </javac>
   </target>
 
-  <target name="test" depends="compile-tests" description="Run the unit and acceptance tests">
+  <target name="-locate-test-jdk" unless="test.jdk">
+    <!-- macOS ships java_home. Anywhere else this quietly does nothing and
+         the tests run on ant's own JVM, so pass -Dtest.jdk there if the
+         distinction matters. -->
+    <exec executable="/usr/libexec/java_home" outputproperty="located.test.jdk"
+          resultproperty="located.test.jdk.result" failifexecutionfails="false">
+      <arg value="-v" />
+      <arg value="${test.jdk.version}" />
+    </exec>
+    <condition property="test.jdk" value="${located.test.jdk}">
+      <equals arg1="${located.test.jdk.result}" arg2="0" />
+    </condition>
+  </target>
+
+  <target name="-test-jvm" depends="-locate-test-jdk">
+    <condition property="test.jvm" value="${test.jdk}/bin/java" else="java">
+      <isset property="test.jdk" />
+    </condition>
+    <echo message="Running the tests on ${test.jvm}" />
+  </target>
+
+  <target name="test" depends="compile-tests,-test-jvm" description="Run the unit and acceptance tests">
     <!-- Forked with dir set to the project root because the acceptance
          tests run Jregr as a subprocess and address both it and their
          own fixtures by relative path ('bin', 'acceptance/...'). -->
-    <junit fork="true" dir="${basedir}" printsummary="true"
+    <junit fork="true" jvm="${test.jvm}" dir="${basedir}" printsummary="true"
            haltonfailure="false" failureproperty="tests.failed">
       <classpath refid="test.classpath" />
       <formatter type="brief" usefile="false" />
