@@ -5,6 +5,8 @@ import static se.alanif.jregr.acceptance.AcceptanceRunner.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -160,5 +162,28 @@ public class AcceptanceScenarios {
         assertEquals("'one_subdir_with_two_cases': Running 0 test(s)...", outputLines[0]);
         assertEquals("'one_subdir_with_two_cases/subdir': Running 2 test(s)...", outputLines[2]);
 
+    }
+
+    @Test
+    public void shouldStopExecutingCommandsAfterACrash() throws Exception {
+        String directory = "crash_should_stop_execution";
+        String[] arguments = {
+                "-dir", "acceptance/"+directory
+        };
+        String[] output = runJregrForCleanOutput(arguments);
+        assertEquals(output[STDERR], "");
+        String[] outputLines = output[STDOUT].split("\n");
+        assertEquals("'"+directory+"': Running 1 test(s)...", outputLines[0]);
+        assertEquals("crash_should_stop_execution : Fatal", outputLines[1]);
+
+        // The point of the case: the crash must be reported, and the
+        // second line of the .jregr file must never have run
+        String caseOutput = contentsOf(directory+File.separator+"crash_should_stop_execution.output");
+        assertTrue(caseOutput, caseOutput.contains("terminated by signal"));
+        assertFalse(caseOutput, caseOutput.contains("does not exist"));
+    }
+
+    private String contentsOf(String filenameRelativeToAcceptance) throws IOException {
+        return new String(Files.readAllBytes(Paths.get("acceptance", filenameRelativeToAcceptance)));
     }
 }

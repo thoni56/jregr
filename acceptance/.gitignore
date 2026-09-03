@@ -2,4 +2,6 @@ theSUT.exe
 theSUT
 stderr.exe
 stderr
+crash.exe
+crash
 *.output
