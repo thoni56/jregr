@@ -62,8 +62,13 @@ Build:
   @done(26-09-03 12:41) compile and compile-tests now empty bin/ and
   test-bin/ first. Confirmed: a backdated Main.java was skipped by javac
   entirely, and bare 'ant' shipped a jar reporting the old version
-☐ Release process for jregr.jar. It sat at 0.2.4 for years while the
+✔ Release process for jregr.jar. It sat at 0.2.4 for years while the
   source said 0.2.5, and ~/bin/jregr was pointing straight at it
+  @done(26-09-03 12:58) 'ant release' is now the one command: clean, then
+  test, then package, then run the jar with -version so the release states
+  what it actually contains. Verified that a failing test produces no jar.
+  Bumping JREGR_VERSION in Main.java is still a manual step beforehand,
+  and ~/bin/jregr is still outside the repo's reach
 
 Repo hygiene:
 ✔ Commit acceptance/crash.c; add crash and crash.exe to acceptance/.gitignore

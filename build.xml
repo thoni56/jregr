@@ -98,6 +98,17 @@
     <fail if="tests.failed" message="There were test failures." />
   </target>
 
+  <target name="release" depends="clean,test,create_run_jar"
+          description="Build a releasable jregr.jar: clean tree, then tests, then package">
+    <!-- The one command that produces a jar worth shipping. 'create_run_jar'
+         on its own depends only on 'compile', so it will happily package red
+         code; this runs the tests first, and from a clean tree. -->
+    <java jar="${basedir}/jregr.jar" fork="true" failonerror="true">
+      <arg value="-version" />
+    </java>
+    <echo message="Built ${basedir}/jregr.jar. It is gitignored here - to ship it, commit it in the Alan repo." />
+  </target>
+
   <target name="create_run_jar" depends="compile">
     <jar destfile="./jregr.jar">
       <manifest>
