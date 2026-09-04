@@ -8,6 +8,14 @@
       'create_run_jar' packages without testing, and is only there for
       when you deliberately want that. -->
 
+  <!-- The version stamped into the jar manifest, which is where Main reads
+       it back from. It deliberately defaults to 'unreleased': the only
+       thing that names a real version is a pushed tag, and the release
+       workflow passes that in with -Dversion. So a hand-built jar says
+       plainly that it is a hand-built jar, instead of carrying a number
+       that was true the last time somebody remembered to edit it. -->
+  <property name="version" value="unreleased" />
+
   <!-- Which tests 'test' runs. Override to narrow while working, e.g.
        ant test -Dtests=**/AcceptanceScenarios.java -->
   <property name="tests" value="**/*Test.java,**/Acceptance*Scenarios.java" />
@@ -121,6 +129,7 @@
     <jar destfile="./jregr.jar">
       <manifest>
         <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Implementation-Version" value="${version}"/>
         <attribute name="Main-Class" value="se.alanif.jregr.Main"/>
         <attribute name="Class-Path" value="."/>
       </manifest>

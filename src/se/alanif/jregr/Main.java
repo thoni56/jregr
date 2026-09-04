@@ -14,7 +14,16 @@ import se.alanif.jregr.io.Directory;
 import se.alanif.jregr.reporters.RegrReporter;
 
 public class Main {
-    private static final String JREGR_VERSION = "0.2.6";
+
+    /* The version is stamped into the jar manifest by build.xml at package
+       time, so a jar cannot report a version it was not built as. Running
+       from the loose classes in 'bin' there is no manifest to read, which
+       is what the acceptance tests do, and an unpackaged build genuinely
+       has no released version, so it says so. */
+    private static String version() {
+        String version = Main.class.getPackage().getImplementationVersion();
+        return version == null ? "unreleased" : version;
+    }
 
     private void error(final String message) {
         System.out.println("Error: " + message);
@@ -60,7 +69,7 @@ public class Main {
             if (commandLine.hasOption("help")) {
                 helpFormatter.printHelp("jregr", optionManager);
             } else if (commandLine.hasOption("version")) {
-                System.out.println("Jregr version " + JREGR_VERSION);
+                System.out.println("Jregr version " + version());
             } else {
                 result = runCases(commandLine);
             }

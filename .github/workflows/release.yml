@@ -31,29 +31,30 @@ jobs:
           distribution: temurin
           java-version: '21'
 
-      # The version is compiled into Main.java, so a tag can name a version
-      # the jar does not contain. Catch that here rather than shipping it.
-      - name: Check the tag matches the version in Main.java
-        run: |
-          tag_version="${GITHUB_REF_NAME#v}"
-          source_version=$(sed -n 's/.*JREGR_VERSION = "\(.*\)".*/\1/p' src/se/alanif/jregr/Main.java)
-          if [ "$tag_version" != "$source_version" ]; then
-            echo "Tag ${GITHUB_REF_NAME} says $tag_version, Main.java says $source_version." >&2
-            echo "Fix JREGR_VERSION or the tag; do not release the two disagreeing." >&2
-            exit 1
-          fi
-          echo "Releasing version $source_version"
-
       # ant happens to be on the current runner images, but that is the
       # runner's promise and not ours, and a release that fails because the
       # image was trimmed is a bad day. Install it outright.
       - name: Install Ant
         run: sudo apt-get update && sudo apt-get install -y ant
 
-      # build.xml locates the test JDK with java_home, which is macOS only,
-      # so say outright which JDK to run the tests on here.
+      # The tag is the only thing that names a version: -Dversion stamps it
+      # into the jar manifest, which is where Main reads it back from.
+      # -Dtest.jdk because build.xml locates the test JDK with java_home,
+      # which is macOS only.
       - name: Build and test
-        run: ant release -Dtest.jdk="$JAVA_HOME"
+        run: ant release -Dtest.jdk="$JAVA_HOME" -Dversion="${GITHUB_REF_NAME#v}"
+
+      # Ask the built artifact what it is, rather than trusting that the
+      # property arrived. This is the check that the tag and the jar agree.
+      - name: Check the jar reports the tagged version
+        run: |
+          expected="Jregr version ${GITHUB_REF_NAME#v}"
+          actual=$(java -jar jregr.jar -version)
+          if [ "$actual" != "$expected" ]; then
+            echo "Expected '$expected', jar says '$actual'." >&2
+            exit 1
+          fi
+          echo "$actual"
 
       # The wrapper goes along with the jar: it expects to sit next to it,
       # and it is what a consumer actually invokes.
