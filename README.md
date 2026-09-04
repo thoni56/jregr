@@ -162,7 +162,7 @@ Character encodings
 Sometimes it might be important to preserve character encodings so that the expected output can be matched correctly.
 There is no option for this, instead use the Java VM option '-Dfile.encoding=<encoding>', like
 
-    java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar $@
+    java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar "$@"
 
 
 Test case status
