@@ -20,6 +20,14 @@
        ant test -Dtests=**/AcceptanceScenarios.java -->
   <property name="tests" value="**/*Test.java,**/Acceptance*Scenarios.java" />
 
+  <!-- Java 21. It is an LTS, it is what Alan's CI already installs to run
+       jregr (.github/workflows/sdk.yml), and it is what this build already
+       forks for its own tests, so nothing that consumes jregr needs
+       anything new. 'release' rather than source/target: those were 1.8,
+       which javac now warns is obsolete and due for removal, and Java 8
+       has not been a requirement here for years. The java8 commits in the
+       log record an old upgrade *to* 8, not a constraint to stay there. -->
+
   <!-- Which JDK runs the tests. RegrDirectoryRecursionTest mocks
        java.lang.Runtime, which Mockito 3 cannot do once it is final, as it
        is from JDK 26. Homebrew's ant depends on openjdk and so forks 26 no
@@ -61,14 +69,14 @@
   <target name="compile">
     <delete dir="bin" />
     <mkdir dir="bin" />
-    <javac includeantruntime="false" srcdir="src" destdir="bin" classpathref="classpath" target="1.8" source="1.8" />
+    <javac includeantruntime="false" srcdir="src" destdir="bin" classpathref="classpath" release="21" />
   </target>
 
   <target name="compile-tests" depends="compile" description="Compile the unit and acceptance tests">
     <delete dir="test-bin" />
     <mkdir dir="test-bin" />
     <javac includeantruntime="false" destdir="test-bin" classpathref="test.classpath"
-           target="1.8" source="1.8" nowarn="true">
+           release="21" nowarn="true">
       <src path="unit" />
       <src path="acceptance" />
     </javac>

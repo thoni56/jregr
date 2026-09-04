@@ -5,6 +5,19 @@
 ☐ Place any error output in the .output, if already done, why does not "<bin> not found" show up there?
 ☐ Remove any non-XML-compliant characters when generating XML-file
 
+Character sets:
+☐ Jregr must never transcode -- it compares what a program emitted, so
+  bytes have to pass through untouched. Today that only holds because the
+  jregr wrapper passes -Dfile.encoding=iso-8859-1; every I/O site in the
+  jar is charset-less and inherits it, so "java -jar jregr.jar" as the
+  README documents it behaves differently on JDK 18+. Give the ten sites
+  an explicit charset. This reverses the 18-12-30 pair below that removed
+  in-source encoding in favour of the java option
+☐ XMLReporter declares encoding="ISO-8859-1" but builds a default-charset
+  PrintStream, so -xml emits UTF-8 bytes claiming Latin-1
+  (Full analysis, verified line numbers and the plan: in Claude's memory
+  for this repo, "jregr-must-never-transcode")
+
 Crash handling:
 ✔ CommandRunner: keep the value of p.waitFor(), expose it as getExitValue() @done(26-09-03 10:49)
 ✔ RegrCase: set fatal on signal death (exit > 128 on Unix, < 0 on Windows).
