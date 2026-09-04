@@ -5,6 +5,8 @@ import static se.alanif.jregr.acceptance.AcceptanceRunner.STDERR;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.STDOUT;
 import static se.alanif.jregr.acceptance.AcceptanceRunner.runJregrForCleanOutput;
 
+import java.io.File;
+
 import org.junit.Test;
 
 public class AcceptanceErrorScenarios {
@@ -12,9 +14,15 @@ public class AcceptanceErrorScenarios {
 
 	@Test
 	public void shouldRequireJregrFileInImplicitTopDirectory() throws Exception {
+		// With no -dir, Jregr reports the directory it was run in, which is
+		// the checkout. Its name is whatever the clone was called, so it has
+		// to be asked for rather than spelled out: it is 'Jregr' in one
+		// working copy and 'jregr' on a CI runner that checks out the
+		// repository name.
+		String directory = new File(System.getProperty("user.dir")).getName();
 		String[] output = runJregrForCleanOutput(new String[0]);
 		assertEquals("", output[STDERR]);
-		assertEquals("Error: Directory 'Jregr' - top level directory must have a non-empty .jregr file", output[STDOUT]);
+		assertEquals("Error: Directory '"+directory+"' - top level directory must have a non-empty .jregr file", output[STDOUT]);
 	}
 
 	@Test
