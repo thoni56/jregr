@@ -1,0 +1,67 @@
+# Builds and publishes a release when a release tag is pushed.
+#
+# 'ant release' is the same command a release is built with by hand: clean
+# tree, compile, run the tests, package, then print the version out of the
+# jar it just built. Nothing here reimplements the build; if a step needs
+# changing it belongs in build.xml so that hand-built and CI-built jars
+# cannot drift apart.
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]*'
+      - '[0-9]*'
+
+permissions:
+  contents: write        # needed to create the release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # JDK 21 for the same reason build.xml defaults test.jdk.version to
+      # it: RegrDirectoryRecursionTest mocks java.lang.Runtime, which
+      # Mockito 3 cannot do once it is final, as it is from JDK 26.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # The version is compiled into Main.java, so a tag can name a version
+      # the jar does not contain. Catch that here rather than shipping it.
+      - name: Check the tag matches the version in Main.java
+        run: |
+          tag_version="${GITHUB_REF_NAME#v}"
+          source_version=$(sed -n 's/.*JREGR_VERSION = "\(.*\)".*/\1/p' src/se/alanif/jregr/Main.java)
+          if [ "$tag_version" != "$source_version" ]; then
+            echo "Tag ${GITHUB_REF_NAME} says $tag_version, Main.java says $source_version." >&2
+            echo "Fix JREGR_VERSION or the tag; do not release the two disagreeing." >&2
+            exit 1
+          fi
+          echo "Releasing version $source_version"
+
+      # ant happens to be on the current runner images, but that is the
+      # runner's promise and not ours, and a release that fails because the
+      # image was trimmed is a bad day. Install it outright.
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      # build.xml locates the test JDK with java_home, which is macOS only,
+      # so say outright which JDK to run the tests on here.
+      - name: Build and test
+        run: ant release -Dtest.jdk="$JAVA_HOME"
+
+      # The wrapper goes along with the jar: it expects to sit next to it,
+      # and it is what a consumer actually invokes.
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes \
+            jregr.jar jregr
