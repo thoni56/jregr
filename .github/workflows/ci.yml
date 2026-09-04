@@ -1,0 +1,60 @@
+# Runs the build and the tests on every push to trunk.
+#
+# This exists because the suite used to run in exactly one place: the
+# maintainer's working copy. An acceptance test that asserted on the name
+# of the directory the repository happened to be cloned into passed there
+# for years, and was first caught by the release workflow, which is a
+# terrible moment to discover it. Anything that only works in one checkout
+# should fail here, on a push, rather than while trying to ship.
+#
+# Linux on purpose: development happens on macOS, so this is the half that
+# is not otherwise covered. Between the two, both are.
+name: CI
+
+on:
+  push:
+    branches:
+      - master        # tags are the release workflow's job, not this one
+  pull_request:
+
+# A newer push makes an in-flight run pointless; don't pay for it.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      # JDK 21 for the reason build.xml gives at test.jdk.version:
+      # RegrDirectoryRecursionTest mocks java.lang.Runtime, which Mockito 3
+      # cannot do once it is final, as it is from JDK 26.
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Install Ant
+        run: sudo apt-get update && sudo apt-get install -y ant
+
+      # The default target: compile, test, package. Packaging is included
+      # deliberately, since a jar that will not build is a broken build
+      # whether or not anyone is releasing today. -Dtest.jdk because
+      # build.xml finds it with java_home, which is macOS only.
+      - name: Build and test
+        run: ant -Dtest.jdk="$JAVA_HOME"
+
+      # An untagged build has no version, and should say so. This is the
+      # other half of the release workflow's check, which asserts that a
+      # tagged build reports the tag.
+      - name: Check an untagged build calls itself unreleased
+        run: |
+          actual=$(java -jar jregr.jar -version)
+          if [ "$actual" != "Jregr version unreleased" ]; then
+            echo "Expected 'Jregr version unreleased', jar says '$actual'." >&2
+            exit 1
+          fi
+          echo "$actual"
