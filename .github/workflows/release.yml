@@ -21,12 +21,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # JDK 21 for the same reason build.xml defaults test.jdk.version to
       # it: RegrDirectoryRecursionTest mocks java.lang.Runtime, which
       # Mockito 3 cannot do once it is final, as it is from JDK 26.
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: '21'
