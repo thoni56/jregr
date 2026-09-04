@@ -1,0 +1,1 @@
+.case : ../bytes -stdin < $2

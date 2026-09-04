@@ -40,6 +40,7 @@ package se.alanif.jregr.diff;
 // $Id: Diff.java,v 1.6 2010/06/08 15:32:53 thoni Exp $
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * diff         Text file difference utility.
@@ -176,7 +177,7 @@ public class Diff {
 			symbol = new Node [ MAXLINECOUNT+2 ];
 			other  = null;    // allocated later!
 			try {
-				reader = new BufferedReader(new FileReader(filename));
+				reader = new BufferedReader(new FileReader(filename, StandardCharsets.ISO_8859_1));
 				//file = new DataInputStream( new FileInputStream( filename));
 			} catch (IOException e) {
 				System.err.println("Diff can't read file " + filename );

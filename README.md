@@ -159,10 +159,20 @@ Options
 Character encodings
 -------------------
 
-Sometimes it might be important to preserve character encodings so that the expected output can be matched correctly.
-There is no option for this, instead use the Java VM option '-Dfile.encoding=<encoding>', like
+`Jregr` never transcodes.
+It compares what a program emitted, so bytes move through it untouched: whatever a test writes ends up in the `.output` byte for byte, and comparing that against the `.expected` compares those same bytes.
+No option and no JVM property is needed.
 
-    java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar "$@"
+This means test cases, their output and their `.expected` files can hold text in *any* encoding -- UTF-8, ISO-8859-1, something else entirely -- as long as the `.expected` holds the same bytes the program actually writes.
+`Jregr` never needs to know which encoding that is, and never has an opinion about it.
+
+Older versions did not do this.
+They inherited whatever the JVM default encoding happened to be, which is why the wrapper script passes `-Dfile.encoding=iso-8859-1`.
+That property is no longer needed and will be removed from the wrapper.
+
+One thing is deliberately *not* preserved: line endings.
+Output is read and written a line at a time, so a CRLF becomes an LF and a final line without a newline gains one.
+That is what lets the same `.expected` serve a suite run on both Windows and Unix, but it does mean the comparison is line by line rather than a raw byte compare.
 
 
 Test case status

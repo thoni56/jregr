@@ -1,10 +1,12 @@
 package se.alanif.jregr;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.apache.commons.cli.CommandLine;
@@ -186,7 +188,7 @@ public class RegrDirectory {
 	private BufferedReader readerFor(File commandsFile) {
 		if (commandsFile.exists())
 			try {
-				return new BufferedReader(new FileReader(commandsFile));
+				return new BufferedReader(new InputStreamReader(new FileInputStream(commandsFile), StandardCharsets.ISO_8859_1));
 			} catch (FileNotFoundException e) {
 				return null;
 			}

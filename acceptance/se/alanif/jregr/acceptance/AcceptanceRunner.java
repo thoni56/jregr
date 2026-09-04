@@ -3,6 +3,7 @@ package se.alanif.jregr.acceptance;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
 public class AcceptanceRunner {
@@ -23,10 +24,10 @@ public class AcceptanceRunner {
 		try {
 			Process p = pb.start();
 
-			final BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			final BufferedReader outputReader = new BufferedReader(new InputStreamReader(p.getInputStream(), StandardCharsets.ISO_8859_1));
 			result[STDOUT] = outputReader.lines().collect(Collectors.joining("\n"));
 
-			final BufferedReader errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+			final BufferedReader errorReader = new BufferedReader(new InputStreamReader(p.getErrorStream(), StandardCharsets.ISO_8859_1));
 			result[STDERR] = errorReader.lines().collect(Collectors.joining("\n"));
 
 			p.waitFor();

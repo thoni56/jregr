@@ -2,9 +2,11 @@ package se.alanif.jregr.io;
 
 import java.io.BufferedReader;
 import java.io.FileFilter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.InputStreamReader;
 import java.io.FilenameFilter;
+import java.nio.charset.StandardCharsets;
 
 import se.alanif.jregr.CommandDecoder;
 
@@ -41,7 +43,7 @@ public class Directory extends File {
     public BufferedReader getBufferedReaderForFile(File file) {
         if (file.exists())
             try {
-                return new BufferedReader(new FileReader(file));
+                return new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.ISO_8859_1));
             } catch (FileNotFoundException e) {
                 return null;
             }

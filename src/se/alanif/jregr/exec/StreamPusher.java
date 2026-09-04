@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 public class StreamPusher extends Thread {
 
@@ -17,7 +18,7 @@ public class StreamPusher extends Thread {
 
 	public void run() {
 		BufferedReader br = new BufferedReader(reader);
-		PrintStream out = new PrintStream(stream);
+		PrintStream out = new PrintStream(stream, true, StandardCharsets.ISO_8859_1);
 		try {
 			String line;
 			while ((line = br.readLine()) != null)

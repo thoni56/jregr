@@ -8,8 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.junit.Before;
@@ -23,6 +26,7 @@ public class AcceptanceScenarios {
         compile("theSUT");
         compile("crash");
         compile("stderr");
+        compile("bytes");
     }
 
     private void compile(String program) throws IOException, InterruptedException {
@@ -202,5 +206,75 @@ public class AcceptanceScenarios {
 
     private String contentsOf(String filenameRelativeToAcceptance) throws IOException {
         return new String(Files.readAllBytes(Paths.get("acceptance", filenameRelativeToAcceptance)));
+    }
+
+    // Character sets. Jregr compares what a program emitted, so bytes have
+    // to pass through it untouched. These pin that down at the byte level,
+    // because a jregr that transcodes can still look correct from the
+    // verdict alone: two different bytes both decode to U+FFFD and then
+    // compare equal.
+
+    @Test
+    public void shouldPreserveARawLatin1ByteThroughTheRoundTrip() throws Exception {
+        String[] outputLines = runCharacterSetCase("charset_latin1_roundtrip", "latin1");
+        assertEquals("latin1 : Pass", outputLines[1]);
+    }
+
+    @Test
+    public void shouldPassAUtf8SequenceThroughUntouched() throws Exception {
+        // What Alan's suites actually contain
+        String[] outputLines = runCharacterSetCase("charset_utf8_sequence", "utf8");
+        assertEquals("utf8 : Pass", outputLines[1]);
+    }
+
+    @Test
+    public void shouldNotConsiderTwoDifferentBytesEqual() throws Exception {
+        // The case emits 0xE5 where .expected holds 0xE4. Read as UTF-8
+        // both become the replacement character, so a jregr that decodes
+        // calls this a Pass -- a false positive on a real difference.
+        String[] outputLines = runCharacterSetCase("charset_byte_mismatch", "mismatch");
+        assertEquals("mismatch : Fail", outputLines[1]);
+        assertArrayEquals(headerAnd("mismatch", 0xE5, 0x0A),
+                          outputBytes("charset_byte_mismatch", "mismatch"));
+    }
+
+    @Test
+    public void shouldPushInputBytesIntoTheSutUnchanged() throws Exception {
+        // The .expected deliberately does not match, so that the .output
+        // survives to be read. The verdict is not the point here, the bytes
+        // in the .output are: they came in through the case file, through
+        // the SUT's stdin, and back out again.
+        String[] outputLines = runCharacterSetCase("charset_stdin_bytes", "stdin");
+        assertEquals("stdin : Fail", outputLines[1]);
+        assertArrayEquals(headerAnd("stdin", 0xE4, 0x0A),
+                          outputBytes("charset_stdin_bytes", "stdin"));
+    }
+
+    private String[] runCharacterSetCase(String directory, String caseName) throws Exception {
+        // A stale .output from an earlier run would be compared instead of
+        // a fresh one, so start from nothing
+        Files.deleteIfExists(outputPath(directory, caseName));
+        String[] arguments = {
+                "-dir", "acceptance/"+directory
+        };
+        String[] output = runJregrForCleanOutput(arguments);
+        assertEquals("", output[STDERR]);
+        return output[STDOUT].split("\n");
+    }
+
+    private Path outputPath(String directory, String caseName) {
+        return Paths.get("acceptance", directory, caseName+".output");
+    }
+
+    private byte[] outputBytes(String directory, String caseName) throws IOException {
+        return Files.readAllBytes(outputPath(directory, caseName));
+    }
+
+    private byte[] headerAnd(String caseName, int... trailing) {
+        byte[] header = ("########## "+caseName+" ##########\n").getBytes(StandardCharsets.US_ASCII);
+        byte[] all = Arrays.copyOf(header, header.length + trailing.length);
+        for (int i = 0; i < trailing.length; i++)
+            all[header.length + i] = (byte) trailing[i];
+        return all;
     }
 }

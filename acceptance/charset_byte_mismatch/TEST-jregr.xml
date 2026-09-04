@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<testsuites>
+  <testsuite name="charset_byte_mismatch">
+    <testcase classname="charset_byte_mismatch" name="mismatch" time="0.016">
+    <failure message="Output does not match expected">
+        <![CDATA[Compared to the expected output, the actual has
+>>>> 2 CHANGED FROM
+ä
+>>>>     CHANGED TO
+å
+]]>
+    </failure>
+    </testcase>
+  </testsuite>
+</testsuites>

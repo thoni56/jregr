@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.cli.CommandLine;
 
@@ -28,7 +29,7 @@ public class XMLReporter extends AbstractRegrReporter {
     public XMLReporter(Directory regrDirectory) throws FileNotFoundException {
         File xmlFile = regrDirectory.getFile("TEST-jregr.xml");
         OutputStream xmlStream = new FileOutputStream(xmlFile);
-        xmlOutput = new PrintStream(xmlStream);
+        xmlOutput = new PrintStream(xmlStream, true, StandardCharsets.ISO_8859_1);
     }
 
     // No arguments constructor for tests
@@ -123,7 +124,7 @@ public class XMLReporter extends AbstractRegrReporter {
     private void insertExpectedOutput(RegrCase theCase, PrintStream outputStream) {
         outputStream.println("        <![CDATA[");
         try {
-            BufferedReader expectedReader = new BufferedReader(new FileReader(theCase.getExpectedFile()));
+            BufferedReader expectedReader = new BufferedReader(new FileReader(theCase.getExpectedFile(), StandardCharsets.ISO_8859_1));
             String line = "";
             while ((line = expectedReader.readLine()) != null)
                 outputStream.println(line);

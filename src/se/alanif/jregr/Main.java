@@ -1,7 +1,11 @@
 package se.alanif.jregr;
 
 import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
@@ -139,7 +143,19 @@ public class Main {
         return cases;
     }
 
+    /* From JDK 19 System.out and System.err follow stdout.encoding, so
+       anything jregr prints -- a diff above all -- would be re-encoded on
+       the way to the terminal. That is how a UTF-8 suite came to show 'Ã¤'
+       where a JDK 11 run showed 'ä'. Writing the bytes back out as they
+       came in and letting the terminal do the interpreting keeps jregr out
+       of the transcoding business on the console too. */
+    private static void useByteTransparentConsole() {
+        System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, StandardCharsets.ISO_8859_1));
+        System.setErr(new PrintStream(new FileOutputStream(FileDescriptor.err), true, StandardCharsets.ISO_8859_1));
+    }
+
     public static void main(String[] args) {
+        useByteTransparentConsole();
         System.exit(new Main().core(args) ? 0 : 1);
     }
 

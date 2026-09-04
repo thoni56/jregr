@@ -6,7 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 
 import se.alanif.jregr.CommandDecoder;
 import se.alanif.jregr.CommandDecoder.CommandSyntaxException;
@@ -126,7 +129,7 @@ public class RegrCase {
     }
 
     private void writeOutputToRedirection(String output, final String stdout) throws IOException {
-        BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(regrDirectory.toDirectory().getPath()+File.separator+stdout, StandardCharsets.ISO_8859_1));
         writer.write(output);
         writer.close();
     }
@@ -140,8 +143,8 @@ public class RegrCase {
         File expectedFile = getExpectedFile();
         if (expectedFile.exists()) {
             File outputFile = getOutputFile();
-            try (BufferedReader expectedReader = new BufferedReader(new FileReader(expectedFile));
-                    BufferedReader outputReader = new BufferedReader(new FileReader(outputFile));) {
+            try (BufferedReader expectedReader = new BufferedReader(new FileReader(expectedFile, StandardCharsets.ISO_8859_1));
+                    BufferedReader outputReader = new BufferedReader(new FileReader(outputFile, StandardCharsets.ISO_8859_1));) {
                 return fileContentsAreEqual(expectedReader, outputReader);
             } catch (FileNotFoundException e) {
                 return false;
@@ -212,7 +215,7 @@ public class RegrCase {
     }
 
     public PrintWriter getPrintWriter() throws FileNotFoundException {
-        return new PrintWriter(getOutputFile().getPath());
+        return new PrintWriter(new OutputStreamWriter(new FileOutputStream(getOutputFile()), StandardCharsets.ISO_8859_1));
     }
 
 }

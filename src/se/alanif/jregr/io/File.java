@@ -3,6 +3,7 @@ package se.alanif.jregr.io;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 public class File extends java.io.File {
 
@@ -16,7 +17,7 @@ public class File extends java.io.File {
 		String content = "";
 
 		try {
-			BufferedReader input = new BufferedReader(new FileReader(this));
+			BufferedReader input = new BufferedReader(new FileReader(this, StandardCharsets.ISO_8859_1));
 			try {
 				int ch;
 				while ((ch = input.read()) != -1) {

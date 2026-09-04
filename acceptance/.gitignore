@@ -4,4 +4,6 @@ stderr.exe
 stderr
 crash.exe
 crash
+bytes.exe
+bytes
 *.output
