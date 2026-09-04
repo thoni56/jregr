@@ -11,8 +11,11 @@ Character sets:
   jregr wrapper passes -Dfile.encoding=iso-8859-1; every I/O site in the
   jar is charset-less and inherits it, so "java -jar jregr.jar" as the
   README documents it behaves differently on JDK 18+. Give the ten sites
-  an explicit charset. This reverses the 18-12-30 pair below that removed
-  in-source encoding in favour of the java option
+  an explicit charset. This reverses the 18-12-30 pair below: 2681983
+  removed the one explicit charset there was, RegrRunner's .output writer,
+  and documented -Dfile.encoding instead. Note 757b8e8 had already tried
+  the same thing on the input side in io/File.java and was reverted the
+  same day, with no reason recorded
 ☐ XMLReporter declares encoding="ISO-8859-1" but builds a default-charset
   PrintStream, so -xml emits UTF-8 bytes claiming Latin-1
   (Full analysis, verified line numbers and the plan: in Claude's memory
