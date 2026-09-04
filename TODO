@@ -4,6 +4,14 @@
 ☐ Remove check for executables in -bin dir(s). Maybe this should be explicitly done for each subdir?
 ☐ Place any error output in the .output, if already done, why does not "<bin> not found" show up there?
 ☐ Remove any non-XML-compliant characters when generating XML-file
+☐ A 'jregr add <case>' subcommand, alongside diff/suspend/ok. Consumers
+  script this themselves today -- Alan carries bin/jregradd, jregrcp and
+  jregrmv, which add, copy and rename the files of a case by guessing a
+  fixed list of extensions. jregradd admits it in its own header: "BUG: It
+  should really look in the .jregr file to know which files to add." Jregr
+  is the only thing that knows what a case consists of, because it is the
+  thing that parses the .jregr. Alan's slott-utf8-bom case went five years
+  with its .input never committed for exactly this reason
 
 Character sets:
 ✔ Jregr must never transcode -- it compares what a program emitted, so
