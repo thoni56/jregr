@@ -135,7 +135,12 @@ public class RegrDirectory {
 		reporter.startSuite(suiteName, cases.length);
 		boolean success = runTheCases(cases, reporter, bindir, suiteName, commandLine);
 		reporter.endSuite();
-		recurse(reporter, bindir, suiteName, decoder, commandLine);
+		// recurse() folds in the result of every subdirectory, so its value
+		// has to be kept: dropping it meant a suite whose only failing cases
+		// were below the top directory still reported success, however loudly
+		// the summary said otherwise
+		if (!recurse(reporter, bindir, suiteName, decoder, commandLine))
+			success = false;
 		return success;
 	}
 

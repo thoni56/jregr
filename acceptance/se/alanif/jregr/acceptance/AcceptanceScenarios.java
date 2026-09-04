@@ -95,6 +95,23 @@ public class AcceptanceScenarios {
     }
 
     @Test
+    public void shouldFailTheRunWhenACaseInASubdirectoryFails() throws Exception {
+        String directory = "failing_case_in_subdir";
+        String[] arguments = {
+                "-dir", "acceptance/"+directory,
+                "-bin", "acceptance"
+        };
+
+        Run run = runJregr(arguments);
+
+        assertEquals(run.stderr(), "");
+        String[] outputLines = run.stdout().split("\n");
+        assertEquals("failing_case : Fail", outputLines[3]);
+        assertEquals("a failing case in a subdirectory must fail the whole run",
+                1, run.exitCode());
+    }
+
+    @Test
     public void shouldUseSameJregrInSubdirectoryWithEmptyJregr() throws Exception {
         String directory = "one_subdir_with_empty_jregr";
         String[] arguments = {
