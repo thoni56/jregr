@@ -37,9 +37,6 @@ General:
 ✔ Fix StreamGobbler tests to compile the dummy external programs @done(18-12-30 12:52)
 
 Character sets:
-☐ Drop -Dfile.encoding=iso-8859-1 from the jregr wrapper. Verified
-  redundant -- the jar behaves identically with and without it -- but kept
-  a release or two in case anything depends on the old behaviour
 ☐ Line endings are still normalised: output is read and written a line at
   a time, so CRLF becomes LF and a missing final newline is added. That is
   what lets one .expected serve Windows and Unix, but it means the compare
@@ -56,6 +53,12 @@ Character sets:
 ✔ Console: System.out follows stdout.encoding from JDK 19, so diffs were
   re-encoded on the way to the terminal. Main now sets a byte transparent
   System.out/err @done(26-09-04)
+✔ Drop -Dfile.encoding=iso-8859-1 from the jregr wrapper @done(26-09-05)
+  The two releases it was kept for, v0.2.7 and v0.2.8, have both shipped.
+  Re-verified against Alan with the v0.2.8 jar before removing: 562
+  regression and 368 compiler cases, byte identical output and the same
+  exit code with the property and without it. Alan's copy of the wrapper
+  dropped it in the same breath
 
 Crash handling:
 ☐ Windows wording: a crash there is reported as "terminated by exception

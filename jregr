@@ -4,11 +4,6 @@
 # arguments depending on platform. It assumes that the jar is in the
 # same directory as this file
 #
-# The -Dfile.encoding below is no longer needed: jregr states its own
-# encoding at every I/O site now and moves bytes through untouched, so it
-# behaves identically without it. Kept for a release or two in case
-# anything depends on the old behaviour, and should then go.
-#
 
 # Get path to the script since that is where the jar should also be
 SOURCE="${BASH_SOURCE[0]}"
@@ -25,5 +20,5 @@ if [[ "$uname" == *[Cc]ygwin* ]]; then
 else
   d=$d/;
 fi
-java -jar -Dfile.encoding=iso-8859-1 "$d"jregr.jar "$@"
+java -jar "$d"jregr.jar "$@"
 exit

@@ -167,8 +167,8 @@ This means test cases, their output and their `.expected` files can hold text in
 `Jregr` never needs to know which encoding that is, and never has an opinion about it.
 
 Older versions did not do this.
-They inherited whatever the JVM default encoding happened to be, which is why the wrapper script passes `-Dfile.encoding=iso-8859-1`.
-That property is no longer needed and will be removed from the wrapper.
+They inherited whatever the JVM default encoding happened to be, which is why the wrapper script used to pass `-Dfile.encoding=iso-8859-1`.
+That property is no longer needed and no longer passed.
 
 One thing is deliberately *not* preserved: line endings.
 Output is read and written a line at a time, so a CRLF becomes an LF and a final line without a newline gains one.
