@@ -1,9 +1,12 @@
-☐ Should set CWD to the directory of the tests so that a relative path
-  in the .jregr can be followed wherever Jregr was run from
-☐ Handle piping of output? We do input... (" < " so should we support " > "?)
+General:
 ☐ Remove check for executables in -bin dir(s). Maybe this should be explicitly done for each subdir?
-☐ Place any error output in the .output, if already done, why does not "<bin> not found" show up there?
-☐ Remove any non-XML-compliant characters when generating XML-file
+☐ Remove any non-XML-compliant characters when generating XML-file.
+  Half built: removeControlCharactersFrom() and the xml10pattern exist,
+  but the only production guard is 'if (output.matches(CONTROL_CHARACTER_REGEX))'
+  and that regex is a single character class, so matches() asks whether the
+  whole output *is* one control character -- effectively never. It wants
+  find(), or an unconditional strip. removeControlCharactersFrom() itself is
+  called from nothing but its own unit tests
 ☐ A 'jregr add <case>' subcommand, alongside diff/suspend/ok. Consumers
   script this themselves today -- Alan carries bin/jregradd, jregrcp and
   jregrmv, which add, copy and rename the files of a case by guessing a
@@ -12,8 +15,35 @@
   is the only thing that knows what a case consists of, because it is the
   thing that parses the .jregr. Alan's slott-utf8-bom case went five years
   with its .input never committed for exactly this reason
+✔ Should set CWD to the directory of the tests so that a relative path
+  in the .jregr can be followed wherever Jregr was run from @done(26-09-05)
+  CommandRunner does processBuilder.directory(directory), and the
+  one_subdir_with_relative_path_to_exe case, whose .jregr says
+  '../../theSUT $2', passes with jregr started from /tmp
+✔ Handle piping of output? We do input... (" < " so should we support " > "?)
+  @done(26-09-05) decodeStdinout() handles '>' as well as '<', covered by
+  one_subdir_with_redirected_output and shouldCreateRedirectedOutputInCaseDirectory
+✔ Place any error output in the .output, if already done, why does not
+  "<bin> not found" show up there? @done(26-09-05) Closed by the crash
+  handling below. A case whose command does not exist now leaves an .output
+  reading 'Cannot run program "nosuchprogram" (in directory "..."): Exec
+  failed, error: 2 (No such file or directory)' instead of a bare header
+✔ An empty .jregr file means the content is inherited from directory above
+✔ Remove possible directory separator at end of -dir option
+✔ Recurse through directories, only follow directories that have .jregr files.
+✔ A top level directory should always have a .jregr file
+✔ Remove source to set file encoding @done(18-12-30 12:30)
+✔ Document java option -Dfile.encoding= @done(18-12-30 12:30)
+✔ Fix StreamGobbler tests to compile the dummy external programs @done(18-12-30 12:52)
 
 Character sets:
+☐ Drop -Dfile.encoding=iso-8859-1 from the jregr wrapper. Verified
+  redundant -- the jar behaves identically with and without it -- but kept
+  a release or two in case anything depends on the old behaviour
+☐ Line endings are still normalised: output is read and written a line at
+  a time, so CRLF becomes LF and a missing final newline is added. That is
+  what lets one .expected serve Windows and Unix, but it means the compare
+  is line by line, not raw bytes. Decide whether that should stay
 ✔ Jregr must never transcode -- it compares what a program emitted, so
   bytes have to pass through untouched. Explicit ISO-8859-1 at every I/O
   site, which is byte transparent because it maps 0x00-0xFF one to one.
@@ -26,15 +56,14 @@ Character sets:
 ✔ Console: System.out follows stdout.encoding from JDK 19, so diffs were
   re-encoded on the way to the terminal. Main now sets a byte transparent
   System.out/err @done(26-09-04)
-☐ Drop -Dfile.encoding=iso-8859-1 from the jregr wrapper. Verified
-  redundant -- the jar behaves identically with and without it -- but kept
-  a release or two in case anything depends on the old behaviour
-☐ Line endings are still normalised: output is read and written a line at
-  a time, so CRLF becomes LF and a missing final newline is added. That is
-  what lets one .expected serve Windows and Unix, but it means the compare
-  is line by line, not raw bytes. Decide whether that should stay
 
 Crash handling:
+☐ Windows wording: a crash there is reported as "terminated by exception
+  0xC0000005", but shouldStopExecutingCommandsAfterACrash asserts on
+  "terminated by signal". Only bites when the suite is run on Windows
+☐ signalName() covers the signals that Linux and macOS agree on. 7 and 10
+  are left out on purpose (SIGBUS/SIGUSR1 vs SIGEMT/SIGBUS) and print as a
+  bare number -- resolve per-platform if that ever matters
 ✔ CommandRunner: keep the value of p.waitFor(), expose it as getExitValue() @done(26-09-03 10:49)
 ✔ RegrCase: set fatal on signal death (exit > 128 on Unix, < 0 on Windows).
   NOT on any non-zero exit -- Alan's compiler suite is full of cases that
@@ -48,14 +77,11 @@ Crash handling:
   status() short-circuits on fatal so it could not affect the result, and
   had it ever matched the .output, clean() would have deleted the .output
   that shouldStopExecutingCommandsAfterACrash reads @done(26-09-03 10:49)
-☐ Windows wording: a crash there is reported as "terminated by exception
-  0xC0000005", but shouldStopExecutingCommandsAfterACrash asserts on
-  "terminated by signal". Only bites when the suite is run on Windows
-☐ signalName() covers the signals that Linux and macOS agree on. 7 and 10
-  are left out on purpose (SIGBUS/SIGUSR1 vs SIGEMT/SIGBUS) and print as a
-  bare number -- resolve per-platform if that ever matters
 
 Test-suite defects:
+☐ RegrDirectoryRecursionTest mocks java.lang.Runtime, which is final as
+  of ~JDK 26. Introduce a seam (RegrDirectoryDouble already takes a
+  Runtime), upgrade to Mockito 5, or pin the JDK
 ✔ shouldCatchStderr asserts ": Fatal" and setUp() never compiles stderr,
   so the result depends on whether a stale gitignored binary happens to
   be on disk. Add compile("stderr") and assert ": Pass" @done(26-09-03 12:24)
@@ -66,9 +92,6 @@ Test-suite defects:
   compile silently becomes a missing binary and a misleading Fatal
   @done(26-09-03 12:24) Now drains cc's diagnostics and asserts on the
   exit status, so a broken .c names itself
-☐ RegrDirectoryRecursionTest mocks java.lang.Runtime, which is final as
-  of ~JDK 26. Introduce a seam (RegrDirectoryDouble already takes a
-  Runtime), upgrade to Mockito 5, or pin the JDK
 
 Build:
 ✔ Pin JAVA_HOME. Homebrew's ant depends on openjdk and forks JDK 26,
@@ -78,9 +101,6 @@ Build:
   which one. Override with -Dtest.jdk=<home> or -Dtest.jdk.version=N.
   Plain 'ant test' is green; -Dtest.jdk=<a 26> still gives the 4
   RegrDirectoryRecursionTest errors, so the pin is doing the work
-☐ Raise -source/-target from 1.8. Deprecated on current JDKs and due to
-  be removed. Nothing requires a Java 8 compatible jar -- the java8
-  commits in the log are an old upgrade, not a standing constraint
 ✔ Narrow the 'classpath' path id from "." to "lib" -- it currently globs
   jregr.jar itself onto the compile classpath, where a stale jar can mask
   a deleted class @done(26-09-03 12:41)
@@ -100,24 +120,21 @@ Build:
   Verified that a failing test produces no jar.
   Bumping JREGR_VERSION in Main.java is still a manual step beforehand,
   and ~/bin/jregr is still outside the repo's reach
-
-☐ Publish releases on GitHub, with the jar as a release asset, instead of
+✔ Raise -source/-target from 1.8. Deprecated on current JDKs and due to
+  be removed. Nothing requires a Java 8 compatible jar -- the java8
+  commits in the log are an old upgrade, not a standing constraint
+  @done(26-09-05) build.xml compiles both src and the tests with release="21"
+✔ Publish releases on GitHub, with the jar as a release asset, instead of
   copying it by hand into whatever consumes it. The release target would
-  then point at the tag rather than at a directory
+  then point at the tag rather than at a directory @done(26-09-05)
+  .github/workflows/release.yml builds and publishes the jar from a pushed
+  tag, and ci.yml builds every push. Alan's bin/jregr now fetches
+  releases/latest instead of committing a jar
 
 Repo hygiene:
-✔ Commit acceptance/crash.c; add crash and crash.exe to acceptance/.gitignore
-  (theSUT and stderr are ignored, crash was missed) @done(26-09-03 10:37)
 ☐ .vscode/launch.json has 6 hardcoded /home/thoni paths, and
   "$(workspaceFolder)" should be "${workspaceFolder}"
 ☐ .settings/org.eclipse.php.core.prefs is tracked -- PHP prefs in a Java repo
 ☐ .DS_Store files are untracked but not ignored
-
-✔ An empty .jregr file means the content is inherited from directory above
-✔ Remove possible directory separator at end of -dir option
-✔ Recurse through directories, only follow directories that have .jregr files.
-✔ A top level directory should always have a .jregr file
-✔ Remove source to set file encoding @done(18-12-30 12:30)
-✔ Document java option -Dfile.encoding= @done(18-12-30 12:30)
-✔ Fix StreamGobbler tests to compile the dummy external programs @done(18-12-30 12:52)
-
+✔ Commit acceptance/crash.c; add crash and crash.exe to acceptance/.gitignore
+  (theSUT and stderr are ignored, crash was missed) @done(26-09-03 10:37)
