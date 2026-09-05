@@ -54,11 +54,17 @@ Character sets:
   re-encoded on the way to the terminal. Main now sets a byte transparent
   System.out/err @done(26-09-04)
 ✔ Drop -Dfile.encoding=iso-8859-1 from the jregr wrapper @done(26-09-05)
-  The two releases it was kept for, v0.2.7 and v0.2.8, have both shipped.
-  Re-verified against Alan with the v0.2.8 jar before removing: 562
-  regression and 368 compiler cases, byte identical output and the same
-  exit code with the property and without it. Alan's copy of the wrapper
-  dropped it in the same breath
+  Verified against Alan with a v0.2.8 jar first: 562 regression and 368
+  compiler cases, byte identical output and the same exit code with the
+  property and without it.
+  It is only redundant from v0.2.8 -- the charset commit landed hours
+  after v0.2.7 was tagged, so with a v0.2.7 jar dropping it fails six
+  encoding cases (accented-e, accented-i, isochars, germanletters,
+  unknownWordMessage, and one more). That is fine here, where the wrapper
+  ships with the jar built beside it, but it is why Alan kept the property
+  in its copy: its wrapper only fetches a jar when none is present, so an
+  old checkout can hold a v0.2.7 jar indefinitely and would fail as if the
+  compiler had regressed
 
 Crash handling:
 ☐ Windows wording: a crash there is reported as "terminated by exception
