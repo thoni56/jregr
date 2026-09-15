@@ -58,3 +58,23 @@ jobs:
             exit 1
           fi
           echo "$actual"
+
+      # A consumer fetches the jar and runs it on whatever Java is already
+      # there, so the floor build.xml compiles to has to be checked by
+      # running the jar, not by reading the build file. Alan's Travis build
+      # is the 11 in question. A second setup-java rather than
+      # JAVA_HOME_11_X64, so nothing here depends on the runner's
+      # architecture, and last because it moves JAVA_HOME off 21.
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Check the jar starts on the oldest Java we compile for
+        run: |
+          java -version
+          if ! java -jar jregr.jar -version; then
+            echo "The jar does not start on Java 11. See the release" >&2
+            echo "properties in build.xml." >&2
+            exit 1
+          fi
