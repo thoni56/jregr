@@ -70,9 +70,15 @@ jobs:
           distribution: temurin
           java-version: '11'
 
+      # The java is checked before the jar is, so that a step which has
+      # quietly stopped being a Java 11 step cannot keep reporting success.
       - name: Check the jar starts on the oldest Java we compile for
         run: |
-          java -version
+          reported=$(java -version 2>&1 | head -1)
+          case "$reported" in
+            *'"11.'*|*'"11"'*) echo "$reported" ;;
+            *) echo "Expected a Java 11 here, got: $reported" >&2; exit 1 ;;
+          esac
           if ! java -jar jregr.jar -version; then
             echo "The jar does not start on Java 11. See the release" >&2
             echo "properties in build.xml." >&2
